@@ -1,0 +1,36 @@
+{
+  "members": [
+	{
+	  "id": "mert",
+	  "name": "Mert",
+	  "communication": 7,
+	  "speed": 5,
+	  "reliability": 8,
+	  "cost": 100
+	},
+	{
+	  "id": "selin",
+	  "name": "Selin",
+	  "communication": 5,
+	  "speed": 9,
+	  "reliability": 6,
+	  "cost": 50
+	},
+	{
+	  "id": "arda",
+	  "name": "Arda",
+	  "communication": 8,
+	  "speed": 4,
+	  "reliability": 9,
+	  "cost": 50
+	},
+	{
+	  "id": "mertcan",
+	  "name": "Mertcan",
+	  "communication": 0,
+	  "speed": 0,
+	  "reliability": 0,
+	  "cost": 50,
+	}
+  ]
+}

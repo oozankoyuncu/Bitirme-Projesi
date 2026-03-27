@@ -1,0 +1,27 @@
+{
+  "activities": [
+	{
+	  "id": "team_assignment",
+	  "name": "Team Assignment",
+	  "type": "team_setup",
+	  "duration": 0,
+	  "cost": 0,
+	  "dependencies": []
+	},
+	{
+  "id": "initial_festival_layout_mapping",
+  "name": "Initial Festival Layout Mapping",
+  "type": "layout_mapping",
+  "duration": 0,
+  "cost": 0,
+  "dependencies": ["team_assignment"]
+	},
+	{"id": "emergency_training",
+	  "name": "Emergency Training",
+	  "type": "emergency_train",
+	  "duration": 0,
+	  "cost": 0,
+	  "dependencies": ["initial_festival_layout_mapping"]}
+	
+  ]
+}
