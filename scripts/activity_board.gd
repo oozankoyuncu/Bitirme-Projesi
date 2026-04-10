@@ -31,6 +31,12 @@ func refresh_board() -> void:
 func get_activity_status(activity: Dictionary) -> String:
 	var activity_id = activity["id"]
 
+	if activity_id == "sponsor_management":
+		if GameState.week < 2:
+			return "Locked"
+		#if GameState.week > 3:
+			#return "Expired"
+
 	if GameState.completed_activities.has(activity_id):
 		return "Completed"
 
@@ -62,6 +68,12 @@ func start_activity(activity: Dictionary) -> void:
 		var panel = get_parent().get_node("EmergencyTrainingPanel")
 		panel.show()
 		panel.create_member_checkboxes()
+		hide()
+		return
+	
+	if activity_id == "sponsor_management":
+		var panel = get_parent().get_node("SponsorManagementPanel")
+		panel.show()
 		hide()
 		return
 

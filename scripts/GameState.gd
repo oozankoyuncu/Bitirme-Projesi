@@ -29,7 +29,19 @@ var emergency_training_phase_start_time: float = 0.0
 var emergency_training_phase_duration: float = 240.0 # 4 dakika = 240 saniye
 var emergency_training_phase_end_time: float = 0.0
 
+
 var active_trainings: Array = []
+
+#sponsor
+
+var sponsor_phase_active: bool = false
+var sponsor_phase_start_time: float = 0.0
+var sponsor_phase_duration: float = 480.0 # 8 dakika
+var sponsor_phase_end_time: float = 0.0
+
+var accepted_sponsors: Array = []
+var rejected_sponsors: Array = []
+var sponsor_attempts_left: int = 3
 
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
@@ -162,3 +174,41 @@ func _complete_training(training: Dictionary) -> void:
 			member[training["training_type"]] = 1
 			break
 	
+func start_sponsor_phase() -> void:
+	sponsor_phase_active = true
+	sponsor_phase_start_time = game_seconds
+	sponsor_phase_end_time = game_seconds + sponsor_phase_duration
+
+	sponsor_attempts_left = 3
+	accepted_sponsors.clear()
+	rejected_sponsors.clear()
+	
+func get_sponsor_remaining_time() -> float:
+	if not sponsor_phase_active:
+		return 0.0
+	return max(0.0, sponsor_phase_end_time - game_seconds)
+	
+func process_sponsor_acceptance(selection: Array, sponsor_defs: Dictionary) -> Dictionary:
+	var accepted = []
+	var rejected = []
+
+	for id in selection:
+		if id in accepted_sponsors:
+			continue
+
+		var chance = sponsor_defs[id]["acceptance"]
+
+		if randf() <= chance:
+			accepted.append(id)
+			accepted_sponsors.append(id)
+			money += sponsor_defs[id]["price"]
+		else:
+			rejected.append(id)
+
+	rejected_sponsors = rejected
+	sponsor_attempts_left -= 1
+
+	return {
+		"accepted": accepted,
+		"rejected": rejected
+	}

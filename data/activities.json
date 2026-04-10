@@ -21,7 +21,14 @@
 	  "type": "emergency_train",
 	  "duration": 0,
 	  "cost": 0,
-	  "dependencies": ["initial_festival_layout_mapping"]}
+	  "dependencies": ["initial_festival_layout_mapping"]},
+	
+
+  	{"id": "sponsor_management",
+  	 "name": "Sponsor Management",
+	 "cost": 0,
+	 "duration": 8,
+	 "dependencies": ["emergency_training"]}
 	
   ]
 }

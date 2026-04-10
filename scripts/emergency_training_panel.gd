@@ -117,6 +117,7 @@ func _refresh_ui() -> void:
 	active_trainings_label.text = text
 
 func _on_back_pressed() -> void:
+	GameState.complete_activity("emergency_training")
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()

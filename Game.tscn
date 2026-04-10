@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjb7r1wy7j8u5"]
+[gd_scene format=3 uid="uid://bjb7r1wy7j8u5"]
 
 [ext_resource type="PackedScene" uid="uid://bw8gq1qn06e22" path="res://time_label.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://pitj4dhy81jp" path="res://scripts/game.gd" id="1_u44n3"]
@@ -6,14 +6,14 @@
 [ext_resource type="Script" uid="uid://bme2u86kmj21l" path="res://scripts/activity_board.gd" id="3_t88pq"]
 [ext_resource type="Script" uid="uid://csct4pmwp2wdg" path="res://scripts/initial_facility_layout_panel.gd" id="5_t88pq"]
 [ext_resource type="Script" uid="uid://dtl375wmcfdlv" path="res://scripts/emergency_training_panel.gd" id="6_r0x5m"]
+[ext_resource type="Script" uid="uid://8grnhn0dg2k5" path="res://scripts/sponsor_management_panel.gd" id="7_3mrqo"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=968914289]
 script = ExtResource("1_u44n3")
 
-[node name="TimeLabel" parent="." instance=ExtResource("1_ig7tw")]
+[node name="TimeLabel" parent="." unique_id=288452266 instance=ExtResource("1_ig7tw")]
 
-[node name="ActivityBoard" type="Control" parent="."]
-visible = false
+[node name="ActivityBoard" type="Control" parent="." unique_id=661756177]
 layout_direction = 4
 layout_mode = 3
 anchors_preset = 0
@@ -23,23 +23,23 @@ offset_right = 2.0
 offset_bottom = 42.0
 script = ExtResource("3_t88pq")
 
-[node name="MarginContainer" type="MarginContainer" parent="ActivityBoard"]
+[node name="MarginContainer" type="MarginContainer" parent="ActivityBoard" unique_id=1655283135]
 layout_mode = 0
 offset_right = 1153.0
 offset_bottom = 92.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ActivityBoard/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ActivityBoard/MarginContainer" unique_id=907657988]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="ActivityBoard/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="ActivityBoard/MarginContainer/VBoxContainer" unique_id=168805372]
 layout_mode = 2
 text = "Activities"
 
-[node name="ActivityList" type="VBoxContainer" parent="ActivityBoard/MarginContainer/VBoxContainer"]
+[node name="ActivityList" type="VBoxContainer" parent="ActivityBoard/MarginContainer/VBoxContainer" unique_id=1938059303]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TeamAssignmentPanel" type="Panel" parent="."]
+[node name="TeamAssignmentPanel" type="Panel" parent="." unique_id=1164320763]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -47,14 +47,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_sb48q")
 
-[node name="MemberList" type="VBoxContainer" parent="TeamAssignmentPanel"]
+[node name="MemberList" type="VBoxContainer" parent="TeamAssignmentPanel" unique_id=2116851667]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 90.0
 offset_right = 574.0
 offset_bottom = 170.0
 
-[node name="TitleLabel" type="Label" parent="TeamAssignmentPanel"]
+[node name="TitleLabel" type="Label" parent="TeamAssignmentPanel" unique_id=988979587]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 26.0
@@ -62,7 +62,7 @@ offset_right = 341.0
 offset_bottom = 56.0
 text = "Team Assignment"
 
-[node name="ConfirmButton" type="Button" parent="TeamAssignmentPanel"]
+[node name="ConfirmButton" type="Button" parent="TeamAssignmentPanel" unique_id=1126779222]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 313.0
@@ -70,44 +70,43 @@ offset_right = 111.0
 offset_bottom = 344.0
 text = "Confirm"
 
-[node name="StatsPanel" type="Panel" parent="TeamAssignmentPanel"]
+[node name="StatsPanel" type="Panel" parent="TeamAssignmentPanel" unique_id=590397135]
 layout_mode = 0
 offset_left = 502.0
 offset_top = 286.0
 offset_right = 1144.0
 offset_bottom = 457.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TeamAssignmentPanel/StatsPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TeamAssignmentPanel/StatsPanel" unique_id=2084049164]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="CommLabel" type="Label" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer"]
+[node name="CommLabel" type="Label" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer" unique_id=2028950138]
 layout_mode = 2
 text = "Communication"
 
-[node name="CommBar" type="ProgressBar" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer"]
+[node name="CommBar" type="ProgressBar" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer" unique_id=1279283993]
 layout_mode = 2
 max_value = 10.0
 
-[node name="SpeedLabel" type="Label" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer"]
+[node name="SpeedLabel" type="Label" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer" unique_id=1050950851]
 layout_mode = 2
 text = "Speed"
 
-[node name="SpeedBar" type="ProgressBar" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer"]
+[node name="SpeedBar" type="ProgressBar" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer" unique_id=1917433051]
 layout_mode = 2
 max_value = 10.0
 
-[node name="ReliabilityLabel" type="Label" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer"]
+[node name="ReliabilityLabel" type="Label" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer" unique_id=7973911]
 layout_mode = 2
 text = "Reliability"
 
-[node name="ReliabilityBar" type="ProgressBar" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer"]
+[node name="ReliabilityBar" type="ProgressBar" parent="TeamAssignmentPanel/StatsPanel/VBoxContainer" unique_id=676479037]
 layout_mode = 2
 max_value = 10.0
 
-[node name="InitialFacilityLayoutPanel" type="Panel" parent="."]
-visible = false
+[node name="InitialFacilityLayoutPanel" type="Panel" parent="." unique_id=436401717]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -115,7 +114,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5_t88pq")
 
-[node name="ConfirmButton" type="Button" parent="InitialFacilityLayoutPanel"]
+[node name="ConfirmButton" type="Button" parent="InitialFacilityLayoutPanel" unique_id=614358148]
 layout_mode = 0
 offset_left = 320.0
 offset_top = 432.0
@@ -123,7 +122,7 @@ offset_right = 499.0
 offset_bottom = 484.0
 text = "Confirm"
 
-[node name="TitleLabel" type="Label" parent="InitialFacilityLayoutPanel"]
+[node name="TitleLabel" type="Label" parent="InitialFacilityLayoutPanel" unique_id=618361784]
 layout_mode = 0
 offset_left = 5.0
 offset_top = 25.0
@@ -131,7 +130,7 @@ offset_right = 236.0
 offset_bottom = 48.0
 text = "Initial Facility Layout Mapping"
 
-[node name="MapArea" type="GridContainer" parent="InitialFacilityLayoutPanel"]
+[node name="MapArea" type="GridContainer" parent="InitialFacilityLayoutPanel" unique_id=712710227]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 52.0
@@ -139,30 +138,30 @@ offset_right = 354.0
 offset_bottom = 308.0
 columns = 2
 
-[node name="AreaA" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaA" type="Button" parent="InitialFacilityLayoutPanel/MapArea" unique_id=2014030907]
 layout_mode = 2
 text = "Area A"
 
-[node name="AreaB" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaB" type="Button" parent="InitialFacilityLayoutPanel/MapArea" unique_id=99949231]
 layout_mode = 2
 text = "Area B"
 
-[node name="AreaC" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaC" type="Button" parent="InitialFacilityLayoutPanel/MapArea" unique_id=1813257670]
 layout_mode = 2
 text = "Area C"
 
-[node name="AreaD" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaD" type="Button" parent="InitialFacilityLayoutPanel/MapArea" unique_id=117296947]
 layout_mode = 2
 text = "Area D"
 
-[node name="AreaInfoLabel" type="Label" parent="InitialFacilityLayoutPanel"]
+[node name="AreaInfoLabel" type="Label" parent="InitialFacilityLayoutPanel" unique_id=1276077814]
 layout_mode = 0
 offset_left = 338.0
 offset_top = 43.0
 offset_right = 1087.0
 offset_bottom = 274.0
 
-[node name="PlacementButtons" type="HBoxContainer" parent="InitialFacilityLayoutPanel"]
+[node name="PlacementButtons" type="HBoxContainer" parent="InitialFacilityLayoutPanel" unique_id=462013759]
 layout_mode = 0
 offset_left = 7.0
 offset_top = 348.0
@@ -170,19 +169,19 @@ offset_right = 244.0
 offset_bottom = 563.0
 alignment = 1
 
-[node name="StageButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons"]
+[node name="StageButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons" unique_id=758768904]
 layout_mode = 2
 text = "Stage"
 
-[node name="FoodButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons"]
+[node name="FoodButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons" unique_id=1699084588]
 layout_mode = 2
 text = "Food"
 
-[node name="ClubButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons"]
+[node name="ClubButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons" unique_id=1749951246]
 layout_mode = 2
 text = "Club"
 
-[node name="BackButton" type="Button" parent="InitialFacilityLayoutPanel"]
+[node name="BackButton" type="Button" parent="InitialFacilityLayoutPanel" unique_id=1835753609]
 layout_mode = 0
 offset_left = 538.0
 offset_top = 431.0
@@ -190,62 +189,98 @@ offset_right = 733.0
 offset_bottom = 486.0
 text = "Back"
 
-[node name="EmergencyTrainingPanel" type="Panel" parent="."]
-visible = false
+[node name="EmergencyTrainingPanel" type="Panel" parent="." unique_id=1488113731]
 offset_right = 1150.0
 offset_bottom = 645.0
 script = ExtResource("6_r0x5m")
 
-[node name="MarginContainer" type="MarginContainer" parent="EmergencyTrainingPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="EmergencyTrainingPanel" unique_id=110579260]
 layout_mode = 0
 offset_top = 25.0
 offset_right = 1148.0
 offset_bottom = 646.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer" unique_id=1951891675]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=1485572344]
 layout_mode = 2
 text = "Emergency Training"
 
-[node name="TimeRemainingLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="TimeRemainingLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=1320651248]
 layout_mode = 2
 
-[node name="MoneyLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="MoneyLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=1518906960]
 layout_mode = 2
 
-[node name="MemberList" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="MemberList" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=1514724609]
 layout_mode = 2
 
-[node name="TrainingButtons" type="HBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="TrainingButtons" type="HBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=1306842348]
 layout_mode = 2
 
-[node name="ElectricalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
+[node name="ElectricalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons" unique_id=10808271]
 layout_mode = 2
 text = "Electric"
 
-[node name="CrowdButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
+[node name="CrowdButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons" unique_id=165840095]
 layout_mode = 2
 text = "Crowd"
 
-[node name="MedicalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
+[node name="MedicalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons" unique_id=1324903520]
 layout_mode = 2
 text = "Medical"
 
-[node name="WeatherButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
+[node name="WeatherButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons" unique_id=1708573689]
 layout_mode = 2
 text = "Weather"
 
-[node name="SelectedTrainingLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="SelectedTrainingLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=450167100]
 layout_mode = 2
 
-[node name="ActiveTrainingsLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="ActiveTrainingsLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=127335356]
 layout_mode = 2
 
-[node name="StartTrainingButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="StartTrainingButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=705138433]
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="BackButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer" unique_id=676779391]
+layout_mode = 2
+text = "Back"
+
+[node name="SponsorManagementPanel" type="Panel" parent="." unique_id=1707140362]
+offset_right = 1150.0
+offset_bottom = 645.0
+script = ExtResource("7_3mrqo")
+
+[node name="MarginContainer" type="MarginContainer" parent="SponsorManagementPanel" unique_id=1661596270]
+layout_mode = 0
+offset_top = 25.0
+offset_right = 1148.0
+offset_bottom = 646.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer" unique_id=1503503070]
+layout_mode = 2
+
+[node name="ResultLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer" unique_id=709610382]
+layout_mode = 2
+text = "Emergency Training"
+
+[node name="TimeLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer" unique_id=587612241]
+layout_mode = 2
+
+[node name="MoneyLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer" unique_id=492891429]
+layout_mode = 2
+
+[node name="SponsorList" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer" unique_id=626207901]
+layout_mode = 2
+
+[node name="ChartContainer" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer" unique_id=1119454300]
+layout_mode = 2
+
+[node name="CheckButton" type="Button" parent="SponsorManagementPanel/MarginContainer/VBoxContainer" unique_id=1611673086]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="SponsorManagementPanel/MarginContainer/VBoxContainer" unique_id=954318826]
 layout_mode = 2
 text = "Back"
