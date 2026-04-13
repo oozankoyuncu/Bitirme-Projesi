@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 
 
@@ -7,6 +7,7 @@ extends Node2D
 @onready var initial_facility_layout_panel: Panel = $InitialFacilityLayoutPanel
 @onready var emergency_training_panel: Panel = $EmergencyTrainingPanel
 @onready var sponsor_management_panel: Panel = $SponsorManagementPanel
+@onready var entertainment_lineup_panel: Panel = $EntertainmentLineupPanel
 
 func _ready() -> void:
 	GameState.load_team_members()
@@ -14,4 +15,5 @@ func _ready() -> void:
 	initial_facility_layout_panel.hide()
 	emergency_training_panel.hide()
 	sponsor_management_panel.hide()
+	entertainment_lineup_panel.hide()
 	activity_board.show()

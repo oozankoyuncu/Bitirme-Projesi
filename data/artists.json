@@ -1,0 +1,28 @@
+{
+  "artists": [
+	{
+	  "id": "athena",
+	  "name": "Athena",
+	  "role": "headliner",
+	  "cost": 180000,
+	  "popularity": 9,
+	  "crowd_appeal": "Very High"
+	},
+	{
+	  "id": "manga",
+	  "name": "Manga",
+	  "role": "supporting",
+	  "cost": 90000,
+	  "popularity": 7,
+	  "crowd_appeal": "High"
+	},
+	{
+	  "id": "kalben",
+	  "name": "Kalben",
+	  "role": "supporting",
+	  "cost": 50000,
+	  "popularity": 6,
+	  "crowd_appeal": "Medium-High"
+	}
+  ]
+}

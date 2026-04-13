@@ -158,5 +158,6 @@ func refresh_ui():
 # ---------------- BACK ----------------
 func _on_back_pressed():
 	hide()
+	GameState.complete_activity("sponsor_management")
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()

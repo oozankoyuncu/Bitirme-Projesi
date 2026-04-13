@@ -1,19 +1,18 @@
 extends Panel
 
-@onready var member_list: VBoxContainer = $MemberList
 
-@onready var comm_label: Label = $StatsPanel/VBoxContainer/CommLabel
-@onready var comm_bar: ProgressBar = $StatsPanel/VBoxContainer/CommBar
-
-
-@onready var speed_label: Label = $StatsPanel/VBoxContainer/SpeedLabel
-@onready var speed_bar: ProgressBar = $StatsPanel/VBoxContainer/SpeedBar
-
-@onready var reliability_label: Label = $StatsPanel/VBoxContainer/ReliabilityLabel
-@onready var reliability_bar: ProgressBar = $StatsPanel/VBoxContainer/ReliabilityBar
+@onready var member_list: VBoxContainer = $MarginContainer/VBoxContainer/MemberList
 
 @onready var confirm_button: Button = $ConfirmButton
 
+@onready var comm_label: Label = $MarginContainer/VBoxContainer/VBoxContainer/CommLabel
+@onready var comm_bar: ProgressBar = $MarginContainer/VBoxContainer/VBoxContainer/CommBar
+
+@onready var speed_label: Label = $MarginContainer/VBoxContainer/VBoxContainer/SpeedLabel
+@onready var speed_bar: ProgressBar = $MarginContainer/VBoxContainer/VBoxContainer/SpeedBar
+
+@onready var reliability_label: Label = $MarginContainer/VBoxContainer/VBoxContainer/ReliabilityLabel
+@onready var reliability_bar: ProgressBar = $MarginContainer/VBoxContainer/VBoxContainer/ReliabilityBar
 
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)

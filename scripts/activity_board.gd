@@ -76,6 +76,12 @@ func start_activity(activity: Dictionary) -> void:
 		panel.show()
 		hide()
 		return
+		
+	if activity_id == "entertainment_lineup":
+		var panel = get_parent().get_node("EntertainmentLineupPanel")
+		panel.show()
+		hide()
+		return
 
 	print("Başlatıldı: ", activity["name"])
 	GameState.completed_activities.append(activity_id)

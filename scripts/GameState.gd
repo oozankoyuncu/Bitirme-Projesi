@@ -4,7 +4,7 @@ extends Node
 signal time_changed
 
 # ---- Varsayılan başlangıç değerleri ----
-const START_MONEY: int = 1000
+const START_MONEY: int = 1000000
 const START_WEEK: int = 1
 const START_TIME_SECONDS: float = 0.0
 
@@ -43,6 +43,16 @@ var accepted_sponsors: Array = []
 var rejected_sponsors: Array = []
 var sponsor_attempts_left: int = 3
 
+#Entertainment Line-up
+var available_artists: Array = []
+var selected_headliners: Array = []
+var selected_supporting_artists: Array = []
+
+var entertainment_lineup_phase_active: bool = false
+var entertainment_lineup_completed: bool = false
+
+var university_debt_limit: int = -300000
+
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
@@ -80,7 +90,8 @@ func _process(delta: float) -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	GameState.load_activities()
+	load_activities()
+	load_artists()
 	
 #func to print the HUD text
 func get_hud_text() -> String:
@@ -212,3 +223,78 @@ func process_sponsor_acceptance(selection: Array, sponsor_defs: Dictionary) -> D
 		"accepted": accepted,
 		"rejected": rejected
 	}
+	
+	#Entertainment Line-up
+	
+func load_artists() -> void:
+	var file = FileAccess.open("res://data/artists.json", FileAccess.READ)
+	
+	if file == null:
+		print("ERROR: artists.json could not be opened")
+		return
+	
+	var content = file.get_as_text()
+	file.close()
+
+	var json = JSON.new()
+	var result = json.parse(content)
+
+	if result != OK:
+		print("ERROR: Failed to parse artists.json")
+		return
+
+	var data = json.data
+
+	if not data.has("artists"):
+		print("ERROR: No 'artists' key in JSON")
+		return
+
+	available_artists = data["artists"]
+	print("Artists loaded: ", available_artists.size())
+	
+func get_total_lineup_cost() -> int:
+	var total := 0
+	for artist in selected_headliners:
+		total += artist["cost"]
+	for artist in selected_supporting_artists:
+		total += artist["cost"]
+	return total
+	
+func get_attendance_from_appeal(appeal: String) -> int:
+	match appeal:
+		"Very High":
+			return 1000
+		"High":
+			return 800
+		"Medium-High":
+			return 600
+		"Medium":
+			return 400
+		"Niche":
+			return 200
+		_:
+			return 0
+
+func get_total_expected_attendance() -> int:
+	var total := 0
+	for artist in selected_headliners:
+		total += get_attendance_from_appeal(artist["crowd_appeal"])
+	for artist in selected_supporting_artists:
+		total += get_attendance_from_appeal(artist["crowd_appeal"])
+	return total
+
+func get_average_lineup_popularity() -> float:
+	var all_artists := selected_headliners + selected_supporting_artists
+	if all_artists.is_empty():
+		return 0.0
+	
+	var total := 0
+	for artist in all_artists:
+		total += artist["popularity"]
+	return float(total) / all_artists.size()
+
+func can_finalize_lineup() -> bool:
+	return selected_headliners.size() >= 1 and selected_supporting_artists.size() >= 2
+	
+func can_afford_artist(artist_cost: int) -> bool:
+	return money - artist_cost >= -300000

@@ -28,7 +28,15 @@
   	 "name": "Sponsor Management",
 	 "cost": 0,
 	 "duration": 8,
-	 "dependencies": ["emergency_training"]}
+	 "dependencies": ["emergency_training"]},
+	
+	{
+  "id": "entertainment_lineup",
+  "name": "Entertainment Line-Up",
+  "type": "artist_selection",
+  "duration": 8,
+  "cost": 0,
+  "dependencies": ["sponsor_management"] }
 	
   ]
 }
