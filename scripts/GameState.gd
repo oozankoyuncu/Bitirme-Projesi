@@ -72,6 +72,14 @@ var volunteer_club_engagement: int = 0
 var volunteer_club_diversity_effect: int = 0
 var volunteer_club_quality_impact: float = 0.0
 
+# Food Vendor Selection
+var food_vendor_completed: bool = false
+var selected_food_vendors: Array = []
+var total_food_capacity: int = 0
+var average_hygiene: float = 0.0
+var total_food_cost: int = 0
+var participant_satisfaction: float = 0.0
+
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
@@ -341,3 +349,16 @@ func finalize_volunteer_club(selected: Array, space: int, engagement: int, diver
 	event_quality_score += quality_impact
 	volunteer_club_completed = true
 	complete_activity("volunteer_club_recruitment")
+
+func finalize_food_vendor_selection(selected: Array, capacity: int, avg_hygiene: float, total_cost: int, satisfaction_impact: float, quality_impact: float) -> void:
+	selected_food_vendors = selected
+	total_food_capacity = capacity
+	average_hygiene = avg_hygiene
+	total_food_cost = total_cost
+	money -= total_cost
+	
+	participant_satisfaction += satisfaction_impact
+	event_quality_score += quality_impact
+	
+	food_vendor_completed = true
+	complete_activity("food_vendor_selection")

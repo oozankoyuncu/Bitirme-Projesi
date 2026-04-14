@@ -76,6 +76,17 @@
 			"dependencies": [
 				"entertainment_lineup"
 			]
+		},
+		{
+			"id": "food_vendor_selection",
+			"name": "Food Vendor Selection",
+			"type": "food_vendor",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"ticket_pricing",
+				"volunteer_club_recruitment"
+			]
 		}
 	]
 }

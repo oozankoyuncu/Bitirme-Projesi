@@ -109,6 +109,12 @@ func start_activity(activity: Dictionary) -> void:
 		hide()
 		return
 
+	if activity_id == "food_vendor_selection":
+		var panel = get_parent().get_node("FoodVendorSelectionPanel")
+		panel.show()
+		hide()
+		return
+
 	print("Başlatıldı: ", activity["name"])
 	GameState.completed_activities.append(activity_id)
 	refresh_board()
