@@ -8,6 +8,7 @@ extends Control
 @onready var emergency_training_panel: Panel = $EmergencyTrainingPanel
 @onready var sponsor_management_panel: Panel = $SponsorManagementPanel
 @onready var entertainment_lineup_panel: Panel = $EntertainmentLineupPanel
+@onready var promotion_strategy_panel: Panel = $PromotionStrategyPanel
 
 func _ready() -> void:
 	GameState.load_team_members()
@@ -16,4 +17,5 @@ func _ready() -> void:
 	emergency_training_panel.hide()
 	sponsor_management_panel.hide()
 	entertainment_lineup_panel.hide()
+	promotion_strategy_panel.hide()
 	activity_board.show()
