@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dtl375wmcfdlv" path="res://scripts/emergency_training_panel.gd" id="6_r0x5m"]
 [ext_resource type="Script" uid="uid://8grnhn0dg2k5" path="res://scripts/sponsor_management_panel.gd" id="7_3mrqo"]
 [ext_resource type="Script" uid="uid://bvtlw302eln4b" path="res://entertainment_lineup_panel.gd" id="8_joorw"]
+[ext_resource type="Script" path="res://scripts/promotion_strategy_panel.gd" id="9_promo"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -452,3 +453,100 @@ text = "Confirm"
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Back"
+
+[node name="PromotionStrategyPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_promo")
+
+[node name="MarginContainer" type="MarginContainer" parent="PromotionStrategyPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HeaderPanel" type="Panel" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Promotion Strategy"
+horizontal_alignment = 1
+
+[node name="BudgetLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ContentPanel" type="Panel" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ContentPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="PromotionList" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SummaryPanel" type="Panel" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SummaryLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Confirm Strategy"
+

@@ -53,6 +53,10 @@ var entertainment_lineup_completed: bool = false
 
 var university_debt_limit: int = -300000
 
+# Promotion Strategy
+var promotion_phase_completed: bool = false
+var promotion_total_actual_reach: float = 0.0
+
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
@@ -298,3 +302,9 @@ func can_finalize_lineup() -> bool:
 	
 func can_afford_artist(artist_cost: int) -> bool:
 	return money - artist_cost >= -300000
+
+func finalize_promotion_strategy(selected: Array, total_cost: int, total_reach: float) -> void:
+	money -= total_cost
+	promotion_total_actual_reach = total_reach
+	promotion_phase_completed = true
+	complete_activity("promotion_strategy")

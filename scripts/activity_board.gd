@@ -40,6 +40,10 @@ func get_activity_status(activity: Dictionary) -> String:
 	if GameState.completed_activities.has(activity_id):
 		return "Completed"
 
+	if activity_id == "promotion_strategy":
+		if GameState.week < 4:
+			return "Locked"
+
 	if not dependencies_completed(activity):
 		return "Locked"
 
@@ -79,6 +83,12 @@ func start_activity(activity: Dictionary) -> void:
 		
 	if activity_id == "entertainment_lineup":
 		var panel = get_parent().get_node("EntertainmentLineupPanel")
+		panel.show()
+		hide()
+		return
+		
+	if activity_id == "promotion_strategy":
+		var panel = get_parent().get_node("PromotionStrategyPanel")
 		panel.show()
 		hide()
 		return
