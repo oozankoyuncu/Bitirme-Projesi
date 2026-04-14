@@ -9,6 +9,8 @@ extends Control
 @onready var sponsor_management_panel: Panel = $SponsorManagementPanel
 @onready var entertainment_lineup_panel: Panel = $EntertainmentLineupPanel
 @onready var promotion_strategy_panel: Panel = $PromotionStrategyPanel
+@onready var ticket_pricing_panel: Panel = $TicketPricingPanel
+@onready var volunteer_club_panel: Panel = $VolunteerClubPanel
 
 func _ready() -> void:
 	GameState.load_team_members()
@@ -18,4 +20,6 @@ func _ready() -> void:
 	sponsor_management_panel.hide()
 	entertainment_lineup_panel.hide()
 	promotion_strategy_panel.hide()
+	ticket_pricing_panel.hide()
+	volunteer_club_panel.hide()
 	activity_board.show()
