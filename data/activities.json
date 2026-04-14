@@ -56,6 +56,26 @@
 			"dependencies": [
 				"sponsor_management"
 			]
+		},
+		{
+			"id": "ticket_pricing",
+			"name": "Ticket Pricing",
+			"type": "ticket_pricing",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"entertainment_lineup"
+			]
+		},
+		{
+			"id": "volunteer_club_recruitment",
+			"name": "Volunteer / Club Recruitment",
+			"type": "volunteer_club",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"entertainment_lineup"
+			]
 		}
 	]
 }

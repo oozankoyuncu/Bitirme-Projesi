@@ -57,6 +57,21 @@ var university_debt_limit: int = -300000
 var promotion_phase_completed: bool = false
 var promotion_total_actual_reach: float = 0.0
 
+# Ticket Pricing
+var ticket_pricing_completed: bool = false
+var final_attendance: float = 0.0
+var chosen_ticket_price: float = 0.0
+var total_revenue: float = 0.0
+var event_quality_score: float = 0.0
+
+# Volunteer / Club Recruitment
+var volunteer_club_completed: bool = false
+var selected_volunteer_clubs: Array = []
+var volunteer_club_space_used: int = 0
+var volunteer_club_engagement: int = 0
+var volunteer_club_diversity_effect: int = 0
+var volunteer_club_quality_impact: float = 0.0
+
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
@@ -308,3 +323,21 @@ func finalize_promotion_strategy(selected: Array, total_cost: int, total_reach: 
 	promotion_total_actual_reach = total_reach
 	promotion_phase_completed = true
 	complete_activity("promotion_strategy")
+
+func finalize_ticket_pricing(attendance: float, price: float, revenue: float, quality_impact: float) -> void:
+	final_attendance = attendance
+	chosen_ticket_price = price
+	total_revenue = revenue
+	event_quality_score += quality_impact
+	ticket_pricing_completed = true
+	complete_activity("ticket_pricing")
+
+func finalize_volunteer_club(selected: Array, space: int, engagement: int, diversity_effect: int, quality_impact: float) -> void:
+	selected_volunteer_clubs = selected
+	volunteer_club_space_used = space
+	volunteer_club_engagement = engagement
+	volunteer_club_diversity_effect = diversity_effect
+	volunteer_club_quality_impact = quality_impact
+	event_quality_score += quality_impact
+	volunteer_club_completed = true
+	complete_activity("volunteer_club_recruitment")

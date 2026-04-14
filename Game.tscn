@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://8grnhn0dg2k5" path="res://scripts/sponsor_management_panel.gd" id="7_3mrqo"]
 [ext_resource type="Script" uid="uid://bvtlw302eln4b" path="res://entertainment_lineup_panel.gd" id="8_joorw"]
 [ext_resource type="Script" path="res://scripts/promotion_strategy_panel.gd" id="9_promo"]
+[ext_resource type="Script" path="res://scripts/ticket_pricing_panel.gd" id="10_ticket"]
+[ext_resource type="Script" path="res://scripts/volunteer_club_panel.gd" id="11_club"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -549,4 +551,197 @@ alignment = 1
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 text = "Confirm Strategy"
+
+[node name="TicketPricingPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("10_ticket")
+
+[node name="MarginContainer" type="MarginContainer" parent="TicketPricingPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HeaderPanel" type="Panel" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Ticket Pricing"
+horizontal_alignment = 1
+
+[node name="BaseReachLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ContentPanel" type="Panel" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="PricingList" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SummaryPanel" type="Panel" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SummaryLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Confirm Strategy"
+
+[node name="VolunteerClubPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_club")
+
+[node name="MarginContainer" type="MarginContainer" parent="VolunteerClubPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HeaderPanel" type="Panel" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Volunteer & Club Recruitment"
+horizontal_alignment = 1
+
+[node name="CapacityLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ContentPanel" type="Panel" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/ContentPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ClubList" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SummaryPanel" type="Panel" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SummaryLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Confirm Selection"
+
 
