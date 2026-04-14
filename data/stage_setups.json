@@ -1,0 +1,31 @@
+{
+  "stage_setups": [
+	{
+	  "id": "basic_stage",
+	  "name": "Basic Stage",
+	  "cost": 1500,
+	  "stage_size": 2,
+	  "lighting_complexity": 2,
+	  "operation_features": 2,
+	  "setup_duration": 2
+	},
+	{
+	  "id": "standard_stage",
+	  "name": "Standard Stage",
+	  "cost": 3000,
+	  "stage_size": 4,
+	  "lighting_complexity": 3,
+	  "operation_features": 3,
+	  "setup_duration": 3
+	},
+	{
+	  "id": "premium_stage",
+	  "name": "Premium Stage",
+	  "cost": 5000,
+	  "stage_size": 5,
+	  "lighting_complexity": 5,
+	  "operation_features": 4,
+	  "setup_duration": 4
+	}
+  ]
+}

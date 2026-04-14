@@ -11,6 +11,7 @@ extends Control
 @onready var promotion_strategy_panel: Panel = $PromotionStrategyPanel
 @onready var ticket_pricing_panel: Panel = $TicketPricingPanel
 @onready var volunteer_club_panel: Panel = $VolunteerClubPanel
+@onready var stage_setup_choices_panel: Panel = $StageSetupChoicesPanel
 
 func _ready() -> void:
 	GameState.load_team_members()
@@ -22,4 +23,5 @@ func _ready() -> void:
 	promotion_strategy_panel.hide()
 	ticket_pricing_panel.hide()
 	volunteer_club_panel.hide()
+	stage_setup_choices_panel.hide()
 	activity_board.show()

@@ -87,6 +87,15 @@
 				"ticket_pricing",
 				"volunteer_club_recruitment"
 			]
-		}
+		},
+		{
+	  "id": "stage_setup_choices",
+	  "name": "Stage Setup Choices",
+	  "type": "stage_setup",
+	  "cost": 0,
+	  "duration": 4,
+	  "dependencies": [
+	]
+	}
 	]
 }

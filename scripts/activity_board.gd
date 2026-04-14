@@ -114,6 +114,12 @@ func start_activity(activity: Dictionary) -> void:
 		panel.show()
 		hide()
 		return
+		
+	if activity_id == "stage_setup_choices":
+		var panel = get_parent().get_node("StageSetupChoicesPanel")
+		panel.show()
+		hide()
+		return
 
 	print("Başlatıldı: ", activity["name"])
 	GameState.completed_activities.append(activity_id)

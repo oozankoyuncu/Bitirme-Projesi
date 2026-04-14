@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bjb7r1wy7j8u5"]
+[gd_scene load_steps=14 format=3 uid="uid://bjb7r1wy7j8u5"]
 
 [ext_resource type="PackedScene" uid="uid://bw8gq1qn06e22" path="res://time_label.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://pitj4dhy81jp" path="res://scripts/game.gd" id="1_u44n3"]
@@ -8,10 +8,11 @@
 [ext_resource type="Script" uid="uid://dtl375wmcfdlv" path="res://scripts/emergency_training_panel.gd" id="6_r0x5m"]
 [ext_resource type="Script" uid="uid://8grnhn0dg2k5" path="res://scripts/sponsor_management_panel.gd" id="7_3mrqo"]
 [ext_resource type="Script" uid="uid://bvtlw302eln4b" path="res://entertainment_lineup_panel.gd" id="8_joorw"]
-[ext_resource type="Script" path="res://scripts/promotion_strategy_panel.gd" id="9_promo"]
-[ext_resource type="Script" path="res://scripts/ticket_pricing_panel.gd" id="10_ticket"]
-[ext_resource type="Script" path="res://scripts/volunteer_club_panel.gd" id="11_club"]
-[ext_resource type="Script" path="res://scripts/food_vendor_selection_panel.gd" id="12_food"]
+[ext_resource type="Script" uid="uid://s6to1rrakk1o" path="res://scripts/promotion_strategy_panel.gd" id="9_promo"]
+[ext_resource type="Script" uid="uid://ctuccdh4lhpc8" path="res://scripts/ticket_pricing_panel.gd" id="10_ticket"]
+[ext_resource type="Script" uid="uid://cuta6qjpotnul" path="res://scripts/volunteer_club_panel.gd" id="11_club"]
+[ext_resource type="Script" uid="uid://s1jp4vvndgib" path="res://scripts/food_vendor_selection_panel.gd" id="12_food"]
+[ext_resource type="Script" uid="uid://8an48xdxkcty" path="res://scripts/stage_setup_choices_panel.gd" id="13_lvtmh"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -745,8 +746,6 @@ custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 text = "Confirm Selection"
 
-
-
 [node name="FoodVendorSelectionPanel" type="Panel" parent="."]
 visible = false
 layout_mode = 1
@@ -843,4 +842,56 @@ custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 text = "Confirm Selection"
 
+[node name="StageSetupChoicesPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("13_lvtmh")
 
+[node name="MarginContainer" type="MarginContainer" parent="StageSetupChoicesPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Stage Setup Choices"
+
+[node name="DescriptionLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Choose one stage version for your festival. Balance cost, impact, and setup duration."
+
+[node name="MoneyLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="OptionList" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="InfoLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ResultLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonsRow" type="HBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfirmButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+layout_mode = 2
+text = "Confirm Selection"
+
+[node name="BackButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+layout_mode = 2
+text = "Back"

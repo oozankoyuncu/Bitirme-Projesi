@@ -80,6 +80,11 @@ var average_hygiene: float = 0.0
 var total_food_cost: int = 0
 var participant_satisfaction: float = 0.0
 
+#Stage Setup
+var stage_setup_defs: Array = []
+var selected_stage_setup: Dictionary = {}
+var stage_setup_score: float = 0.0
+
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
@@ -90,6 +95,7 @@ func reset() -> void:
 	week = START_WEEK
 	game_seconds = START_TIME_SECONDS
 	is_running = true
+	
 
 	last_week_tick = -1
 	
@@ -119,6 +125,7 @@ func _process(delta: float) -> void:
 func _ready() -> void:
 	load_activities()
 	load_artists()
+	load_stage_setups()
 	
 #func to print the HUD text
 func get_hud_text() -> String:
@@ -362,3 +369,37 @@ func finalize_food_vendor_selection(selected: Array, capacity: int, avg_hygiene:
 	
 	food_vendor_completed = true
 	complete_activity("food_vendor_selection")
+	
+func load_stage_setups() -> void:
+	var file = FileAccess.open("res://data/stage_setups.json", FileAccess.READ)
+	if file == null:
+		print("stage_setups.json açılamadı")
+		return
+
+	var json_text = file.get_as_text()
+	var data = JSON.parse_string(json_text)
+
+	if data == null or not data.has("stage_setups"):
+		print("stage_setups.json parse edilemedi")
+		return
+
+	stage_setup_defs = data["stage_setups"]
+	
+func calculate_stage_impact(stage_data: Dictionary) -> float:
+	return (
+		stage_data["stage_size"] * 0.5 +
+		stage_data["lighting_complexity"] * 0.3 +
+		stage_data["operation_features"] * 0.2
+	)
+
+func choose_stage_setup(stage_data: Dictionary) -> bool:
+	var cost: int = stage_data["cost"]
+
+	if money < cost:
+		return false
+
+	money -= cost
+	selected_stage_setup = stage_data.duplicate(true)
+	stage_setup_score = calculate_stage_impact(stage_data)
+
+	return true
