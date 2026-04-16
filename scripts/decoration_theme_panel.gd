@@ -63,13 +63,13 @@ func build_options() -> void:
 		var checkbox := CheckBox.new()
 		var impact := GameState.calculate_decoration_theme_impact(theme)
 
-		checkbox.text = " " + theme["name"] + "  (💰 $" + str(theme["cost"]) + ")"
+		checkbox.text = " " + theme["name"] + "  (Cost: $" + str(theme["cost"]) + ")"
 		checkbox.add_theme_font_size_override("font_size", 26)
 		checkbox.set_meta("theme_data", theme)
 		checkbox.toggled.connect(func(pressed: bool): _on_theme_toggled(checkbox, pressed))
 		
 		var details := Label.new()
-		details.text = "      ↳ 😊 Satisfaction: %d/10   |   ⚙️ Complexity: %d/10   |   📏 Space: %d/10   |   ⭐ Theme Score: %.1f" % [
+		details.text = "      ↳ Satisfaction: %d/10   |   Complexity: %d/10   |   Space: %d/10   |   Theme Score: %.1f" % [
 			theme["satisfaction_impact"],
 			theme["complexity"],
 			theme["space_impact"],
@@ -105,12 +105,12 @@ func _on_theme_toggled(changed_checkbox: CheckBox, pressed: bool) -> void:
 	var impact := GameState.calculate_decoration_theme_impact(theme)
 	info_label.text = \
 		"=== SELECTED: " + theme["name"].to_upper() + " ===\n" + \
-		"💰 Budget Cost: $" + str(theme["cost"]) + "\n" + \
-		"⏱️ Setup Processing Time: " + str(theme["setup_duration"]) + " weeks\n" + \
-		"😊 Joy & Satisfaction Impact: " + str(theme["satisfaction_impact"]) + " / 10\n" + \
-		"⚙️ Construction Complexity: " + str(theme["complexity"]) + " / 10\n" + \
-		"📏 Scale & Space Requirements: " + str(theme["space_impact"]) + " / 10\n" + \
-		"⭐ Computed Synergy Score: " + str(snapped(impact, 0.1))
+		"Budget Cost: $" + str(theme["cost"]) + "\n" + \
+		"Setup Processing Time: " + str(theme["setup_duration"]) + " weeks\n" + \
+		"Joy & Satisfaction Impact: " + str(theme["satisfaction_impact"]) + " / 10\n" + \
+		"Construction Complexity: " + str(theme["complexity"]) + " / 10\n" + \
+		"Scale & Space Requirements: " + str(theme["space_impact"]) + " / 10\n" + \
+		"Computed Synergy Score: " + str(snapped(impact, 0.1))
 
 func _on_confirm_pressed() -> void:
 	if selected_theme_id == "":

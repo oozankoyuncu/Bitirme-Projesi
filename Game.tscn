@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://8an48xdxkcty" path="res://scripts/stage_setup_choices_panel.gd" id="13_lvtmh"]
 [ext_resource type="Script" uid="uid://dummysound" path="res://scripts/sound_system_choices_panel.gd" id="14_sound"]
 [ext_resource type="Script" uid="uid://dummytrans" path="res://scripts/transport_coordination_panel.gd" id="15_transport"]
+[ext_resource type="Script" uid="uid://dummydecthem" path="res://scripts/decoration_theme_panel.gd" id="16_dtheme"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -1003,5 +1004,61 @@ layout_mode = 2
 text = "Confirm Schedule"
 
 [node name="BackButton" type="Button" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+layout_mode = 2
+text = "Back"
+
+[node name="DecorationThemePanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("16_dtheme")
+
+[node name="MarginContainer" type="MarginContainer" parent="DecorationThemePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Decoration Theme Decision"
+
+[node name="DescriptionLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Choose a defining aesthetic for your festival! Balance your budget against attendee satisfaction and construction complexity."
+
+[node name="MoneyLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Budget: $0"
+
+[node name="OptionList" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InfoLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Please select a theme from the list..."
+
+[node name="ResultLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonsRow" type="HBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfirmButton" type="Button" parent="DecorationThemePanel/MarginContainer/VBoxContainer/ButtonsRow"]
+layout_mode = 2
+text = "Confirm Selection"
+
+[node name="BackButton" type="Button" parent="DecorationThemePanel/MarginContainer/VBoxContainer/ButtonsRow"]
 layout_mode = 2
 text = "Back"
