@@ -94,8 +94,15 @@
 	  "type": "stage_setup",
 	  "cost": 0,
 	  "duration": 4,
-	  "dependencies": [
-	]
+	  "dependencies": []
+	},
+	{
+	  "id": "sound_system_choices",
+	  "name": "Sound System Choices",
+	  "type": "sound_system",
+	  "cost": 0,
+	  "duration": 4,
+	  "dependencies": []
 	}
 	]
 }

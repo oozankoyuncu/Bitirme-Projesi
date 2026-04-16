@@ -85,6 +85,11 @@ var stage_setup_defs: Array = []
 var selected_stage_setup: Dictionary = {}
 var stage_setup_score: float = 0.0
 
+#Sound System Setup
+var sound_system_defs: Array = []
+var selected_sound_system: Dictionary = {}
+var sound_system_score: float = 0.0
+
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
@@ -121,11 +126,11 @@ func _process(delta: float) -> void:
 
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	load_activities()
 	load_artists()
 	load_stage_setups()
+	load_sound_systems()
 	
 #func to print the HUD text
 func get_hud_text() -> String:
@@ -401,5 +406,35 @@ func choose_stage_setup(stage_data: Dictionary) -> bool:
 	money -= cost
 	selected_stage_setup = stage_data.duplicate(true)
 	stage_setup_score = calculate_stage_impact(stage_data)
+
+	return true
+
+func load_sound_systems() -> void:
+	var file = FileAccess.open("res://data/sound_systems.json", FileAccess.READ)
+	if file == null:
+		print("sound_systems.json açılamadı")
+		return
+
+	var json_text = file.get_as_text()
+	var data = JSON.parse_string(json_text)
+
+	if data == null or not data.has("sound_systems"):
+		print("sound_systems.json parse edilemedi")
+		return
+
+	sound_system_defs = data["sound_systems"]
+
+func calculate_sound_system_impact(system_data: Dictionary) -> float:
+	return (system_data["sound_quality"] * 0.7) / (system_data["technical_skill_level"] * 0.1 + system_data["electricity_consumption"] * 0.1)
+
+func choose_sound_system(system_data: Dictionary) -> bool:
+	var cost: int = system_data["cost"]
+
+	if money < cost:
+		return false
+
+	money -= cost
+	selected_sound_system = system_data.duplicate(true)
+	sound_system_score = calculate_sound_system_impact(system_data)
 
 	return true

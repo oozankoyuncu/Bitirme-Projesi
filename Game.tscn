@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://cuta6qjpotnul" path="res://scripts/volunteer_club_panel.gd" id="11_club"]
 [ext_resource type="Script" uid="uid://s1jp4vvndgib" path="res://scripts/food_vendor_selection_panel.gd" id="12_food"]
 [ext_resource type="Script" uid="uid://8an48xdxkcty" path="res://scripts/stage_setup_choices_panel.gd" id="13_lvtmh"]
+[ext_resource type="Script" uid="uid://dummysound" path="res://scripts/sound_system_choices_panel.gd" id="14_sound"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -893,5 +894,60 @@ layout_mode = 2
 text = "Confirm Selection"
 
 [node name="BackButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+layout_mode = 2
+text = "Back"
+
+[node name="SoundSystemChoicesPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("14_sound")
+
+[node name="MarginContainer" type="MarginContainer" parent="SoundSystemChoicesPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Sound System Choices"
+
+[node name="DescriptionLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Choose one sound system version for your festival. Balance performance, electricity and cost."
+
+[node name="MoneyLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="OptionList" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="InfoLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ResultLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonsRow" type="HBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfirmButton" type="Button" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+layout_mode = 2
+text = "Confirm Selection"
+
+[node name="BackButton" type="Button" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
 layout_mode = 2
 text = "Back"

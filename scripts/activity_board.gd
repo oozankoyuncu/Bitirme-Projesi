@@ -47,6 +47,10 @@ func get_activity_status(activity: Dictionary) -> String:
 	if activity_id == "ticket_pricing":
 		if GameState.week < 4:
 			return "Locked"
+			
+	if activity_id == "sound_system_choices":
+		if GameState.week < 7:
+			return "Locked"
 
 	if not dependencies_completed(activity):
 		return "Locked"
@@ -117,6 +121,12 @@ func start_activity(activity: Dictionary) -> void:
 		
 	if activity_id == "stage_setup_choices":
 		var panel = get_parent().get_node("StageSetupChoicesPanel")
+		panel.show()
+		hide()
+		return
+		
+	if activity_id == "sound_system_choices":
+		var panel = get_parent().get_node("SoundSystemChoicesPanel")
 		panel.show()
 		hide()
 		return
