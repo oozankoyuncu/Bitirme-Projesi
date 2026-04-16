@@ -1,0 +1,49 @@
+{
+  "deliveries": [
+    {
+      "id": "stage_materials",
+      "name": "Stage Infrastructure & Rigging",
+      "type": "stage",
+      "arrival_time": "Morning",
+      "paperwork_status": "Complete",
+      "dependency": "none",
+      "workload": 8
+    },
+    {
+      "id": "sound_system",
+      "name": "Heavy Sound Equipment",
+      "type": "sound",
+      "arrival_time": "Afternoon",
+      "paperwork_status": "Complete",
+      "dependency": "stage_materials",
+      "workload": 5
+    },
+    {
+      "id": "lighting_rig",
+      "name": "Lighting & Effects Systems",
+      "type": "lighting",
+      "arrival_time": "Evening",
+      "paperwork_status": "Complete",
+      "dependency": "stage_materials",
+      "workload": 6
+    },
+    {
+      "id": "decoration_props",
+      "name": "Art Installations & Decoration",
+      "type": "decoration",
+      "arrival_time": "Morning",
+      "paperwork_status": "Missing Documents",
+      "dependency": "none",
+      "workload": 4
+    },
+    {
+      "id": "food_stalls",
+      "name": "Food Vendor Stalls",
+      "type": "food",
+      "arrival_time": "Afternoon",
+      "paperwork_status": "Complete",
+      "dependency": "none",
+      "workload": 3
+    }
+  ]
+}

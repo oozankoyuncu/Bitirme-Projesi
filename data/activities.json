@@ -103,6 +103,22 @@
 	  "cost": 0,
 	  "duration": 4,
 	  "dependencies": []
+	},
+	{
+	  "id": "transport_coordination",
+	  "name": "Transport Coordination",
+	  "type": "transport",
+	  "cost": 0,
+	  "duration": 4,
+	  "dependencies": []
+	},
+	{
+	  "id": "decoration_theme_decision",
+	  "name": "Decoration Theme Decision",
+	  "type": "decoration_theme",
+	  "cost": 0,
+	  "duration": 2,
+	  "dependencies": []
 	}
 	]
 }

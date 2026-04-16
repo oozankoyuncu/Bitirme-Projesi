@@ -90,6 +90,15 @@ var sound_system_defs: Array = []
 var selected_sound_system: Dictionary = {}
 var sound_system_score: float = 0.0
 
+# Transport Coordination
+var transport_delivery_defs: Array = []
+var transport_schedule: Dictionary = {}
+
+# Decoration Theme
+var decoration_theme_defs: Array = []
+var selected_decoration_theme: Dictionary = {}
+var decoration_theme_score: float = 0.0
+
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
@@ -131,6 +140,8 @@ func _ready() -> void:
 	load_artists()
 	load_stage_setups()
 	load_sound_systems()
+	load_transport_deliveries()
+	load_decoration_themes()
 	
 #func to print the HUD text
 func get_hud_text() -> String:
@@ -436,5 +447,40 @@ func choose_sound_system(system_data: Dictionary) -> bool:
 	money -= cost
 	selected_sound_system = system_data.duplicate(true)
 	sound_system_score = calculate_sound_system_impact(system_data)
+
+	return true
+
+func load_transport_deliveries() -> void:
+	var file = FileAccess.open("res://data/transport_deliveries.json", FileAccess.READ)
+	if file == null: return
+	var text = file.get_as_text()
+	var data = JSON.parse_string(text)
+	if data and data.has("deliveries"):
+		transport_delivery_defs = data["deliveries"]
+
+func save_transport_schedule(schedule: Dictionary) -> void:
+	transport_schedule = schedule.duplicate(true)
+	complete_activity("transport_coordination")
+
+func load_decoration_themes() -> void:
+	var file = FileAccess.open("res://data/decoration_themes.json", FileAccess.READ)
+	if file == null: return
+	var text = file.get_as_text()
+	var data = JSON.parse_string(text)
+	if data and data.has("decoration_themes"):
+		decoration_theme_defs = data["decoration_themes"]
+
+func calculate_decoration_theme_impact(theme: Dictionary) -> float:
+	return (theme["satisfaction_impact"] * 0.6) / ((theme["complexity"] + theme["space_impact"]) * 0.4)
+
+func choose_decoration_theme(theme: Dictionary) -> bool:
+	var cost: int = theme["cost"]
+
+	if money < cost:
+		return false
+
+	money -= cost
+	selected_decoration_theme = theme.duplicate(true)
+	decoration_theme_score = calculate_decoration_theme_impact(theme)
 
 	return true

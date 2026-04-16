@@ -1,0 +1,31 @@
+{
+  "decoration_themes": [
+    {
+      "id": "minimalist_chic",
+      "name": "Minimalist Chic",
+      "cost": 1500,
+      "setup_duration": 1,
+      "satisfaction_impact": 5,
+      "complexity": 2,
+      "space_impact": 2
+    },
+    {
+      "id": "boho_aesthetic",
+      "name": "Boho Nostalgic Aesthetic",
+      "cost": 3200,
+      "setup_duration": 3,
+      "satisfaction_impact": 7,
+      "complexity": 5,
+      "space_impact": 4
+    },
+    {
+      "id": "neon_cyberpunk",
+      "name": "Neon Cyberpunk Future",
+      "cost": 6000,
+      "setup_duration": 5,
+      "satisfaction_impact": 10,
+      "complexity": 8,
+      "space_impact": 7
+    }
+  ]
+}

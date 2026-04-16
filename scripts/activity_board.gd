@@ -52,6 +52,14 @@ func get_activity_status(activity: Dictionary) -> String:
 		if GameState.week < 7:
 			return "Locked"
 
+	if activity_id == "transport_coordination":
+		if GameState.week < 7:
+			return "Locked"
+
+	if activity_id == "decoration_theme_decision":
+		if GameState.week < 8:
+			return "Locked"
+
 	if not dependencies_completed(activity):
 		return "Locked"
 
@@ -127,6 +135,18 @@ func start_activity(activity: Dictionary) -> void:
 		
 	if activity_id == "sound_system_choices":
 		var panel = get_parent().get_node("SoundSystemChoicesPanel")
+		panel.show()
+		hide()
+		return
+		
+	if activity_id == "transport_coordination":
+		var panel = get_parent().get_node("TransportCoordinationPanel")
+		panel.show()
+		hide()
+		return
+
+	if activity_id == "decoration_theme_decision":
+		var panel = get_parent().get_node("DecorationThemePanel")
 		panel.show()
 		hide()
 		return
