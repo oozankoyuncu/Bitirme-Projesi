@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://dummysound" path="res://scripts/sound_system_choices_panel.gd" id="14_sound"]
 [ext_resource type="Script" uid="uid://dummytrans" path="res://scripts/transport_coordination_panel.gd" id="15_transport"]
 [ext_resource type="Script" uid="uid://dummydecthem" path="res://scripts/decoration_theme_panel.gd" id="16_dtheme"]
+[ext_resource type="Script" path="res://scripts/festival_cleaning_security_panel.gd" id="17_clean"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -71,7 +72,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_sb48q")
-metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="TeamAssignmentPanel"]
 layout_mode = 1
@@ -80,53 +80,136 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(0, 40)
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Team Assignment"
-
-[node name="MemberList" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "TEAM ASSIGNMENT"
+
+[node name="SubTitleLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Select your crew for the event"
+
+[node name="HSeparator" type="HSeparator" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CommLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="MainContent" type="HBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="LeftScroll" type="ScrollContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="MemberList" type="GridContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/LeftScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 2
+
+[node name="RightPanel" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="StatsPanel" type="PanelContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="StatsTitle" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "TEAM STATS"
+
+[node name="CommBox" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CommLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/CommBox"]
 layout_mode = 2
 text = "Communication"
 
-[node name="CommBar" type="ProgressBar" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="CommBar" type="ProgressBar" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/CommBox"]
 layout_mode = 2
 max_value = 10.0
 
-[node name="SpeedLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="SpeedBox" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/SpeedBox"]
 layout_mode = 2
 text = "Speed"
 
-[node name="SpeedBar" type="ProgressBar" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="SpeedBar" type="ProgressBar" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/SpeedBox"]
 layout_mode = 2
 max_value = 10.0
 
-[node name="ReliabilityLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="RelBox" type="VBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ReliabilityLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/RelBox"]
 layout_mode = 2
 text = "Reliability"
 
-[node name="ReliabilityBar" type="ProgressBar" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="ReliabilityBar" type="ProgressBar" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/RelBox"]
 layout_mode = 2
 max_value = 10.0
 
-[node name="ConfirmButton" type="Button" parent="TeamAssignmentPanel"]
-layout_mode = 0
-offset_left = 6.0
-offset_top = 612.0
-offset_right = 118.0
-offset_bottom = 643.0
-text = "Confirm"
+[node name="CostPanel" type="PanelContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Total Cost:"
+
+[node name="TotalCostLabel" type="Label" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "$0"
+
+[node name="ConfirmButton" type="Button" parent="TeamAssignmentPanel/MarginContainer/VBoxContainer/MainContent/RightPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "CONFIRM SELECTION"
 
 [node name="InitialFacilityLayoutPanel" type="Panel" parent="."]
 visible = false
@@ -138,80 +221,204 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5_t88pq")
 
-[node name="ConfirmButton" type="Button" parent="InitialFacilityLayoutPanel"]
-layout_mode = 0
-offset_left = 320.0
-offset_top = 432.0
-offset_right = 499.0
-offset_bottom = 484.0
-text = "Confirm"
+[node name="MarginContainer" type="MarginContainer" parent="InitialFacilityLayoutPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
-[node name="TitleLabel" type="Label" parent="InitialFacilityLayoutPanel"]
-layout_mode = 0
-offset_left = 5.0
-offset_top = 25.0
-offset_right = 236.0
-offset_bottom = 48.0
-text = "Initial Facility Layout Mapping"
+[node name="VBoxContainer" type="VBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="MapArea" type="GridContainer" parent="InitialFacilityLayoutPanel"]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 52.0
-offset_right = 354.0
-offset_bottom = 308.0
+[node name="Header" type="HBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "SITE PLANNING & LOGISTICS"
+
+[node name="InfoButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="Palette" type="VBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette"]
+layout_mode = 2
+text = "CONSTRUCTION PALETTE"
+horizontal_alignment = 1
+
+[node name="PlacementButtons" type="VBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="StageButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette/PlacementButtons"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "STAGE"
+
+[node name="FoodButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette/PlacementButtons"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "FOOD VENDOR"
+
+[node name="ClubButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette/PlacementButtons"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "CLUB STAND"
+
+[node name="CenterMap" type="CenterContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MapArea" type="GridContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap"]
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
 columns = 2
 
-[node name="AreaA" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaA" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
 layout_mode = 2
 text = "Area A"
 
-[node name="AreaB" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaB" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
 layout_mode = 2
 text = "Area B"
 
-[node name="AreaC" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaC" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
 layout_mode = 2
 text = "Area C"
 
-[node name="AreaD" type="Button" parent="InitialFacilityLayoutPanel/MapArea"]
+[node name="AreaD" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
 layout_mode = 2
 text = "Area D"
 
-[node name="AreaInfoLabel" type="Label" parent="InitialFacilityLayoutPanel"]
-layout_mode = 0
-offset_left = 338.0
-offset_top = 43.0
-offset_right = 1087.0
-offset_bottom = 274.0
-
-[node name="PlacementButtons" type="HBoxContainer" parent="InitialFacilityLayoutPanel"]
-layout_mode = 0
-offset_left = 7.0
-offset_top = 348.0
-offset_right = 244.0
-offset_bottom = 563.0
-alignment = 1
-
-[node name="StageButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons"]
+[node name="RightDetails" type="VBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
-text = "Stage"
+theme_override_constants/separation = 15
 
-[node name="FoodButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons"]
+[node name="DetailsPanel" type="PanelContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails"]
 layout_mode = 2
-text = "Food"
+size_flags_vertical = 3
 
-[node name="ClubButton" type="Button" parent="InitialFacilityLayoutPanel/PlacementButtons"]
+[node name="MarginContainer" type="MarginContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel"]
 layout_mode = 2
-text = "Club"
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 
-[node name="BackButton" type="Button" parent="InitialFacilityLayoutPanel"]
-layout_mode = 0
-offset_left = 538.0
-offset_top = 431.0
-offset_right = 733.0
-offset_bottom = 486.0
-text = "Back"
+[node name="VBoxContainer" type="VBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "AREA DETAILS"
+horizontal_alignment = 1
+
+[node name="AreaInfoLabel" type="Label" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Select an area to view details"
+autowrap_mode = 3
+
+[node name="WarningLabel" type="Label" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+autowrap_mode = 3
+
+[node name="Footer" type="HBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 2
+
+[node name="BackButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 45)
+layout_mode = 2
+text = "BACK"
+
+[node name="ConfirmButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(200, 45)
+layout_mode = 2
+text = "CONFIRM PLAN"
+
+[node name="GuidePanel" type="PanelContainer" parent="InitialFacilityLayoutPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="InitialFacilityLayoutPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE"
+
+[node name="CloseGuideButton" type="Button" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+autowrap_mode = 3
 
 [node name="EmergencyTrainingPanel" type="Panel" parent="."]
 visible = false
@@ -230,56 +437,203 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Emergency Training"
-
-[node name="TimeRemainingLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="MoneyLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "EMERGENCY TRAINING ACADEMY"
+
+[node name="InfoButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="MemberList" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="MainContent" type="HBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="ProgramsColumn" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="ProgramTitle" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn"]
+layout_mode = 2
+text = "TRAINING PROGRAMS"
+horizontal_alignment = 1
+
+[node name="TrainingButtons" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ElectricalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "ELECTRICAL FAILURE"
+
+[node name="CrowdButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "CROWD CONTROL"
+
+[node name="MedicalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "MEDICAL RESPONSE"
+
+[node name="CrisisButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "CRISIS MGMT"
+
+[node name="MembersColumn" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="MembersTitle" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/MembersColumn"]
+layout_mode = 2
+text = "TEAM ASSIGNMENT"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/MembersColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MemberList" type="GridContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/MembersColumn/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 1
+
+[node name="StatusColumn" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="StatusTitle" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/StatusColumn"]
+layout_mode = 2
+text = "ACTIVE SESSIONS"
+horizontal_alignment = 1
+
+[node name="StatusPanel" type="PanelContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/StatusColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="TrainingButtons" type="HBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="ActiveTrainingsLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "No active training"
+autowrap_mode = 3
+
+[node name="Footer" type="HBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="TimerBox" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimeRemainingLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Footer/TimerBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Training Window: 240s"
+
+[node name="ProgressBar" type="ProgressBar" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Footer/TimerBox"]
+visible = false
 layout_mode = 2
 
-[node name="ElectricalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
-layout_mode = 2
-text = "Electric"
-
-[node name="CrowdButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
-layout_mode = 2
-text = "Crowd"
-
-[node name="MedicalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
-layout_mode = 2
-text = "Medical"
-
-[node name="WeatherButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/TrainingButtons"]
-layout_mode = 2
-text = "Weather"
-
-[node name="SelectedTrainingLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="MoneyBox" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Footer"]
 layout_mode = 2
 
-[node name="ActiveTrainingsLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="MoneyLabel" type="Label" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Footer/MoneyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "$1,000,000"
+
+[node name="BackButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+text = "FINISH"
+
+[node name="GuidePanel" type="PanelContainer" parent="EmergencyTrainingPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="EmergencyTrainingPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EmergencyTrainingPanel/GuidePanel/MarginContainer"]
 layout_mode = 2
 
-[node name="StartTrainingButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="EmergencyTrainingPanel/GuidePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Start Training"
 
-[node name="BackButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="EmergencyTrainingPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-text = "Back"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE"
+
+[node name="CloseGuideButton" type="Button" parent="EmergencyTrainingPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="EmergencyTrainingPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="EmergencyTrainingPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="EmergencyTrainingPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+autowrap_mode = 3
 
 [node name="SponsorManagementPanel" type="Panel" parent="."]
 visible = false
@@ -292,37 +646,396 @@ grow_vertical = 2
 script = ExtResource("7_3mrqo")
 
 [node name="MarginContainer" type="MarginContainer" parent="SponsorManagementPanel"]
-layout_mode = 0
-offset_top = 25.0
-offset_right = 1148.0
-offset_bottom = 646.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="ResultLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Sponsor Management"
-
-[node name="TimeLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="MoneyLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "SPONSOR NEGOTIATIONS"
+
+[node name="InfoButton" type="Button" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="SponsorList" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+[node name="MainContent" type="HBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="LeftNegotiation" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/LeftNegotiation"]
+layout_mode = 2
+text = "PROPOSAL STATUS"
+horizontal_alignment = 1
+
+[node name="ResultLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/LeftNegotiation"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Waiting for proposal..."
+autowrap_mode = 3
+
+[node name="AttemptsLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/LeftNegotiation"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+text = "Attempts Left: 3"
+horizontal_alignment = 1
+
+[node name="CheckButton" type="Button" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/LeftNegotiation"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "NEGOTIATE DEAL"
+
+[node name="CenterSponsors" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="ListTitle" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/CenterSponsors"]
+layout_mode = 2
+text = "AVALIABLE SPONSORS"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/CenterSponsors"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SponsorList" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/CenterSponsors/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="RightSummary" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="SummaryTitle" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/RightSummary"]
+layout_mode = 2
+text = "SIGNED DEALS"
+horizontal_alignment = 1
+
+[node name="SummaryPanel" type="PanelContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/RightSummary"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/RightSummary/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/RightSummary/SummaryPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="ChartContainer" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+[node name="SignedListLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/MainContent/RightSummary/SummaryPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "No sponsors signed yet."
+autowrap_mode = 3
+
+[node name="Footer" type="HBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="MoneyBox" type="VBoxContainer" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MoneyLabel" type="Label" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/Footer/MoneyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "Budget: 1,000,000 TL"
+
+[node name="BackButton" type="Button" parent="SponsorManagementPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "BACK"
+
+[node name="GuidePanel" type="PanelContainer" parent="SponsorManagementPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SponsorManagementPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SponsorManagementPanel/GuidePanel/MarginContainer"]
 layout_mode = 2
 
-[node name="CheckButton" type="Button" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="SponsorManagementPanel/GuidePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Select Sponsor"
 
-[node name="BackButton" type="Button" parent="SponsorManagementPanel/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SponsorManagementPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-text = "Back"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE"
+
+[node name="CloseGuideButton" type="Button" parent="SponsorManagementPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="SponsorManagementPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SponsorManagementPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="SponsorManagementPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="FestivalCleaningSecurityPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("17_clean")
+
+[node name="MarginContainer" type="MarginContainer" parent="FestivalCleaningSecurityPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "FESTIVAL CLEANING & SECURITY"
+
+[node name="InfoButton" type="Button" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="LeftPalette" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/LeftPalette"]
+layout_mode = 2
+text = "CLEANING CREWS"
+horizontal_alignment = 1
+
+[node name="CleaningList" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/LeftPalette"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CenterDashboard" type="PanelContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 0
+
+[node name="DashboardTitle" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+text = "SELECTED TEAMS"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+
+[node name="SelectedTeamsScroll" type="ScrollContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/SelectedTeamsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SelectedTeamsList" type="GridContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/SelectedTeamsScroll/CenterContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 2
+
+[node name="HSeparator2" type="HSeparator" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Operational Excellence: 0.0"
+horizontal_alignment = 1
+
+[node name="ResultLabel" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+text = "Awaiting deployment..."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="RightPalette" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+text = "SECURITY TEAMS"
+horizontal_alignment = 1
+
+[node name="SecurityList" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Footer" type="HBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="SpaceBox" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpaceLabel" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Footer/SpaceBox"]
+layout_mode = 2
+text = "Site Space: 0 / 60 Units"
+
+[node name="SpaceBar" type="ProgressBar" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Footer/SpaceBox"]
+layout_mode = 2
+
+[node name="MoneyBox" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+
+[node name="MoneyLabel" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Footer/MoneyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Budget: $1,000,000"
+
+[node name="ConfirmButton" type="Button" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "CONFIRM DEPLOYMENT"
+
+[node name="BackButton" type="Button" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+text = "BACK"
+
+[node name="GuidePanel" type="PanelContainer" parent="FestivalCleaningSecurityPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="FestivalCleaningSecurityPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/GuidePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="FestivalCleaningSecurityPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FestivalCleaningSecurityPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE"
+
+[node name="CloseGuideButton" type="Button" parent="FestivalCleaningSecurityPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="FestivalCleaningSecurityPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="FestivalCleaningSecurityPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="FestivalCleaningSecurityPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+autowrap_mode = 3
 
 [node name="EntertainmentLineupPanel" type="Panel" parent="."]
 visible = false
@@ -846,6 +1559,7 @@ layout_mode = 2
 text = "Confirm Selection"
 
 [node name="StageSetupChoicesPanel" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -861,43 +1575,199 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Stage Setup Choices"
-
-[node name="DescriptionLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Choose one stage version for your festival. Balance cost, impact, and setup duration."
-
-[node name="MoneyLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="OptionList" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "STAGE INFRASTRUCTURE & SETUPS"
+
+[node name="InfoButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="CenterDashboard" type="PanelContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PreviewTitle" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "STAGE INFRASTRUCTURE CATALOG"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
 size_flags_vertical = 3
 
-[node name="InfoLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="StageList" type="HBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="DurationLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+text = "Setup Duration: -- Weeks"
+horizontal_alignment = 1
+
+[node name="RightPalette" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+text = "METRICS ANALYSIS"
+horizontal_alignment = 1
+
+[node name="StatsContainer" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="SizeStat" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer"]
 layout_mode = 2
 
-[node name="ResultLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SizeStat"]
+layout_mode = 2
+text = "Physical Scale"
+
+[node name="ProgressBar" type="ProgressBar" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SizeStat"]
+layout_mode = 2
+max_value = 10.0
+
+[node name="LightingStat" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer"]
 layout_mode = 2
 
-[node name="ButtonsRow" type="HBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/LightingStat"]
+layout_mode = 2
+text = "Lighting Complexity"
+
+[node name="ProgressBar" type="ProgressBar" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/LightingStat"]
+layout_mode = 2
+max_value = 10.0
+
+[node name="OperationStat" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer"]
 layout_mode = 2
 
-[node name="ConfirmButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="Label" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/OperationStat"]
 layout_mode = 2
-text = "Confirm Selection"
+text = "Technical Operations"
 
-[node name="BackButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="ProgressBar" type="ProgressBar" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/OperationStat"]
 layout_mode = 2
-text = "Back"
+max_value = 10.0
+
+[node name="ResultLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator2" type="HSeparator" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="MoneyBox" type="VBoxContainer" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MoneyLabel" type="Label" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/Footer/MoneyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+text = "Budget: 400,000 TL"
+
+[node name="ConfirmButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "CONFIRM SELECTION"
+
+[node name="BackButton" type="Button" parent="StageSetupChoicesPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+text = "BACK"
+
+[node name="GuidePanel" type="PanelContainer" parent="StageSetupChoicesPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="StageSetupChoicesPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StageSetupChoicesPanel/GuidePanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Header" type="HBoxContainer" parent="StageSetupChoicesPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="StageSetupChoicesPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE: STAGE SETUP"
+
+[node name="CloseGuideButton" type="Button" parent="StageSetupChoicesPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="StageSetupChoicesPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="StageSetupChoicesPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="StageSetupChoicesPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+autowrap_mode = 3
 
 [node name="SoundSystemChoicesPanel" type="Panel" parent="."]
 visible = false
@@ -916,43 +1786,202 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Sound System Choices"
-
-[node name="DescriptionLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Choose one sound system version for your festival. Balance performance, electricity and cost."
-
-[node name="MoneyLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="OptionList" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "AUDIO INFRASTRUCTURE & ACOUSTICS"
+
+[node name="InfoButton" type="Button" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CatalogSection" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/CatalogSection"]
+layout_mode = 2
+text = "ACOUSTIC CATALOG"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/CatalogSection"]
+custom_minimum_size = Vector2(0, 240)
+layout_mode = 2
 size_flags_vertical = 3
 
-[node name="InfoLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="SystemList" type="HBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/CatalogSection/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DetailsArea" type="PanelContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="PreviewTitle" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Select a Sound Configuration"
+horizontal_alignment = 1
+
+[node name="StatsGrid" type="HBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="QualityStat" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid/QualityStat"]
+layout_mode = 2
+text = "Acoustic Quality"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid/QualityStat"]
+layout_mode = 2
+max_value = 10.0
+
+[node name="SkillStat" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid/SkillStat"]
+layout_mode = 2
+text = "Technical Dexterity"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid/SkillStat"]
+layout_mode = 2
+max_value = 10.0
+
+[node name="GridLoadStat" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid/GridLoadStat"]
+layout_mode = 2
+text = "Operational Grid Load"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/StatsGrid/GridLoadStat"]
+layout_mode = 2
+max_value = 10.0
+
+[node name="InfoRow" type="HBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="SetupLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/DetailsArea/VBox/InfoRow"]
+layout_mode = 2
+text = "Installation Time: --"
+horizontal_alignment = 1
 
 [node name="ResultLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+horizontal_alignment = 1
 
-[node name="ButtonsRow" type="HBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+[node name="Footer" type="HBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="MoneyBox" type="VBoxContainer" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MoneyLabel" type="Label" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/Footer/MoneyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "Budget: 1,000,000 TL"
+
+[node name="ConfirmButton" type="Button" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
+text = "DEPLOY SYSTEM"
+
+[node name="BackButton" type="Button" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+text = "BACK"
+
+[node name="GuidePanel" type="PanelContainer" parent="SoundSystemChoicesPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -300.0
+offset_right = 450.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SoundSystemChoicesPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SoundSystemChoicesPanel/GuidePanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Header" type="HBoxContainer" parent="SoundSystemChoicesPanel/GuidePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ConfirmButton" type="Button" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="Label" type="Label" parent="SoundSystemChoicesPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-text = "Confirm Selection"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE: SOUND SYSTEMS"
 
-[node name="BackButton" type="Button" parent="SoundSystemChoicesPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="CloseGuideButton" type="Button" parent="SoundSystemChoicesPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(35, 35)
 layout_mode = 2
-text = "Back"
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="SoundSystemChoicesPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SoundSystemChoicesPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="SoundSystemChoicesPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(850, 0)
+layout_mode = 2
+autowrap_mode = 3
 
 [node name="TransportCoordinationPanel" type="Panel" parent="."]
 visible = false
@@ -971,41 +2000,225 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 60
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Transport Coordination"
 
-[node name="DescriptionLabel" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Schedule which deliveries arrive in Week 8 or Week 9. Balance your daily workload and avoid breaking dependencies!"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="OptionList" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="TitleLabel" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "TRANSPORT COORDINATION CENTER"
+
+[node name="InfoButton" type="Button" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="LeftManifest" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/LeftManifest"]
+layout_mode = 2
+text = "DELIVERY MANIFEST"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/LeftManifest"]
+layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ResultLabel" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
+[node name="ManifestList" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/LeftManifest/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="CenterTimeline" type="PanelContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimelineContent" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Label" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent"]
+layout_mode = 2
+text = "LOGISTICS TIMELINE VIEW"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent"]
 layout_mode = 2
 
-[node name="ButtonsRow" type="HBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
+[node name="TimelineGrid" type="GridContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Week8Box" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent/TimelineGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent/TimelineGrid/Week8Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "WEEK 08"
+horizontal_alignment = 1
+
+[node name="W8Slots" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent/TimelineGrid/Week8Box"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 5
+
+[node name="Week9Box" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent/TimelineGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent/TimelineGrid/Week9Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "WEEK 09"
+horizontal_alignment = 1
+
+[node name="W9Slots" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/CenterTimeline/TimelineContent/TimelineGrid/Week9Box"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 5
+
+[node name="RightAdvisor" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="AdvisorTitle" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/RightAdvisor"]
+layout_mode = 2
+text = "OPERATIONAL RISK ANALYSIS"
+horizontal_alignment = 1
+
+[node name="RiskBox" type="PanelContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/RightAdvisor"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/RightAdvisor/RiskBox"]
 layout_mode = 2
 
-[node name="ConfirmButton" type="Button" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="Margin" type="MarginContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/RightAdvisor/RiskBox/VBox"]
 layout_mode = 2
-text = "Confirm Schedule"
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="BackButton" type="Button" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="RiskLabel" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/RightAdvisor/RiskBox/VBox/Margin"]
 layout_mode = 2
-text = "Back"
+size_flags_vertical = 3
+text = "Analying logistics path..."
+autowrap_mode = 3
+
+[node name="EfficiencyScore" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/MainContent/RightAdvisor"]
+layout_mode = 2
+text = "Coordination Efficiency: 0%"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="InfoBox" type="VBoxContainer" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatusLabel" type="Label" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/Footer/InfoBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+text = "System: Awaiting final schedule synchronization."
+
+[node name="ConfirmButton" type="Button" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+text = "FINALIZE LOGISTICS PLAN"
+
+[node name="BackButton" type="Button" parent="TransportCoordinationPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+text = "BACK"
+
+[node name="GuidePanel" type="PanelContainer" parent="TransportCoordinationPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -300.0
+offset_right = 450.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TransportCoordinationPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TransportCoordinationPanel/GuidePanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Header" type="HBoxContainer" parent="TransportCoordinationPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TransportCoordinationPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE: TRANSPORT COORDINATION"
+
+[node name="CloseGuideButton" type="Button" parent="TransportCoordinationPanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="TransportCoordinationPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TransportCoordinationPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="TransportCoordinationPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+autowrap_mode = 3
 
 [node name="DecorationThemePanel" type="Panel" parent="."]
 visible = false
@@ -1024,41 +2237,206 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Decoration Theme Decision"
 
-[node name="DescriptionLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-text = "Choose a defining aesthetic for your festival! Balance your budget against attendee satisfaction and construction complexity."
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "FESTIVAL DECORATION & THEME"
 
-[node name="MoneyLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+[node name="InfoButton" type="Button" parent="DecorationThemePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-text = "Budget: $0"
+text = "?"
 
-[node name="OptionList" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="LeftPalette" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/LeftPalette"]
+layout_mode = 2
+text = "THEME CATALOG"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/LeftPalette"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="InfoLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+[node name="ThemeList" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/LeftPalette/ScrollContainer"]
 layout_mode = 2
-text = "Please select a theme from the list..."
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
 
-[node name="ResultLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+[node name="CenterDashboard" type="PanelContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PreviewTitle" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Select a Theme"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+text = "Choose a decoration style that reflects your festival's identity."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SynergyScoreLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+text = "Synergy Score: 0.0"
+horizontal_alignment = 1
+
+[node name="RightPalette" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ImpactTitle" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+text = "IMPACT ANALYSIS"
+horizontal_alignment = 1
+
+[node name="StatsContainer" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="SatisfactionStats" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer"]
 layout_mode = 2
 
-[node name="ButtonsRow" type="HBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SatisfactionStats"]
+layout_mode = 2
+text = "Satisfaction Impact"
+
+[node name="ProgressBar" type="ProgressBar" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SatisfactionStats"]
+layout_mode = 2
+max_value = 10.0
+
+[node name="ComplexityStats" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer"]
 layout_mode = 2
 
-[node name="ConfirmButton" type="Button" parent="DecorationThemePanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="Label" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/ComplexityStats"]
 layout_mode = 2
-text = "Confirm Selection"
+text = "Construction Complexity"
 
-[node name="BackButton" type="Button" parent="DecorationThemePanel/MarginContainer/VBoxContainer/ButtonsRow"]
+[node name="ProgressBar" type="ProgressBar" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/ComplexityStats"]
 layout_mode = 2
-text = "Back"
+max_value = 10.0
+
+[node name="SpaceStats" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SpaceStats"]
+layout_mode = 2
+text = "Space Requirement"
+
+[node name="ProgressBar" type="ProgressBar" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SpaceStats"]
+layout_mode = 2
+max_value = 10.0
+
+[node name="ResultLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Footer" type="HBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="MoneyBox" type="VBoxContainer" parent="DecorationThemePanel/MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MoneyLabel" type="Label" parent="DecorationThemePanel/MarginContainer/VBoxContainer/Footer/MoneyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "Budget: 1,000,000 TL"
+
+[node name="ConfirmButton" type="Button" parent="DecorationThemePanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "CONFIRM THEME"
+
+[node name="BackButton" type="Button" parent="DecorationThemePanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+text = "BACK"
+
+[node name="GuidePanel" type="PanelContainer" parent="DecorationThemePanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="DecorationThemePanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DecorationThemePanel/GuidePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="DecorationThemePanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DecorationThemePanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE"
+
+[node name="CloseGuideButton" type="Button" parent="DecorationThemePanel/GuidePanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="DecorationThemePanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DecorationThemePanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="DecorationThemePanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+autowrap_mode = 3

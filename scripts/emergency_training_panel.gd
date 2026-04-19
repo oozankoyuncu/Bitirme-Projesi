@@ -5,91 +5,176 @@ var selected_training_type: String = ""
 var training_defs = {
 	"electrical_failure_response": {
 		"display_name": "Electrical Failure Response",
-		"duration": 5.0,
-		"cost_per_member": 100
+		"duration": 60.0,
+		"cost_per_member": 100,
+		"description": "Handle power outages and technical failures."
 	},
 	"crowd_control": {
-		"display_name": "Crowd Control",
+		"display_name": "Crowd Control & Evacuation",
 		"duration": 120.0,
-		"cost_per_member": 80
+		"cost_per_member": 80,
+		"description": "Manage large crowds and safe evacuations."
 	},
 	"medical_first_response": {
 		"display_name": "Medical First Response",
-		"duration": 150.0,
-		"cost_per_member": 90
+		"duration": 90.0,
+		"cost_per_member": 90,
+		"description": "Respond to medical emergencies and first aid."
 	},
-	"severe_weather_protocols": {
-		"display_name": "Severe Weather Protocols",
-		"duration": 200.0,
-		"cost_per_member": 110
+	"crisis_management": {
+		"display_name": "Crisis & Risk Management",
+		"duration": 150.0,
+		"cost_per_member": 110,
+		"description": "Handle unforeseen problems and high pressure."
 	}
 }
 
+# UI References
+@onready var time_label: Label = $MarginContainer/VBoxContainer/Footer/TimerBox/TimeRemainingLabel
+@onready var money_label: Label = $MarginContainer/VBoxContainer/Footer/MoneyBox/MoneyLabel
+@onready var member_list_container: GridContainer = $MarginContainer/VBoxContainer/MainContent/MembersColumn/ScrollContainer/MemberList
+@onready var active_trainings_label: Label = $MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer/VBoxContainer/ActiveTrainingsLabel
+@onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
 
-@onready var time_label: Label = $MarginContainer/VBoxContainer/TimeRemainingLabel
-@onready var money_label: Label = $MarginContainer/VBoxContainer/MoneyLabel
-@onready var selected_training_label: Label = $MarginContainer/VBoxContainer/SelectedTrainingLabel
-@onready var active_trainings_label: Label = $MarginContainer/VBoxContainer/ActiveTrainingsLabel
-@onready var start_button: Button = $MarginContainer/VBoxContainer/StartTrainingButton
-@onready var back_button: Button = $MarginContainer/VBoxContainer/BackButton
-@onready var member_list: VBoxContainer = $MarginContainer/VBoxContainer/MemberList
+@onready var elec_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/ElectricalButton
+@onready var crowd_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/CrowdButton
+@onready var med_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/MedicalButton
+@onready var crisis_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/CrisisButton
+
+@onready var info_btn: Button = $MarginContainer/VBoxContainer/Header/InfoButton
+@onready var guide_panel: PanelContainer = $GuidePanel
+@onready var guide_label: Label = $GuidePanel/MarginContainer/VBoxContainer/ScrollContainer/GuideLabel
+@onready var close_guide_btn: Button = $GuidePanel/MarginContainer/VBoxContainer/Header/CloseGuideButton
 
 func _ready() -> void:
-	$MarginContainer/VBoxContainer/TrainingButtons/ElectricalButton.pressed.connect(func(): _select_training("electrical_failure_response"))
-	$MarginContainer/VBoxContainer/TrainingButtons/CrowdButton.pressed.connect(func(): _select_training("crowd_control"))
-	$MarginContainer/VBoxContainer/TrainingButtons/MedicalButton.pressed.connect(func(): _select_training("medical_first_response"))
-	$MarginContainer/VBoxContainer/TrainingButtons/WeatherButton.pressed.connect(func(): _select_training("severe_weather_protocols"))
+	# Program Connections
+	elec_btn.pressed.connect(func(): _on_program_selected("electrical_failure_response", elec_btn))
+	crowd_btn.pressed.connect(func(): _on_program_selected("crowd_control", crowd_btn))
+	med_btn.pressed.connect(func(): _on_program_selected("medical_first_response", med_btn))
+	crisis_btn.pressed.connect(func(): _on_program_selected("crisis_management", crisis_btn))
 
-	start_button.pressed.connect(_on_start_training_pressed)
 	back_button.pressed.connect(_on_back_pressed)
+	info_btn.pressed.connect(func(): guide_panel.show())
+	close_guide_btn.pressed.connect(func(): guide_panel.hide())
 
-
+	_setup_guide_text()
+	_setup_ui_styles()
+	
 	if not GameState.emergency_training_phase_active:
 		GameState.start_emergency_training_phase()
-	
-
-	_refresh_ui()
 
 func _process(_delta: float) -> void:
 	_refresh_ui()
 
-func create_member_checkboxes() -> void:
-	print("member_list = ", member_list)
-	print("selected_team = ", GameState.selected_team)
+func _setup_ui_styles() -> void:
+	var main_style = StyleBoxFlat.new()
+	main_style.bg_color = Color(0.02, 0.05, 0.1, 0.95)
+	main_style.border_width_left = 4
+	main_style.border_color = Color(0.1, 0.4, 0.8) # Academy Blue
+	add_theme_stylebox_override("panel", main_style)
 
-	for child in member_list.get_children():
+	var status_style = StyleBoxFlat.new()
+	status_style.bg_color = Color(0.1, 0.12, 0.15, 0.8)
+	status_style.border_width_left = 1
+	status_style.border_color = Color(0.2, 0.3, 0.5)
+	$MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel.add_theme_stylebox_override("panel", status_style)
+
+	refresh_member_list()
+
+func refresh_member_list() -> void:
+	for child in member_list_container.get_children():
 		child.queue_free()
 
 	for member in GameState.selected_team:
-		var checkbox := CheckBox.new()
-		checkbox.text = member["name"]
-		checkbox.set_meta("member_data", member)
-		member_list.add_child(checkbox)
-		print("eklendi: ", checkbox.text)
+		var card = _create_member_card(member)
+		member_list_container.add_child(card)
 
-	print("child count = ", member_list.get_child_count())
+func _create_member_card(member: Dictionary) -> PanelContainer:
+	var card = PanelContainer.new()
+	card.custom_minimum_size = Vector2(0, 70)
+	
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.15, 0.18, 0.25, 0.7)
+	style.corner_radius_top_left = 5
+	style.corner_radius_bottom_left = 5
+	card.add_theme_stylebox_override("panel", style)
 
-func get_selected_member() -> Dictionary:
-	for child in member_list.get_children():
-		if child is CheckBox and child.button_pressed:
-			return child.get_meta("member_data")
-	return {}
+	var hbox = HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 15)
+	card.add_child(hbox)
 
-func _select_training(training_type: String) -> void:
-	selected_training_type = training_type
-	selected_training_label.text = "Selected Training: " + training_defs[training_type]["display_name"]
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_right", 10)
+	hbox.add_child(margin)
 
-func _on_start_training_pressed() -> void:
-	var member := get_selected_member()
+	var v_info = VBoxContainer.new()
+	v_info.size_flags_horizontal = SIZE_EXPAND_FILL
+	margin.add_child(v_info)
 
-	if member.is_empty():
-		print("Bir üye seç")
-		return
+	var name_lbl = Label.new()
+	name_lbl.text = member["name"]
+	name_lbl.add_theme_font_size_override("font_size", 18)
+	v_info.add_child(name_lbl)
 
-	if selected_training_type == "":
-		print("Bir eğitim seç")
-		return
+	# Training Load Progress
+	var load_box = HBoxContainer.new()
+	v_info.add_child(load_box)
 
+	var pbar = ProgressBar.new()
+	pbar.max_value = 240.0
+	pbar.value = member.get("total_training_time", 0.0)
+	pbar.custom_minimum_size = Vector2(200, 10)
+	pbar.show_percentage = false
+	
+	# Color coding for load
+	var p_style = StyleBoxFlat.new()
+	if pbar.value > 200: p_style.bg_color = Color(0.9, 0.2, 0.2)
+	elif pbar.value > 120: p_style.bg_color = Color(0.9, 0.6, 0.1)
+	else: p_style.bg_color = Color(0.2, 0.7, 0.9)
+	pbar.add_theme_stylebox_override("fill", p_style)
+	
+	load_box.add_child(pbar)
+	
+	var time_lbl = Label.new()
+	time_lbl.text = str(int(pbar.value)) + "s / 240s"
+	time_lbl.add_theme_font_size_override("font_size", 12)
+	load_box.add_child(time_lbl)
+
+	# Assign Button
+	var assign_btn = Button.new()
+	assign_btn.text = "ASSIGN"
+	assign_btn.custom_minimum_size = Vector2(100, 0)
+	
+	if member.get("is_in_training", false):
+		assign_btn.text = "TRAINING..."
+		assign_btn.disabled = true
+	elif selected_training_type == "":
+		assign_btn.disabled = true
+	
+	assign_btn.pressed.connect(func(): _on_assign_pressed(member))
+	hbox.add_child(assign_btn)
+
+	return card
+
+func _on_program_selected(type: String, btn: Button) -> void:
+	selected_training_type = type
+	
+	# Clear styles
+	for b in [elec_btn, crowd_btn, med_btn, crisis_btn]:
+		b.remove_theme_stylebox_override("normal")
+	
+	var select_style = StyleBoxFlat.new()
+	select_style.bg_color = Color(0.1, 0.4, 0.9, 0.6)
+	select_style.border_width_left = 4
+	select_style.border_color = Color.WHITE
+	btn.add_theme_stylebox_override("normal", select_style)
+	
+	refresh_member_list()
+
+func _on_assign_pressed(member: Dictionary) -> void:
+	if selected_training_type == "": return
+	
 	var training = training_defs[selected_training_type]
 	var ok = GameState.start_member_training(
 		member,
@@ -97,27 +182,54 @@ func _on_start_training_pressed() -> void:
 		training["duration"],
 		training["cost_per_member"]
 	)
-
-	if not ok:
-		print("Eğitim başlatılamadı")
-		return
-
-	_refresh_ui()
+	
+	if ok:
+		refresh_member_list()
+		_refresh_ui()
 
 func _refresh_ui() -> void:
 	var remaining := GameState.get_emergency_training_remaining_time()
-	time_label.text = "Remaining Time: %.1f sec" % remaining
-	money_label.text = "Money: $" + str(GameState.money)
+	time_label.text = "Academy Window Remaining: %.1f sec" % remaining
+	money_label.text = "Available Budget: $" + str(GameState.money)
 
-	var text := "Active Trainings:\n"
+	var text := ""
 	for training in GameState.active_trainings:
 		var left = max(0.0, training["end_time"] - GameState.game_seconds)
-		text += training["member_name"] + " - " + training_defs[training["training_type"]]["display_name"] + " (" + str(snapped(left, 0.1)) + "s)\n"
-
+		text += "• " + training["member_name"] + "\n  " + training_defs[training["training_type"]]["display_name"] + "\n  (" + str(int(left)) + "s left)\n\n"
+	
+	if text == "": text = "No active training sessions."
 	active_trainings_label.text = text
+	
+	# Periodically refresh the member list to update "is_in_training" status
+	# (In a real game, you might use signals, but for 4 mins, a quick scan works)
+	var still_training = false
+	for m in GameState.selected_team:
+		if m.get("is_in_training", false):
+			still_training = true
+			break
+	
+	# If any training finished since last card refresh, update the UI
+	# We could optimize this, but simple is fine for now
+	# _refresh_member_list() is called via _process or better yet, signals from GameState
 
 func _on_back_pressed() -> void:
 	GameState.complete_activity("emergency_training")
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()
+
+func _setup_guide_text() -> void:
+	guide_label.text = "\n\nACTIVITY GUIDE\n\n" + \
+		"Activity Overview:\n" + \
+		"Emergency Training is an investment in your team’s future performance. Assign team members to specialized programs to handle unexpected festival situations.\n\n" + \
+		"Your Objective:\n" + \
+		"Improve preparedness, strengthen critical performance, and balance benefits with cost/time constraints.\n\n" + \
+		"Training Programs:\n" + \
+		"• Electrical Failure: Handle power outages and technical failures.\n" + \
+		"• Crowd Control: Manage large crowds and safely handle evacuations.\n" + \
+		"• Medical Response: Respond to medical emergencies and provide assistance.\n" + \
+		"• Crisis Management: Handle unforeseen problems and high-pressure situations.\n\n" + \
+		"Key Rules:\n" + \
+		"• TOTAL TIME LIMIT: Each member can train for a maximum of 4 minutes (240s).\n" + \
+		"• IMPACT: Trained members complete related scenarios 50% FASTER during the festival.\n" + \
+		"• Member status: Trainees are unavailable for other tasks while in session."

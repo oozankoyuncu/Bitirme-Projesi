@@ -1,153 +1,188 @@
 extends Control
 
-@onready var option_list: VBoxContainer = $MarginContainer/VBoxContainer/OptionList
-@onready var info_label: Label = $MarginContainer/VBoxContainer/InfoLabel
-@onready var result_label: Label = $MarginContainer/VBoxContainer/ResultLabel
-@onready var money_label: Label = $MarginContainer/VBoxContainer/MoneyLabel
-@onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonsRow/ConfirmButton
-@onready var back_button: Button = $MarginContainer/VBoxContainer/ButtonsRow/BackButton
-
+# ---------------- DATA ----------------
+# The data is loaded from JSON in GameState, but we'll manage local selection state
 var selected_theme_id: String = ""
+
+# ---------------- UI REFS ----------------
+@onready var theme_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftPalette/ScrollContainer/ThemeList
+@onready var preview_title: Label = $MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/PreviewTitle
+@onready var description_label: Label = $MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/DescriptionLabel
+@onready var synergy_label: Label = $MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/SynergyScoreLabel
+
+@onready var satisfaction_bar: ProgressBar = $MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SatisfactionStats/ProgressBar
+@onready var complexity_bar: ProgressBar = $MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/ComplexityStats/ProgressBar
+@onready var space_bar: ProgressBar = $MarginContainer/VBoxContainer/MainContent/RightPalette/StatsContainer/SpaceStats/ProgressBar
+@onready var result_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPalette/ResultLabel
+
+@onready var money_label: Label = $MarginContainer/VBoxContainer/Footer/MoneyBox/MoneyLabel
+@onready var confirm_button: Button = $MarginContainer/VBoxContainer/Footer/ConfirmButton
+@onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
+
+@onready var info_button: Button = $MarginContainer/VBoxContainer/Header/InfoButton
+@onready var guide_panel: PanelContainer = $GuidePanel
+@onready var guide_label: Label = $GuidePanel/MarginContainer/VBoxContainer/ScrollContainer/GuideLabel
+@onready var close_guide_button: Button = $GuidePanel/MarginContainer/VBoxContainer/Header/CloseGuideButton
+
+# ---------------- LOGIC ----------------
 
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	back_button.pressed.connect(_on_back_pressed)
+	info_button.pressed.connect(func(): guide_panel.show())
+	close_guide_button.pressed.connect(func(): guide_panel.hide())
 	visibility_changed.connect(_on_visibility_changed)
 
-	# --- Estetik / UX Ayarları ---
-	var title: Label = $MarginContainer/VBoxContainer/TitleLabel
-	title.add_theme_font_size_override("font_size", 32)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_setup_guide_text()
+	_setup_ui_styles()
+	_create_theme_cards()
+	_refresh_ui()
 
-	var desc: Label = $MarginContainer/VBoxContainer/DescriptionLabel
-	desc.add_theme_font_size_override("font_size", 20)
-	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+func _process(_delta: float) -> void:
+	if visible:
+		money_label.text = "Budget: " + str(GameState.money) + " TL"
 
-	money_label.add_theme_font_size_override("font_size", 24)
-	money_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+func _setup_ui_styles() -> void:
+	var main_style = StyleBoxFlat.new()
+	main_style.bg_color = Color(0.05, 0.08, 0.12, 0.95) # Deep HUD blue
+	main_style.border_width_left = 4
+	main_style.border_color = Color(0.0, 0.6, 1.0) # Tactical Cyan
+	add_theme_stylebox_override("panel", main_style)
 
-	info_label.add_theme_font_size_override("font_size", 20)
-	info_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var dash_style = StyleBoxFlat.new()
+	dash_style.bg_color = Color(0.1, 0.15, 0.2, 0.8)
+	dash_style.set_corner_radius_all(10)
+	$MarginContainer/VBoxContainer/MainContent/CenterDashboard.add_theme_stylebox_override("panel", dash_style)
 
-	result_label.add_theme_font_size_override("font_size", 22)
-	result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-
-	var buttons_row: HBoxContainer = $MarginContainer/VBoxContainer/ButtonsRow
-	buttons_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	
-	confirm_button.add_theme_font_size_override("font_size", 20)
-	back_button.add_theme_font_size_override("font_size", 20)
-	
-	option_list.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	option_list.alignment = BoxContainer.ALIGNMENT_CENTER
-	
-	var margin: MarginContainer = $MarginContainer
-	margin.add_theme_constant_override("margin_top", 60)
-	margin.add_theme_constant_override("margin_bottom", 60)
-	margin.add_theme_constant_override("margin_left", 60)
-	margin.add_theme_constant_override("margin_right", 60)
-	
-	$MarginContainer/VBoxContainer.add_theme_constant_override("separation", 20)
-	# ----------------------------
-
-	build_options()
-	refresh_ui()
-
-func build_options() -> void:
-	for child in option_list.get_children():
+func _create_theme_cards() -> void:
+	for child in theme_list.get_children():
 		child.queue_free()
 
 	for theme in GameState.decoration_theme_defs:
-		var container = VBoxContainer.new()
-		var checkbox := CheckBox.new()
-		var impact := GameState.calculate_decoration_theme_impact(theme)
+		var card = _create_card(theme)
+		theme_list.add_child(card)
 
-		checkbox.text = " " + theme["name"] + "  (Cost: $" + str(theme["cost"]) + ")"
-		checkbox.add_theme_font_size_override("font_size", 26)
-		checkbox.set_meta("theme_data", theme)
-		checkbox.toggled.connect(func(pressed: bool): _on_theme_toggled(checkbox, pressed))
-		
-		var details := Label.new()
-		details.text = "      ↳ Satisfaction: %d/10   |   Complexity: %d/10   |   Space: %d/10   |   Theme Score: %.1f" % [
-			theme["satisfaction_impact"],
-			theme["complexity"],
-			theme["space_impact"],
-			impact
-		]
-		details.add_theme_font_size_override("font_size", 18)
-		details.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85))
+func _create_card(theme: Dictionary) -> PanelContainer:
+	var card = PanelContainer.new()
+	card.custom_minimum_size = Vector2(0, 100)
+	card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.15, 0.2, 0.25, 0.7)
+	style.border_width_left = 5
+	style.border_color = _get_theme_color(theme["id"])
+	card.add_theme_stylebox_override("panel", style)
 
-		container.add_child(checkbox)
-		container.add_child(details)
-		
-		var spacer = Control.new()
-		spacer.custom_minimum_size = Vector2(0, 8)
-		container.add_child(spacer)
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 15)
+	margin.add_theme_constant_override("margin_right", 15)
+	card.add_child(margin)
 
-		option_list.add_child(container)
+	var v_box = VBoxContainer.new()
+	v_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	margin.add_child(v_box)
 
-func _on_theme_toggled(changed_checkbox: CheckBox, pressed: bool) -> void:
-	if not pressed:
-		if changed_checkbox.get_meta("theme_data")["id"] == selected_theme_id:
-			selected_theme_id = ""
-			info_label.text = "Please select a theme from the list..."
-		return
+	var name_lbl = Label.new()
+	name_lbl.text = theme["name"]
+	name_lbl.add_theme_font_size_override("font_size", 20)
+	v_box.add_child(name_lbl)
 
-	for container in option_list.get_children():
-		for child in container.get_children():
-			if child is CheckBox and child != changed_checkbox:
-				child.button_pressed = false
+	var cost_lbl = Label.new()
+	cost_lbl.text = "Cost: " + str(theme["cost"]) + " TL"
+	cost_lbl.add_theme_color_override("font_color", Color(1, 0.8, 0.2))
+	v_box.add_child(cost_lbl)
 
-	var theme: Dictionary = changed_checkbox.get_meta("theme_data")
+	# Click logic
+	card.gui_input.connect(func(event): 
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			_select_theme(theme, card)
+	)
+
+	return card
+
+func _get_theme_color(id: String) -> Color:
+	match id:
+		"electro_neon": return Color(0.8, 0.0, 1.0) # Neon Purple
+		"colorful_carnival": return Color(1.0, 0.4, 0.0) # Carnival Orange
+		"old_school_retro": return Color(0.0, 0.8, 0.8) # Retro Cyan
+		"freedom_time": return Color(1.0, 1.0, 1.0) # Pure White/Beyond
+		_: return Color(0.5, 0.5, 0.5)
+
+func _select_theme(theme: Dictionary, card: PanelContainer) -> void:
 	selected_theme_id = theme["id"]
+	
+	# Highlight selected card
+	for c in theme_list.get_children():
+		c.get_theme_stylebox("panel").bg_color = Color(0.15, 0.2, 0.25, 0.7)
+	card.get_theme_stylebox("panel").bg_color = Color(0.1, 0.3, 0.5, 0.9)
 
-	var impact := GameState.calculate_decoration_theme_impact(theme)
-	info_label.text = \
-		"=== SELECTED: " + theme["name"].to_upper() + " ===\n" + \
-		"Budget Cost: $" + str(theme["cost"]) + "\n" + \
-		"Setup Processing Time: " + str(theme["setup_duration"]) + " weeks\n" + \
-		"Joy & Satisfaction Impact: " + str(theme["satisfaction_impact"]) + " / 10\n" + \
-		"Construction Complexity: " + str(theme["complexity"]) + " / 10\n" + \
-		"Scale & Space Requirements: " + str(theme["space_impact"]) + " / 10\n" + \
-		"Computed Synergy Score: " + str(snapped(impact, 0.1))
+	# Update Preview
+	preview_title.text = theme["name"].to_upper()
+	preview_title.add_theme_color_override("font_color", _get_theme_color(theme["id"]))
+	
+	# Descriptions mapping (dynamic)
+	match theme["id"]:
+		"electro_neon": description_label.text = "Immerse the festival in futuristic neon lights and electronic vibes. High satisfaction but requires significant power and space."
+		"colorful_carnival": description_label.text = "A burst of traditional colors and street-party aesthetics. Reliable, simple to set up, and universally loved."
+		"old_school_retro": description_label.text = "Nostalgic 90s vibes with pixel art and retro props. Low cost and low complexity, perfect for tighter budgets."
+		"freedom_time": description_label.text = "Abstract, minimalist, and open-ended. A sophisticated choice that balances space and satisfaction beautifully."
+	
+	var impact = GameState.calculate_decoration_theme_impact(theme)
+	synergy_label.text = "Synergy Score: " + str(snapped(impact, 0.1))
+
+	# Update bars
+	satisfaction_bar.value = theme["satisfaction_impact"]
+	complexity_bar.value = theme["complexity"]
+	space_bar.value = theme["space_impact"]
+	
+	result_label.text = ""
 
 func _on_confirm_pressed() -> void:
 	if selected_theme_id == "":
-		result_label.text = "Please select one decoration theme."
+		result_label.text = "Please select a theme catalog entry."
+		result_label.add_theme_color_override("font_color", Color.CORAL)
 		return
 
-	var selected_data: Dictionary = {}
-	for theme in GameState.decoration_theme_defs:
-		if theme["id"] == selected_theme_id:
-			selected_data = theme
+	var theme_data: Dictionary = {}
+	for t in GameState.decoration_theme_defs:
+		if t["id"] == selected_theme_id:
+			theme_data = t
 			break
 
-	if selected_data.is_empty():
-		result_label.text = "Theme data not found."
+	if GameState.money < theme_data["cost"]:
+		result_label.text = "CRITICAL: Insufficient funds for this deployment."
+		result_label.add_theme_color_override("font_color", Color.RED)
 		return
 
-	var ok := GameState.choose_decoration_theme(selected_data)
-	if not ok:
-		result_label.text = "Not enough budget for this theme selection."
-		return
-
+	GameState.choose_decoration_theme(theme_data)
 	GameState.complete_activity("decoration_theme_decision")
-	result_label.text = "Decoration Theme selected successfully."
-	refresh_ui()
-
-	hide()
-	get_parent().get_node("ActivityBoard").show()
-	get_parent().get_node("ActivityBoard").refresh_board()
-
-func refresh_ui() -> void:
-	money_label.text = "Budget: " + str(GameState.money) + " TL"
-
-func _on_visibility_changed() -> void:
-	if visible:
-		refresh_ui()
+	
+	_on_back_pressed()
 
 func _on_back_pressed() -> void:
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()
+
+func _on_visibility_changed() -> void:
+	if visible:
+		_refresh_ui()
+
+func _refresh_ui() -> void:
+	money_label.text = "Budget: " + str(GameState.money) + " TL"
+	result_label.text = ""
+
+func _setup_guide_text() -> void:
+	guide_label.text = "\n\nACTIVITY GUIDE: DECORATION & THEME\n\n" + \
+		"Activity Overview:\n" + \
+		"The decoration theme defines the visual identity of your festival. It influences participant happiness and construction logistics.\n\n" + \
+		"Your Objective:\n" + \
+		"• Choose a theme that maximizes satisfaction while managing costs and space.\n" + \
+		"• Higher complexity might lead to longer setup times or higher risks.\n\n" + \
+		"Calculations:\n" + \
+		"• Synergy Score = (Satisfaction * 0.6) / ((Complexity + Space) * 0.4)\n" + \
+		"• Higher Satisfaction = Better participant reviews.\n" + \
+		"• Higher Complexity = Increased engineering challenge.\n\n" + \
+		"Rules:\n" + \
+		"• You can only finalize one primary theme.\n" + \
+		"• Ensure you have enough budget before confirming."

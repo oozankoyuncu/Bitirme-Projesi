@@ -119,6 +119,14 @@
 	  "cost": 0,
 	  "duration": 2,
 	  "dependencies": []
+	},
+	{
+	  "id": "festival_cleaning_security",
+	  "name": "Festival Cleaning & Security",
+	  "type": "cleaning_security",
+	  "cost": 0,
+	  "duration": 4,
+	  "dependencies": ["decoration_theme_decision"]
 	}
 	]
 }

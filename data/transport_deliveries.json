@@ -44,6 +44,33 @@
       "paperwork_status": "Complete",
       "dependency": "none",
       "workload": 3
+    },
+    {
+      "id": "backstage_furniture",
+      "name": "Artist Lounge & VIP Sets",
+      "type": "hospitality",
+      "arrival_time": "Evening",
+      "paperwork_status": "Complete",
+      "dependency": "decoration_props",
+      "workload": 5
+    },
+    {
+      "id": "security_barriers",
+      "name": "Front-of-Stage Barriers",
+      "type": "security",
+      "arrival_time": "Morning",
+      "paperwork_status": "Complete",
+      "dependency": "stage_materials",
+      "workload": 7
+    },
+    {
+      "id": "waste_management",
+      "name": "Bins & Sanitation Kits",
+      "type": "sanitation",
+      "arrival_time": "Afternoon",
+      "paperwork_status": "Incomplete",
+      "dependency": "none",
+      "workload": 4
     }
   ]
 }

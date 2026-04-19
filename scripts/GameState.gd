@@ -4,7 +4,7 @@ extends Node
 signal time_changed
 
 # ---- Varsayılan başlangıç değerleri ----
-const START_MONEY: int = 1000000
+const START_MONEY: int = 400000
 const START_WEEK: int = 1
 const START_TIME_SECONDS: float = 0.0
 
@@ -98,6 +98,13 @@ var transport_schedule: Dictionary = {}
 var decoration_theme_defs: Array = []
 var selected_decoration_theme: Dictionary = {}
 var decoration_theme_score: float = 0.0
+
+# Festival Cleaning & Security
+var cleaning_security_completed: bool = false
+var selected_cleaning_teams: Array = []
+var selected_security_teams: Array = []
+var max_site_space: int = 100 # Increased limit for larger teams
+var used_site_space: int = 0
 
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
@@ -198,6 +205,10 @@ func start_member_training(member: Dictionary, training_type: String, duration: 
 
 	if member.get("is_in_training", false):
 		return false
+		
+	var total_so_far = member.get("total_training_time", 0.0)
+	if total_so_far + duration > 240.0:
+		return false
 
 	if get_emergency_training_remaining_time() < duration:
 		return false
@@ -207,6 +218,7 @@ func start_member_training(member: Dictionary, training_type: String, duration: 
 
 	money -= cost
 	member["is_in_training"] = true
+	member["total_training_time"] = total_so_far + duration
 
 	active_trainings.append({
 		"member_id": member["id"],

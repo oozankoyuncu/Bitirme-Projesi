@@ -87,7 +87,7 @@ func start_activity(activity: Dictionary) -> void:
 	if activity_id == "emergency_training":
 		var panel = get_parent().get_node("EmergencyTrainingPanel")
 		panel.show()
-		panel.create_member_checkboxes()
+		panel.refresh_member_list()
 		hide()
 		return
 	
@@ -147,6 +147,12 @@ func start_activity(activity: Dictionary) -> void:
 
 	if activity_id == "decoration_theme_decision":
 		var panel = get_parent().get_node("DecorationThemePanel")
+		panel.show()
+		hide()
+		return
+
+	if activity_id == "festival_cleaning_security":
+		var panel = get_parent().get_node("FestivalCleaningSecurityPanel")
 		panel.show()
 		hide()
 		return
