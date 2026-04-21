@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bjb7r1wy7j8u5"]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="PackedScene" uid="uid://bw8gq1qn06e22" path="res://time_label.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://pitj4dhy81jp" path="res://scripts/game.gd" id="1_u44n3"]
@@ -17,6 +17,18 @@
 [ext_resource type="Script" uid="uid://dummytrans" path="res://scripts/transport_coordination_panel.gd" id="15_transport"]
 [ext_resource type="Script" uid="uid://dummydecthem" path="res://scripts/decoration_theme_panel.gd" id="16_dtheme"]
 [ext_resource type="Script" path="res://scripts/festival_cleaning_security_panel.gd" id="17_clean"]
+[ext_resource type="Script" path="res://scripts/email_panel.gd" id="18_email"]
+[ext_resource type="Script" path="res://scripts/charter_panel.gd" id="19_charter"]
+[ext_resource type="Texture2D" path="res://resources/backround_campus.png" id="20_bg"]
+[ext_resource type="Texture2D" path="res://resources/mentor_student.png" id="21_mentor"]
+[ext_resource type="Shader" path="res://resources/background_remover.gdshader" id="22_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mascot"]
+shader = ExtResource("22_shader")
+shader_parameter/key_color = Color(1.0, 1.0, 1.0, 1)
+shader_parameter/threshold = 0.1
+shader_parameter/softness = 0.05
+
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -27,21 +39,697 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_u44n3")
 
-[node name="TimeLabel" parent="." instance=ExtResource("1_ig7tw")]
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("20_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.470588)
+
+[node name="TopBar" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+
+[node name="Margin" type="MarginContainer" parent="TopBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 30
+
+[node name="HBox" type="HBoxContainer" parent="TopBar/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Logo" type="Label" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "SPRING FESTIVAL MANAGER"
+
+[node name="Spacer" type="Control" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stats" type="HBoxContainer" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="WeekBox" type="HBoxContainer" parent="TopBar/Margin/HBox/Stats"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="TopBar/Margin/HBox/Stats/WeekBox"]
+layout_mode = 2
+text = "🗓"
+
+[node name="Label" type="Label" parent="TopBar/Margin/HBox/Stats/WeekBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "Week: 1"
+
+[node name="BudgetBox" type="HBoxContainer" parent="TopBar/Margin/HBox/Stats"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="TopBar/Margin/HBox/Stats/BudgetBox"]
+layout_mode = 2
+text = "💰"
+
+[node name="Label" type="Label" parent="TopBar/Margin/HBox/Stats/BudgetBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 20
+text = "Budget: 400,000 TL"
+
+[node name="TimeBox" type="HBoxContainer" parent="TopBar/Margin/HBox/Stats"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="TopBar/Margin/HBox/Stats/TimeBox"]
+layout_mode = 2
+text = "⏱"
+
+[node name="Label" type="Label" parent="TopBar/Margin/HBox/Stats/TimeBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "00:00:00"
+
+
+[node name="EmailPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("18_email")
+
+[node name="MarginContainer" type="MarginContainer" parent="EmailPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="HBox" type="HBoxContainer" parent="EmailPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="CharacterContainer" type="VBoxContainer" parent="EmailPanel/MarginContainer/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = -10
+alignment = 2
+
+[node name="Bubble" type="PanelContainer" parent="EmailPanel/MarginContainer/HBox/CharacterContainer"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="EmailPanel/MarginContainer/HBox/CharacterContainer/Bubble"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="WelcomeLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/CharacterContainer/Bubble/Margin"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Welcome!
+Let's plan a great festival."
+horizontal_alignment = 1
+
+[node name="MentorCharacterContainer" type="Control" parent="EmailPanel/MarginContainer/HBox/CharacterContainer"]
+custom_minimum_size = Vector2(450, 600)
+layout_mode = 2
+
+[node name="MentorCharacter" type="TextureRect" parent="EmailPanel/MarginContainer/HBox/CharacterContainer/MentorCharacterContainer"]
+material = SubResource("ShaderMaterial_mascot")
+custom_minimum_size = Vector2(450, 600)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("21_mentor")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EmailSide" type="VBoxContainer" parent="EmailPanel/MarginContainer/HBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="EmailBox" type="PanelContainer" parent="EmailPanel/MarginContainer/HBox/EmailSide"]
+custom_minimum_size = Vector2(1000, 650)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Margin" type="MarginContainer" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="Content" type="VBoxContainer" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Header" type="HBoxContainer" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
+layout_mode = 2
+
+[node name="SubjectLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Subject: Appointment as Project Manager - Spring Student Festival"
+
+[node name="Details" type="VBoxContainer" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
+layout_mode = 2
+
+[node name="FromLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content/Details"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "From: University Administration (Rectorate)"
+
+[node name="ToLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content/Details"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "To: Project Manager"
+
+[node name="HSeparator" type="HSeparator" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
+layout_mode = 2
+
+[node name="BodyLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 22
+text = "Dear Manager,
+
+We are pleased to inform you that the university will host the Spring Student Festival on campus. The aim is enhancing student engagement, enriching campus life, and fostering community interaction.
+
+Your responsibilities will include managing the project timeline, budget, and scope, ensuring that the festival is delivered successfully and safely.
+
+Please review the Project Charter presented in the next screen, which outlines project objectives and success criteria. Once you accept, the preparation phase will officially begin.
+
+Sincerely,
+University Administration (Rectorate)"
+autowrap_mode = 3
+
+[node name="AcceptButton" type="Button" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 26
+text = "Accept & View Charter"
+
+
+[node name="CharterPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("19_charter")
+
+[node name="MarginContainer" type="MarginContainer" parent="CharterPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 40
+
+[node name="TabContainer" type="TabContainer" parent="CharterPanel/MarginContainer"]
+layout_mode = 2
+tab_alignment = 1
+
+[node name="Overview" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Margin" type="MarginContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 48
+text = "PROJECT CHARTER"
+
+[node name="AdminRow" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="University" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/University"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "🏛"
+
+[node name="Text" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/University"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/University/Text"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "University Administration"
+
+[node name="Sub" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/University/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "From: Rectorate Office"
+
+[node name="Arrow" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = ">"
+
+[node name="User" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/User"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "👤"
+
+[node name="Text" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/User"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/User/Text"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "You"
+
+[node name="Sub" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/User/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Project Manager"
+
+[node name="HSeparator" type="HSeparator" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
+layout_mode = 2
+
+[node name="ObjectiveSection" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ObjectiveSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 28
+text = "🎯 Project Objective"
+
+[node name="Text" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ObjectiveSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Successfully plan and deliver a one-day Spring Student Festival by managing time, budget, scope, and risks under realistic constraints, while maximizing overall project performance."
+autowrap_mode = 3
+
+[node name="ScopeSection" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 28
+text = "📋 Project Scope Requirements"
+
+[node name="List" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Item1" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "✅ Secure at least 2 sponsors contributing to the budget of at least $$"
+
+[node name="Item2" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "✅ Select one main headliner and at least 2 sub-performers"
+
+[node name="Item3" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "✅ Include different types of activity (volunteer/club) and at least two volunteers"
+
+[node name="Item4" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "✅ Have at least two different types of cuisine and have at least a 2.6 hygiene rating"
+
+[node name="ConstraintHeader" type="PanelContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
+layout_mode = 2
+
+[node name="ConstraintTitle" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ConstraintHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "⚠️ Project Constraints"
+
+[node name="Grid" type="GridContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 50
+columns = 2
+
+[node name="TimeBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/TimeBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "⌛ Time Constraint:"
+
+[node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/TimeBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 22
+text = "• Total preparation duration: 8 weeks
+• Total gameplay duration: 32 minutes"
+
+[node name="BudgetBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/BudgetBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "💰 Budget Constraint:"
+
+[node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/BudgetBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 22
+text = "• Initial budget: 400,000 TL
+• No additional internal funding after start"
+
+[node name="Success" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Margin" type="MarginContainer" parent="CharterPanel/MarginContainer/TabContainer/Success"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 42
+text = "SUCCESS CRITERIA"
+horizontal_alignment = 1
+
+[node name="OFSFormula" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "OFS = 0.6 × Participant Satisfaction (SS) + 0.4 × Event Quality (EQ)"
+horizontal_alignment = 1
+
+[node name="Sub" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 22
+text = "Project success is evaluated using the following Key Performance Indicators (KPIs). Each indicator reflects a core project management competency and contributes to the final score."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TabContent" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 40
+
+[node name="KPI_List" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+
+
+
+[node name="TimeKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/TimeKPI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/TimeKPI/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Time Management"
+
+[node name="Spacer" type="Control" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/TimeKPI/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bar" type="ProgressBar" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/TimeKPI/HBox"]
+custom_minimum_size = Vector2(300, 20)
+layout_mode = 2
+size_flags_vertical = 4
+value = 75.0
+show_percentage = false
+
+[node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/TimeKPI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "• Activities completed within the planned timeline
++ Delays reduce overall performance score"
+
+[node name="BudgetKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/BudgetKPI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/BudgetKPI/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Budget Control - Cost Efficiency"
+
+[node name="Spacer" type="Control" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/BudgetKPI/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bar" type="ProgressBar" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/BudgetKPI/HBox"]
+custom_minimum_size = Vector2(300, 20)
+layout_mode = 2
+size_flags_vertical = 4
+value = 60.0
+show_percentage = false
+
+[node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/BudgetKPI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "• Staying within the allocated budget
+• Efficient use of sponsorship income and ticket revenue"
+
+[node name="ScopeKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/ScopeKPI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/ScopeKPI/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Scope Adherence"
+
+[node name="Spacer" type="Control" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/ScopeKPI/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bar" type="ProgressBar" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/ScopeKPI/HBox"]
+custom_minimum_size = Vector2(300, 20)
+layout_mode = 2
+size_flags_vertical = 4
+value = 85.0
+show_percentage = false
+
+[node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/ScopeKPI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "• Completion of all required deliverables defined in the Project Charter"
+
+[node name="MotivationKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/MotivationKPI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/MotivationKPI/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Team Motivation"
+
+[node name="Spacer" type="Control" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/MotivationKPI/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bar" type="ProgressBar" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/MotivationKPI/HBox"]
+custom_minimum_size = Vector2(300, 20)
+layout_mode = 2
+size_flags_vertical = 4
+value = 80.0
+show_percentage = false
+
+[node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/MotivationKPI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "• Balanced workload across teams
++ Maintain high engagement"
+
+[node name="SatisfactionKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Participant Satisfaction (SS)"
+
+[node name="Spacer" type="Control" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bar" type="ProgressBar" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI/HBox"]
+custom_minimum_size = Vector2(300, 20)
+layout_mode = 2
+size_flags_vertical = 4
+value = 40.0
+show_percentage = false
+
+[node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "Reflects attendee experience, comfort, and entertainment quality"
+
+[node name="QualityKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/QualityKPI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/QualityKPI/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Event Quality (EQ)"
+
+[node name="Spacer" type="Control" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/QualityKPI/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bar" type="ProgressBar" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/QualityKPI/HBox"]
+custom_minimum_size = Vector2(300, 20)
+layout_mode = 2
+size_flags_vertical = 4
+value = 90.0
+show_percentage = false
+
+[node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/QualityKPI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "Reflects attendance levels, artist quality, and operational success"
+
+[node name="SuccessMascot" type="TextureRect" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent"]
+material = SubResource("ShaderMaterial_mascot")
+custom_minimum_size = Vector2(400, 550)
+layout_mode = 2
+size_flags_vertical = 8
+texture = ExtResource("21_mentor")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Footer" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="AcceptCharterButton" type="Button" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/Footer"]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Accept and Start Project"
 
 [node name="ActivityBoard" type="Control" parent="."]
 visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 80.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
 script = ExtResource("3_t88pq")
-metadata/_edit_use_anchors_ = true
+
+[node name="Background" type="Panel" parent="ActivityBoard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="ActivityBoard"]
 layout_mode = 1
@@ -50,18 +738,43 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ActivityBoard/MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="ActivityBoard/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Header" type="HBoxContainer" parent="ActivityBoard/MarginContainer/VBox"]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="ActivityBoard/MarginContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="ActivityBoard/MarginContainer/VBox/Header"]
 layout_mode = 2
-text = "Activities"
-horizontal_alignment = 1
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 36
+text = "ACTIVITY DASHBOARD"
 
-[node name="ActivityList" type="VBoxContainer" parent="ActivityBoard/MarginContainer/VBoxContainer"]
+[node name="Sub" type="Label" parent="ActivityBoard/MarginContainer/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 18
+text = "Manage your tasks for the week"
+vertical_alignment = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ActivityBoard/MarginContainer/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ActivityList" type="GridContainer" parent="ActivityBoard/MarginContainer/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 25
+columns = 3
 
 [node name="TeamAssignmentPanel" type="Panel" parent="."]
 visible = false
@@ -1200,12 +1913,33 @@ theme_override_constants/margin_bottom = 60
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="HeaderPanel" type="Panel" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 80)
+[node name="HeaderPanel" type="PanelContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel"]
-layout_mode = 1
+[node name="Margin" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="InfoButton" type="Button" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 24
+text = "?"
+
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin"]
+layout_mode = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1213,18 +1947,81 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+[node name="TitleBox" type="HBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin/VBoxContainer/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 32
 text = "Promotion Strategy"
 horizontal_alignment = 1
 
-[node name="BudgetLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+[node name="BudgetLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 
-[node name="ContentPanel" type="Panel" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+[node name="InfoPopup" type="PanelContainer" parent="PromotionStrategyPanel"]
+visible = false
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -150.0
+offset_right = 300.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="Margin" type="MarginContainer" parent="PromotionStrategyPanel/InfoPopup"]
 layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="PromotionStrategyPanel/InfoPopup/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TopBox" type="HBoxContainer" parent="PromotionStrategyPanel/InfoPopup/Margin/VBox"]
+layout_mode = 2
+
+[node name="Objective" type="Label" parent="PromotionStrategyPanel/InfoPopup/Margin/VBox/TopBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 20
+text = "Objective: Maximize Expected Reach vs. Budget"
+
+[node name="CloseInfoButton" type="Button" parent="PromotionStrategyPanel/InfoPopup/Margin/VBox/TopBox"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="Rules" type="Label" parent="PromotionStrategyPanel/InfoPopup/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "• Rule 1: Choose strategy options within your available budget context.
+• Rule 2: Actual Reach is calculated as (Expected Reach × Reliability).
+• Rule 3: You have 4 minutes to finalize strategies this week."
+autowrap_mode = 3
+
+
+
+[node name="ContentPanel" type="PanelContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"PanelContainerGlass"
 size_flags_vertical = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ContentPanel"]
@@ -1243,12 +2040,19 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SummaryPanel" type="Panel" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
+[node name="SummaryPanel" type="PanelContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel"]
-layout_mode = 1
+[node name="Margin" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin"]
+layout_mode = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1256,7 +2060,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="SummaryLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="SummaryLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
@@ -1296,31 +2100,156 @@ theme_override_constants/margin_bottom = 60
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="HeaderPanel" type="Panel" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 80)
+[node name="HeaderPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="InfoButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 24
+text = "?"
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin"]
+layout_mode = 2
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
+theme_override_font_sizes/font_size = 32
 text = "Ticket Pricing"
 horizontal_alignment = 1
 
-[node name="BaseReachLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
-layout_mode = 2
-horizontal_alignment = 1
 
-[node name="ContentPanel" type="Panel" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+[node name="InfoPopup" type="PanelContainer" parent="TicketPricingPanel"]
+visible = false
+custom_minimum_size = Vector2(900, 650)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -325.0
+offset_right = 450.0
+offset_bottom = 325.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/InfoPopup"]
 layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="VBox" type="VBoxContainer" parent="TicketPricingPanel/InfoPopup/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="TicketPricingPanel/InfoPopup/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "ACTIVITY GUIDE"
+
+[node name="Close" type="Button" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="TicketPricingPanel/InfoPopup/Margin/VBox"]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="TicketPricingPanel/InfoPopup/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Content" type="VBoxContainer" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 25
+
+[node name="PricingTitle" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 24
+text = "TICKET PRICING STRATEGY"
+
+[node name="OverviewSection" type="VBoxContainer" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content/OverviewSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Activity Overview:"
+
+[node name="Text" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content/OverviewSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "In this stage, you determine your festival’s ticket price by selecting one of the available pricing options. Each option affects both attendance and perceived event value, directly influencing your total revenue. Activity takes Week 5 (~4 mins)."
+autowrap_mode = 3
+
+[node name="ObjectiveSection" type="VBoxContainer" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content/ObjectiveSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Your Objective:"
+
+[node name="Text" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content/ObjectiveSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "Choose a ticket price that maximizes total revenue, maintains strong attendance, and balances price with perceived event quality."
+autowrap_mode = 3
+
+[node name="ConsiderationsSection" type="VBoxContainer" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content/ConsiderationsSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Key Strategic Considerations:"
+
+[node name="Text" type="Label" parent="TicketPricingPanel/InfoPopup/Margin/VBox/Scroll/Content/ConsiderationsSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "• Balance Price vs. Attendance: Higher attendance doesn't always mean higher revenue.
+• Maximize Revenue: Focus on the combination of price and volume.
+• Intelligence Trade-off: Consulting reveals precise data but reduces your initial budget.
+• Long-term Impact: This is your main revenue source. Your ability to recover expenses depends on this decision.
+• Calculation: Attendance = Base + (Base * Impact). *Base is hidden unless consulting is bought."
+autowrap_mode = 3
+
+[node name="ContentPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"PanelContainerGlass"
 size_flags_vertical = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel"]
@@ -1335,24 +2264,67 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="PricingList" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+[node name="DynamicContent" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="ConsultingPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent"]
+layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="HBox" type="HBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "Strategic Intelligence Service"
+
+[node name="Desc" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Unlock hidden Base Attendance and reveal precise individual impact percentages."
+
+[node name="PurchaseConsultingButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox"]
+custom_minimum_size = Vector2(240, 45)
+layout_mode = 2
+size_flags_vertical = 4
+text = "Purchase Consulting (5,000 TL)"
+
+[node name="PricingList" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SummaryPanel" type="Panel" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
+[node name="SummaryPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin"]
+layout_mode = 2
+alignment = 1
 alignment = 1
 
-[node name="SummaryLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="SummaryLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1

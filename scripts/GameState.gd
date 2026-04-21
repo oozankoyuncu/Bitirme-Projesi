@@ -17,6 +17,7 @@ var activities = []
 var completed_activities: Array[String] = []
 var selected_team: Array = []
 var all_team_members: Array = []
+var team_motivation: float = 80.0
 
 var layout_plan: Dictionary = {}
 
@@ -64,6 +65,10 @@ var chosen_ticket_price: float = 0.0
 var total_revenue: float = 0.0
 var event_quality_score: float = 0.0
 
+# Ticket Pricing Strategy
+var ticket_consulting_purchased: bool = false
+const TICKET_CONSULTING_COST: int = 5000
+
 # Volunteer / Club Recruitment
 var volunteer_club_completed: bool = false
 var selected_volunteer_clubs: Array = []
@@ -109,13 +114,13 @@ var used_site_space: int = 0
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
 
-var is_running: bool = true
+var is_running: bool = false
 
 func reset() -> void:
 	money = START_MONEY
 	week = START_WEEK
 	game_seconds = START_TIME_SECONDS
-	is_running = true
+	is_running = false
 	
 
 	last_week_tick = -1
@@ -139,6 +144,10 @@ func _process(delta: float) -> void:
 		if tick > 0:
 			week += 1
 	emit_signal("time_changed")
+
+func start_game_timer() -> void:
+	is_running = true
+	last_week_tick = int(game_seconds) / 4
 
 
 
