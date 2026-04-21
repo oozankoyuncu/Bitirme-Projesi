@@ -6,7 +6,7 @@ signal time_changed
 # ---- Varsayılan başlangıç değerleri ----
 const START_MONEY: int = 400000
 const START_WEEK: int = 1
-const START_TIME_SECONDS: float = 0.0
+const START_TIME_SECONDS: float = 1.0
 
 # ---- Oyun state ----
 var money: int = START_MONEY
@@ -18,6 +18,7 @@ var completed_activities: Array[String] = []
 var selected_team: Array = []
 var all_team_members: Array = []
 var team_motivation: float = 80.0
+var skip_onboarding: bool = false
 
 var layout_plan: Dictionary = {}
 
@@ -138,7 +139,7 @@ func _process(delta: float) -> void:
 	_update_active_trainings()
 	
 	# Her 4 saniyede bir week++ (sadece 1 kere)
-	var tick := int(game_seconds) / 4
+	var tick := int(game_seconds) / 240
 	if tick != last_week_tick:
 		last_week_tick = tick
 		if tick > 0:

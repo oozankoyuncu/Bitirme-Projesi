@@ -3,17 +3,17 @@ extends Panel
 @onready var member_list: GridContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/MemberList
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
 
-@onready var comm_bar: ProgressBar = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/CommBox/CommBar
-@onready var speed_bar: ProgressBar = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/SpeedBox/SpeedBar
-@onready var reliability_bar: ProgressBar = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/RelBox/ReliabilityBar
-
-@onready var total_cost_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel/MarginContainer/HBoxContainer/TotalCostLabel
+var right_panel_bars: Dictionary = {}
 
 @onready var main_panel: Panel = self
 @onready var stats_sidebar: PanelContainer = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel
-@onready var cost_sidebar: PanelContainer = $MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel
 
 func _ready() -> void:
+	if has_node("MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel"):
+		get_node("MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel").hide()
+	
+	_init_right_panel_stats()
+	
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	_setup_ui_styles()
 	create_member_cards()
@@ -41,7 +41,6 @@ func _setup_ui_styles() -> void:
 	sidebar_style.border_width_bottom = 1
 	sidebar_style.border_color = Color(0.2, 0.3, 0.4)
 	stats_sidebar.add_theme_stylebox_override("panel", sidebar_style)
-	cost_sidebar.add_theme_stylebox_override("panel", sidebar_style)
 	
 	# Button Styling
 	var btn_style = StyleBoxFlat.new()
@@ -72,7 +71,7 @@ func create_member_cards() -> void:
 
 func create_card_ui(member: Dictionary) -> PanelContainer:
 	var card = PanelContainer.new()
-	card.custom_minimum_size = Vector2(250, 180) # Increased size
+	card.custom_minimum_size = Vector2(380, 280) # Increased size for more stats
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
 	# Metadata for identification
@@ -101,20 +100,23 @@ func create_card_ui(member: Dictionary) -> PanelContainer:
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(name_label)
 	
-	var cost_label = Label.new()
-	cost_label.text = "$%d" % member["cost"]
-	cost_label.add_theme_color_override("font_color", Color.GOLD)
-	cost_label.add_theme_font_size_override("font_size", 18)
-	header.add_child(cost_label)
+	# Stats - Now in a GridContainer to allow multiple stats nicely
+	var stats_grid = GridContainer.new()
+	stats_grid.columns = 2
+	stats_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stats_grid.add_theme_constant_override("h_separation", 15)
+	stats_grid.add_theme_constant_override("v_separation", 10)
+	vbox.add_child(stats_grid)
 	
-	# Stats - Now in a VBox to allow full width bars and labels
-	var stats_vbox = VBoxContainer.new()
-	stats_vbox.add_theme_constant_override("separation", 5)
-	vbox.add_child(stats_vbox)
-	
-	add_stat_row(stats_vbox, "Communication", member["communication"])
-	add_stat_row(stats_vbox, "Speed", member["speed"])
-	add_stat_row(stats_vbox, "Reliability", member["reliability"])
+	add_stat_row(stats_grid, "Communication", member["communication"])
+	add_stat_row(stats_grid, "Speed", member["speed"])
+	add_stat_row(stats_grid, "Operations", member["operations"])
+	add_stat_row(stats_grid, "Reliability", member["reliability"])
+	add_stat_row(stats_grid, "Teamwork", member["teamwork"])
+	add_stat_row(stats_grid, "Stress Tol.", member["stress_tolerance"])
+	add_stat_row(stats_grid, "Creativity", member["creativity"])
+	add_stat_row(stats_grid, "Experience", member["experience_level"])
+	add_stat_row(stats_grid, "Workload Cap.", member["workload_capacity"])
 	
 	# Selection Button (Invisible but covers the card)
 	var btn = Button.new()
@@ -133,6 +135,7 @@ func create_card_ui(member: Dictionary) -> PanelContainer:
 
 func add_stat_row(parent: Control, label_text: String, value: float) -> void:
 	var stat_container = VBoxContainer.new()
+	stat_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	parent.add_child(stat_container)
 	
 	var label_hbox = HBoxContainer.new()
@@ -146,13 +149,13 @@ func add_stat_row(parent: Control, label_text: String, value: float) -> void:
 	label_hbox.add_child(lbl)
 	
 	var percent_lbl = Label.new()
-	percent_lbl.text = "%d%%" % (value * 10)
+	percent_lbl.text = "%d%%" % (value * 20)
 	percent_lbl.add_theme_font_size_override("font_size", 14)
 	percent_lbl.add_theme_color_override("font_color", Color(1, 1, 1))
 	label_hbox.add_child(percent_lbl)
 	
 	var bar = ProgressBar.new()
-	bar.max_value = 10
+	bar.max_value = 5
 	bar.value = value
 	bar.show_percentage = false
 	bar.custom_minimum_size = Vector2(0, 10) # Slightly thicker bar
@@ -160,9 +163,9 @@ func add_stat_row(parent: Control, label_text: String, value: float) -> void:
 	
 	# Color based on value
 	var style = StyleBoxFlat.new()
-	if value >= 7:
+	if value >= 4:
 		style.bg_color = Color(0.2, 0.8, 0.2) # Green
-	elif value >= 4:
+	elif value >= 3:
 		style.bg_color = Color(0.8, 0.8, 0.2) # Yellow
 	else:
 		style.bg_color = Color(0.8, 0.2, 0.2) # Red
@@ -220,34 +223,112 @@ func get_selected_members() -> Array:
 	return selected
 
 
+func _init_right_panel_stats() -> void:
+	var right_stats_container = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer
+	for child in right_stats_container.get_children():
+		child.queue_free()
+	
+	var stats_grid = GridContainer.new()
+	stats_grid.columns = 1
+	stats_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stats_grid.add_theme_constant_override("h_separation", 10)
+	stats_grid.add_theme_constant_override("v_separation", 8)
+	right_stats_container.add_child(stats_grid)
+	
+	var stat_keys = [
+		{"key": "communication", "label": "Communication"},
+		{"key": "speed", "label": "Speed"},
+		{"key": "operations", "label": "Operations"},
+		{"key": "reliability", "label": "Reliability"},
+		{"key": "teamwork", "label": "Teamwork"},
+		{"key": "stress_tolerance", "label": "Stress Tol."},
+		{"key": "creativity", "label": "Creativity"},
+		{"key": "experience_level", "label": "Experience"},
+		{"key": "workload_capacity", "label": "Workload Cap."}
+	]
+	
+	for stat in stat_keys:
+		var bar = _add_right_panel_stat_row(stats_grid, stat["label"])
+		right_panel_bars[stat["key"]] = bar
+
+func _add_right_panel_stat_row(parent: Control, label_text: String) -> ProgressBar:
+	var stat_container = VBoxContainer.new()
+	stat_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(stat_container)
+	
+	var label_hbox = HBoxContainer.new()
+	stat_container.add_child(label_hbox)
+	
+	var lbl = Label.new()
+	lbl.text = label_text
+	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label_hbox.add_child(lbl)
+	
+	var percent_lbl = Label.new()
+	percent_lbl.text = "0%"
+	percent_lbl.add_theme_font_size_override("font_size", 12)
+	percent_lbl.add_theme_color_override("font_color", Color(1, 1, 1))
+	label_hbox.add_child(percent_lbl)
+	
+	var bar = ProgressBar.new()
+	bar.max_value = 5
+	bar.value = 0
+	bar.show_percentage = false
+	bar.custom_minimum_size = Vector2(0, 8)
+	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.8, 0.2, 0.2)
+	style.corner_radius_top_left = 2
+	style.corner_radius_top_right = 2
+	style.corner_radius_bottom_right = 2
+	style.corner_radius_bottom_left = 2
+	bar.add_theme_stylebox_override("fill", style)
+	stat_container.add_child(bar)
+	
+	bar.set_meta("percent_lbl", percent_lbl)
+	return bar
+
 func update_stats_display() -> void:
 	var selected := get_selected_members()
-	
-	var total_cost: int = 0
-	for member in selected:
-		total_cost += member["cost"]
-	
-	total_cost_label.text = "$%d" % total_cost
 
-	if selected.is_empty():
-		comm_bar.value = 0
-		speed_bar.value = 0
-		reliability_bar.value = 0
-		return
-
-	var total_comm: float = 0.0
-	var total_speed: float = 0.0
-	var total_reliability: float = 0.0
-
-	for member in selected:
-		total_comm += member["communication"]
-		total_speed += member["speed"]
-		total_reliability += member["reliability"]
+	var totals = {
+		"communication": 0.0,
+		"speed": 0.0,
+		"operations": 0.0,
+		"reliability": 0.0,
+		"teamwork": 0.0,
+		"stress_tolerance": 0.0,
+		"creativity": 0.0,
+		"experience_level": 0.0,
+		"workload_capacity": 0.0
+	}
 
 	var count := selected.size()
-	comm_bar.value = total_comm / count
-	speed_bar.value = total_speed / count
-	reliability_bar.value = total_reliability / count
+	if count > 0:
+		for member in selected:
+			for key in totals.keys():
+				totals[key] += member[key]
+		for key in totals.keys():
+			totals[key] /= count
+
+	for key in totals.keys():
+		var val = totals[key]
+		var bar: ProgressBar = right_panel_bars[key]
+		bar.value = val
+		var percent_lbl: Label = bar.get_meta("percent_lbl")
+		percent_lbl.text = "%d%%" % (val * 20)
+		
+		var style = bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
+		if val >= 4.0:
+			style.bg_color = Color(0.2, 0.8, 0.2)
+		elif val >= 3.0:
+			style.bg_color = Color(0.8, 0.8, 0.2)
+		else:
+			style.bg_color = Color(0.8, 0.2, 0.2)
+		bar.add_theme_stylebox_override("fill", style)
 
 
 func _on_confirm_pressed() -> void:
@@ -259,8 +340,6 @@ func _on_confirm_pressed() -> void:
 		return
 
 	GameState.selected_team = selected
-	for member in selected:
-		GameState.money -= member["cost"]
 	
 	if not GameState.completed_activities.has("team_assignment"):
 		GameState.completed_activities.append("team_assignment")

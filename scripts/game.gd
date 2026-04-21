@@ -35,9 +35,16 @@ func _ready() -> void:
 	stage_setup_choices_panel.hide()
 	
 	# Initial Onboarding Sequence
-	activity_board.hide()
-	charter_panel.hide()
-	email_panel.show()
+	if GameState.skip_onboarding:
+		activity_board.show()
+		charter_panel.hide()
+		email_panel.hide()
+		if GameState.has_method("start_game_timer"):
+			GameState.start_game_timer()
+	else:
+		charter_panel.show()
+		activity_board.hide()
+		email_panel.hide()
 	
 	_update_hud()
 
