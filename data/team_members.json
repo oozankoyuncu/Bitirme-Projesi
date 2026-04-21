@@ -1,36 +1,199 @@
 {
-  "members": [
-	{
-	  "id": "mert",
-	  "name": "Mert",
-	  "communication": 7,
-	  "speed": 5,
-	  "reliability": 8,
-	  "cost": 100
-	},
-	{
-	  "id": "selin",
-	  "name": "Selin",
-	  "communication": 5,
-	  "speed": 9,
-	  "reliability": 6,
-	  "cost": 50
-	},
-	{
-	  "id": "arda",
-	  "name": "Arda",
-	  "communication": 8,
-	  "speed": 4,
-	  "reliability": 9,
-	  "cost": 50
-	},
-	{
-	  "id": "mertcan",
-	  "name": "Mertcan",
-	  "communication": 0,
-	  "speed": 0,
-	  "reliability": 0,
-	  "cost": 50,
-	}
-  ]
+	"members": [
+		{
+			"id": "elif_kaya",
+			"name": "Elif Kaya",
+			"communication": 4,
+			"speed": 1,
+			"operations": 5,
+			"reliability": 1,
+			"teamwork": 4,
+			"stress_tolerance": 2,
+			"creativity": 1,
+			"experience_level": 4,
+			"workload_capacity": 2
+		},
+		{
+			"id": "mert_aydin",
+			"name": "Mert Aydın",
+			"communication": 1,
+			"speed": 4,
+			"operations": 1,
+			"reliability": 4,
+			"teamwork": 1,
+			"stress_tolerance": 4,
+			"creativity": 5,
+			"experience_level": 1,
+			"workload_capacity": 2
+		},
+		{
+			"id": "mertcan_bakir",
+			"name": "Mertcan Bakır",
+			"communication": 5,
+			"speed": 1,
+			"operations": 4,
+			"reliability": 1,
+			"teamwork": 2,
+			"stress_tolerance": 1,
+			"creativity": 4,
+			"experience_level": 2,
+			"workload_capacity": 1
+		},
+		{
+			"id": "can_yilmaz",
+			"name": "Can Yılmaz",
+			"communication": 1,
+			"speed": 5,
+			"operations": 1,
+			"reliability": 4,
+			"teamwork": 4,
+			"stress_tolerance": 1,
+			"creativity": 1,
+			"experience_level": 5,
+			"workload_capacity": 3
+		},
+		{
+			"id": "mert_tokgoz",
+			"name": "Mert Tokgöz",
+			"communication": 2,
+			"speed": 4,
+			"operations": 1,
+			"reliability": 5,
+			"teamwork": 1,
+			"stress_tolerance": 4,
+			"creativity": 2,
+			"experience_level": 4,
+			"workload_capacity": 1
+		},
+		{
+			"id": "kerem_sahin",
+			"name": "Kerem Şahin",
+			"communication": 4,
+			"speed": 2,
+			"operations": 4,
+			"reliability": 1,
+			"teamwork": 5,
+			"stress_tolerance": 1,
+			"creativity": 4,
+			"experience_level": 1,
+			"workload_capacity": 2
+		},
+		{
+			"id": "defne_koculu",
+			"name": "Defne Koçulu",
+			"communication": 1,
+			"speed": 1,
+			"operations": 2,
+			"reliability": 4,
+			"teamwork": 1,
+			"stress_tolerance": 5,
+			"creativity": 1,
+			"experience_level": 4,
+			"workload_capacity": 3
+		},
+		{
+			"id": "emir_celik",
+			"name": "Emir Çelik",
+			"communication": 4,
+			"speed": 4,
+			"operations": 1,
+			"reliability": 2,
+			"teamwork": 4,
+			"stress_tolerance": 1,
+			"creativity": 5,
+			"experience_level": 1,
+			"workload_capacity": 1
+		},
+		{
+			"id": "cem_sahin",
+			"name": "Cem Şahin",
+			"communication": 5,
+			"speed": 1,
+			"operations": 4,
+			"reliability": 1,
+			"teamwork": 1,
+			"stress_tolerance": 4,
+			"creativity": 4,
+			"experience_level": 2,
+			"workload_capacity": 3
+		},
+		{
+			"id": "arda_kurt",
+			"name": "Arda Kurt",
+			"communication": 1,
+			"speed": 4,
+			"operations": 5,
+			"reliability": 4,
+			"teamwork": 2,
+			"stress_tolerance": 1,
+			"creativity": 1,
+			"experience_level": 4,
+			"workload_capacity": 2
+		},
+		{
+			"id": "burak_cimen",
+			"name": "Burak Çimen",
+			"communication": 4,
+			"speed": 1,
+			"operations": 1,
+			"reliability": 5,
+			"teamwork": 4,
+			"stress_tolerance": 4,
+			"creativity": 1,
+			"experience_level": 1,
+			"workload_capacity": 2
+		},
+		{
+			"id": "bora_tekin",
+			"name": "Bora Tekin",
+			"communication": 2,
+			"speed": 5,
+			"operations": 4,
+			"reliability": 1,
+			"teamwork": 1,
+			"stress_tolerance": 2,
+			"creativity": 4,
+			"experience_level": 5,
+			"workload_capacity": 3
+		},
+		{
+			"id": "cansu_temiz",
+			"name": "Cansu Temiz",
+			"communication": 1,
+			"speed": 1,
+			"operations": 4,
+			"reliability": 4,
+			"teamwork": 5,
+			"stress_tolerance": 1,
+			"creativity": 2,
+			"experience_level": 1,
+			"workload_capacity": 2
+		},
+		{
+			"id": "oguz_kilic",
+			"name": "Oğuz Kılıç",
+			"communication": 4,
+			"speed": 4,
+			"operations": 2,
+			"reliability": 1,
+			"teamwork": 1,
+			"stress_tolerance": 4,
+			"creativity": 4,
+			"experience_level": 4,
+			"workload_capacity": 3
+		},
+		{
+			"id": "melis_yildiz",
+			"name": "Melis Yıldız",
+			"communication": 1,
+			"speed": 2,
+			"operations": 1,
+			"reliability": 4,
+			"teamwork": 4,
+			"stress_tolerance": 5,
+			"creativity": 1,
+			"experience_level": 1,
+			"workload_capacity": 3
+		}
+	]
 }

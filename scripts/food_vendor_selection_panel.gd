@@ -67,17 +67,45 @@ var vendor_options = {
 const MAX_SPACE: int = 100
 const MAX_ELECTRICITY: int = 50
 
-@onready var vendor_list: VBoxContainer = $MarginContainer/VBoxContainer/ContentPanel/MarginContainer/VendorList
-@onready var capacity_label: Label = $MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer/CapacityLabel
-@onready var summary_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer/SummaryLabel
-@onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonRow/ConfirmButton
+@onready var vendor_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/VendorList
+@onready var budget_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/BudgetLabel
+@onready var capacity_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/CapacityLabel
+@onready var hygiene_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/HygieneLabel
+@onready var electricity_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/ElectricityLabel
+@onready var space_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/SpaceLabel
+@onready var diversity_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/DiversityLabel
+@onready var warning_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/WarningLabel
+@onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
 
 var option_checkboxes: Array = []
 
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
+	_setup_ui_styles()
 	create_options()
 	refresh_ui()
+
+func _setup_ui_styles() -> void:
+	# Main Panel Glassmorphism
+	var main_style = StyleBoxFlat.new()
+	main_style.bg_color = Color(0.05, 0.07, 0.1, 0.95)
+	main_style.border_width_left = 4
+	main_style.border_color = Color(0.8, 0.4, 0.2)
+	add_theme_stylebox_override("panel", main_style)
+
+	# Stats Panel
+	var side_style = StyleBoxFlat.new()
+	side_style.bg_color = Color(0.1, 0.12, 0.15, 0.8)
+	side_style.corner_radius_top_left = 10
+	side_style.corner_radius_top_right = 10
+	side_style.corner_radius_bottom_right = 10
+	side_style.corner_radius_bottom_left = 10
+	side_style.border_width_left = 1
+	side_style.border_width_top = 1
+	side_style.border_width_right = 1
+	side_style.border_width_bottom = 1
+	side_style.border_color = Color(0.4, 0.3, 0.2)
+	$MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel.add_theme_stylebox_override("panel", side_style)
 
 func create_options() -> void:
 	for c in vendor_list.get_children():
@@ -90,11 +118,21 @@ func create_options() -> void:
 		var card = PanelContainer.new()
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
+		var card_style = StyleBoxFlat.new()
+		card_style.bg_color = Color(0.15, 0.18, 0.22, 0.8)
+		card_style.corner_radius_top_left = 8
+		card_style.corner_radius_top_right = 8
+		card_style.corner_radius_bottom_right = 8
+		card_style.corner_radius_bottom_left = 8
+		card_style.border_width_left = 4
+		card_style.border_color = Color(0.8, 0.4, 0.2)
+		card.add_theme_stylebox_override("panel", card_style)
+		
 		var margin = MarginContainer.new()
-		margin.add_theme_constant_override("margin_left", 15)
-		margin.add_theme_constant_override("margin_top", 10)
-		margin.add_theme_constant_override("margin_right", 15)
-		margin.add_theme_constant_override("margin_bottom", 10)
+		margin.add_theme_constant_override("margin_left", 20)
+		margin.add_theme_constant_override("margin_top", 15)
+		margin.add_theme_constant_override("margin_right", 20)
+		margin.add_theme_constant_override("margin_bottom", 15)
 		card.add_child(margin)
 		
 		var hbox = HBoxContainer.new()
@@ -102,13 +140,15 @@ func create_options() -> void:
 		
 		var cb = CheckBox.new()
 		cb.text = "  " + v_data["display_name"]
+		cb.add_theme_font_size_override("font_size", 20)
 		cb.set_meta("id", id)
-		cb.toggled.connect(_on_option_toggled)
+		cb.toggled.connect(func(toggled_on): _on_option_toggled(toggled_on, card, card_style))
 		
 		if GameState.food_vendor_completed:
 			cb.disabled = true
 			if GameState.selected_food_vendors.has(id):
 				cb.button_pressed = true
+				_style_selected_card(card_style, true)
 		
 		option_checkboxes.append(cb)
 		hbox.add_child(cb)
@@ -117,14 +157,35 @@ func create_options() -> void:
 		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hbox.add_child(spacer)
 		
-		var details_label = Label.new()
-		details_label.text = "Type: " + v_data["cuisine_type"] + " | Price: " + str(v_data["price"]) + " | Cap: " + str(v_data["service_capacity"]) + " | Speed: " + v_data["speed"] + " | Hyg: " + str(v_data["hygiene_rating"]) + " | Elec: " + str(v_data["electricity_requirement"]) + "kVA | Space: " + str(v_data["space_requirement"]) + "sqm"
-		details_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		hbox.add_child(details_label)
+		var details_vbox = VBoxContainer.new()
+		details_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		hbox.add_child(details_vbox)
+		
+		var top_label = Label.new()
+		top_label.text = v_data["cuisine_type"] + " | " + str(v_data["price"]) + " TL | Cap: " + str(v_data["service_capacity"])
+		top_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		top_label.modulate = Color(1.0, 0.8, 0.6)
+		details_vbox.add_child(top_label)
+		
+		var bottom_label = Label.new()
+		bottom_label.text = "Hyg: " + str(v_data["hygiene_rating"]) + " | Speed: " + v_data["speed"] + " | Elec: " + str(v_data["electricity_requirement"]) + "kVA | Space: " + str(v_data["space_requirement"]) + "sqm"
+		bottom_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		bottom_label.modulate = Color(0.7, 0.7, 0.7)
+		bottom_label.add_theme_font_size_override("font_size", 14)
+		details_vbox.add_child(bottom_label)
 		
 		vendor_list.add_child(card)
 
-func _on_option_toggled(_toggled_on: bool) -> void:
+func _style_selected_card(style: StyleBoxFlat, selected: bool) -> void:
+	if selected:
+		style.bg_color = Color(0.4, 0.2, 0.1, 0.9)
+		style.border_color = Color(1.0, 0.6, 0.2)
+	else:
+		style.bg_color = Color(0.15, 0.18, 0.22, 0.8)
+		style.border_color = Color(0.8, 0.4, 0.2)
+
+func _on_option_toggled(toggled_on: bool, card: PanelContainer, style: StyleBoxFlat) -> void:
+	_style_selected_card(style, toggled_on)
 	refresh_ui()
 
 func get_totals() -> Dictionary:
@@ -203,36 +264,45 @@ func get_totals() -> Dictionary:
 	}
 
 func refresh_ui() -> void:
-	capacity_label.text = "Limits - Space: " + str(MAX_SPACE) + " sqm | Electricity: " + str(MAX_ELECTRICITY) + " kVA"
 	var data = get_totals()
 	
+	budget_label.text = "Budget: " + str(data["price"]) + " / " + str(GameState.money) + " TL"
+	capacity_label.text = "Capacity: " + str(data["capacity"]) + " / " + str(GameState.final_attendance)
+	hygiene_label.text = "Avg Hygiene: " + str(snapped(data["avg_hygiene"], 0.1))
+	electricity_label.text = "Electricity: " + str(data["electricity"]) + " / " + str(MAX_ELECTRICITY) + " kVA"
+	space_label.text = "Space Used: " + str(data["space"]) + " / " + str(MAX_SPACE) + " sqm"
+	diversity_label.text = "Diversity: " + str(data["diversity_count"]) + " types"
+	
 	if GameState.food_vendor_completed:
-		confirm_button.text = "Back to Board"
+		confirm_button.text = "BACK TO BOARD"
 		confirm_button.disabled = false
-		summary_label.text = "Selection Fixed! Cost: " + str(data["price"]) + " TL | Capacity: " + str(data["capacity"])
+		warning_label.text = "Selection Fixed."
+		warning_label.modulate = Color(0.4, 1.0, 0.4)
 	else:
-		confirm_button.text = "Confirm Selection"
+		confirm_button.text = "CONFIRM SELECTION"
 		
 		var warnings = []
-		if data["budget_exceeded"]:
-			warnings.append("OVER BUDGET!")
-		if data["constraints_exceeded"]:
-			warnings.append("OVER LIMITS (Space/Elec)!")
-		if data["low_capacity"]:
-			warnings.append("LOW CAPACITY!")
-		if data["low_hygiene"]:
-			warnings.append("BAD HYGIENE!")
-		if data["low_diversity"]:
-			warnings.append("POOR VARIETY!")
+		if data["budget_exceeded"]: warnings.append("OVER BUDGET")
+		if data["constraints_exceeded"]: warnings.append("OVER LIMITS")
+		if data["low_capacity"]: warnings.append("LOW CAPACITY")
+		if data["low_hygiene"]: warnings.append("BAD HYGIENE")
+		if data["low_diversity"]: warnings.append("POOR VARIETY")
 			
-		var warning_text = ""
 		if warnings.size() > 0:
-			warning_text = "[WARNING: " + ", ".join(warnings) + "] "
-			# Allow submission even if warnings exist, as per explicit user request
+			warning_label.text = "WARNING: " + ", ".join(warnings)
+			warning_label.modulate = Color(1.0, 0.2, 0.2)
+		else:
+			warning_label.text = "All constraints met."
+			warning_label.modulate = Color(0.6, 0.6, 0.6)
 			
-		summary_label.text = warning_text + "Cost: " + str(data["price"]) + " TL | Cap: " + str(data["capacity"]) + "/" + str(GameState.final_attendance) + " | Hyg: " + str(snapped(data["avg_hygiene"], 0.1)) + " | Elec: " + str(data["electricity"]) + " | Space: " + str(data["space"])
+		budget_label.modulate = Color(1.0, 0.2, 0.2) if data["budget_exceeded"] else Color.WHITE
+		electricity_label.modulate = Color(1.0, 0.2, 0.2) if data["electricity"] > MAX_ELECTRICITY else Color.WHITE
+		space_label.modulate = Color(1.0, 0.2, 0.2) if data["space"] > MAX_SPACE else Color.WHITE
+		capacity_label.modulate = Color(1.0, 0.6, 0.2) if data["low_capacity"] else Color.WHITE
+		hygiene_label.modulate = Color(1.0, 0.6, 0.2) if data["low_hygiene"] else Color.WHITE
+		diversity_label.modulate = Color(1.0, 0.6, 0.2) if data["low_diversity"] else Color.WHITE
 		
-		# Confirm button stays enabled, warnings and penalties handle the UX
+		# Confirm button stays enabled
 		confirm_button.disabled = false 
 
 func _on_confirm_pressed() -> void:

@@ -127,6 +127,18 @@
 	  "cost": 0,
 	  "duration": 4,
 	  "dependencies": ["decoration_theme_decision"]
+	},
+	{
+	  "id": "final_festival_layout_mapping",
+	  "name": "Final Festival Layout Mapping",
+	  "type": "final_layout_mapping",
+	  "cost": 0,
+	  "duration": 0,
+	  "dependencies": [
+		"food_vendor_selection",
+		"volunteer_club_recruitment",
+		"stage_setup_choices"
+	  ]
 	}
 	]
 }

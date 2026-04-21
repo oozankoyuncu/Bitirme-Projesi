@@ -42,9 +42,9 @@ func _ready() -> void:
 		if GameState.has_method("start_game_timer"):
 			GameState.start_game_timer()
 	else:
-		charter_panel.show()
+		charter_panel.hide()
 		activity_board.hide()
-		email_panel.hide()
+		email_panel.show()
 	
 	_update_hud()
 

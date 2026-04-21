@@ -42,17 +42,42 @@ var club_options = {
 # Update this to match real area capacities when fully designed.
 const MAX_SPACE: int = 200
 
-@onready var club_list: VBoxContainer = $MarginContainer/VBoxContainer/ContentPanel/MarginContainer/ClubList
-@onready var capacity_label: Label = $MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer/CapacityLabel
-@onready var summary_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer/SummaryLabel
-@onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonRow/ConfirmButton
+@onready var club_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/ClubList
+@onready var capacity_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/CapacityLabel
+@onready var engagement_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/EngagementLabel
+@onready var types_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/TypesLabel
+@onready var warning_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/WarningLabel
+@onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
 
 var option_checkboxes: Array = []
 
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
+	_setup_ui_styles()
 	create_options()
 	refresh_ui()
+
+func _setup_ui_styles() -> void:
+	# Main Panel Glassmorphism
+	var main_style = StyleBoxFlat.new()
+	main_style.bg_color = Color(0.05, 0.07, 0.1, 0.95)
+	main_style.border_width_left = 4
+	main_style.border_color = Color(0.2, 0.6, 0.8)
+	add_theme_stylebox_override("panel", main_style)
+
+	# Stats Panel
+	var side_style = StyleBoxFlat.new()
+	side_style.bg_color = Color(0.1, 0.12, 0.15, 0.8)
+	side_style.corner_radius_top_left = 10
+	side_style.corner_radius_top_right = 10
+	side_style.corner_radius_bottom_right = 10
+	side_style.corner_radius_bottom_left = 10
+	side_style.border_width_left = 1
+	side_style.border_width_top = 1
+	side_style.border_width_right = 1
+	side_style.border_width_bottom = 1
+	side_style.border_color = Color(0.3, 0.4, 0.5)
+	$MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel.add_theme_stylebox_override("panel", side_style)
 
 func create_options() -> void:
 	for c in club_list.get_children():
@@ -65,11 +90,21 @@ func create_options() -> void:
 		var card = PanelContainer.new()
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
+		var card_style = StyleBoxFlat.new()
+		card_style.bg_color = Color(0.15, 0.18, 0.22, 0.8)
+		card_style.corner_radius_top_left = 8
+		card_style.corner_radius_top_right = 8
+		card_style.corner_radius_bottom_right = 8
+		card_style.corner_radius_bottom_left = 8
+		card_style.border_width_left = 4
+		card_style.border_color = Color(0.2, 0.6, 0.8)
+		card.add_theme_stylebox_override("panel", card_style)
+		
 		var margin = MarginContainer.new()
-		margin.add_theme_constant_override("margin_left", 15)
-		margin.add_theme_constant_override("margin_top", 10)
-		margin.add_theme_constant_override("margin_right", 15)
-		margin.add_theme_constant_override("margin_bottom", 10)
+		margin.add_theme_constant_override("margin_left", 20)
+		margin.add_theme_constant_override("margin_top", 15)
+		margin.add_theme_constant_override("margin_right", 20)
+		margin.add_theme_constant_override("margin_bottom", 15)
 		card.add_child(margin)
 		
 		var hbox = HBoxContainer.new()
@@ -77,13 +112,15 @@ func create_options() -> void:
 		
 		var cb = CheckBox.new()
 		cb.text = "  " + c_data["display_name"]
+		cb.add_theme_font_size_override("font_size", 20)
 		cb.set_meta("id", id)
-		cb.toggled.connect(_on_option_toggled)
+		cb.toggled.connect(func(toggled_on): _on_option_toggled(toggled_on, card, card_style))
 		
 		if GameState.volunteer_club_completed:
 			cb.disabled = true
 			if GameState.selected_volunteer_clubs.has(id):
 				cb.button_pressed = true
+				_style_selected_card(card_style, true)
 		
 		option_checkboxes.append(cb)
 		hbox.add_child(cb)
@@ -92,14 +129,35 @@ func create_options() -> void:
 		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hbox.add_child(spacer)
 		
-		var details_label = Label.new()
-		details_label.text = "Type: " + c_data["activity_type"] + " | Space: " + str(c_data["space_requirement"]) + " sqm | Engage: +" + str(c_data["engagement_level"]) + " | Needs: " + c_data["operational_needs"]
-		details_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		hbox.add_child(details_label)
+		var details_vbox = VBoxContainer.new()
+		details_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		hbox.add_child(details_vbox)
+		
+		var type_label = Label.new()
+		type_label.text = c_data["activity_type"] + " | +" + str(c_data["engagement_level"]) + " Eng."
+		type_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		type_label.modulate = Color(0.6, 0.8, 1.0)
+		details_vbox.add_child(type_label)
+		
+		var req_label = Label.new()
+		req_label.text = str(c_data["space_requirement"]) + " sqm | " + c_data["operational_needs"]
+		req_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		req_label.modulate = Color(0.7, 0.7, 0.7)
+		req_label.add_theme_font_size_override("font_size", 14)
+		details_vbox.add_child(req_label)
 		
 		club_list.add_child(card)
 
-func _on_option_toggled(_toggled_on: bool) -> void:
+func _style_selected_card(style: StyleBoxFlat, selected: bool) -> void:
+	if selected:
+		style.bg_color = Color(0.2, 0.3, 0.4, 0.9)
+		style.border_color = Color(0.4, 0.8, 1.0)
+	else:
+		style.bg_color = Color(0.15, 0.18, 0.22, 0.8)
+		style.border_color = Color(0.2, 0.6, 0.8)
+
+func _on_option_toggled(toggled_on: bool, card: PanelContainer, style: StyleBoxFlat) -> void:
+	_style_selected_card(style, toggled_on)
 	refresh_ui()
 
 func get_totals() -> Dictionary:
@@ -143,24 +201,30 @@ func get_totals() -> Dictionary:
 	}
 
 func refresh_ui() -> void:
-	capacity_label.text = "Total Space Available: " + str(MAX_SPACE) + " sqm"
 	var data = get_totals()
 	
+	capacity_label.text = "Space Used: " + str(data["space"]) + " / " + str(MAX_SPACE) + " sqm"
+	engagement_label.text = "Total Engagement: +" + str(data["engagement"])
+	types_label.text = "Diversity (Types): " + str(data["diversity_effect"])
+	
 	if GameState.volunteer_club_completed:
-		confirm_button.text = "Back to Board"
+		confirm_button.text = "BACK TO BOARD"
 		confirm_button.disabled = false
-		summary_label.text = "Selection Fixed! Selected: " + str(data["selected_ids"].size()) + " | Used Space: " + str(data["space"]) + "/" + str(MAX_SPACE) + " | Engagement: +" + str(data["engagement"])
+		warning_label.text = "Selection Fixed."
+		warning_label.modulate = Color(0.4, 1.0, 0.4)
 	else:
-		confirm_button.text = "Confirm Selection"
+		confirm_button.text = "CONFIRM SELECTION"
 		
-		var warning = ""
 		if data["space_exceeded"]:
-			warning = "[WARNING: OVER CAPACITY! Penalty applied] "
-			
-		summary_label.text = warning + "Selected: " + str(data["selected_ids"].size()) + " | Space: " + str(data["space"]) + " / " + str(MAX_SPACE) + " | Total Engagement: " + str(data["engagement"]) + " | Types: " + str(data["diversity_effect"])
+			warning_label.text = "WARNING: Over Capacity! Penalty will be applied."
+			warning_label.modulate = Color(1.0, 0.2, 0.2)
+			capacity_label.modulate = Color(1.0, 0.2, 0.2)
+		else:
+			warning_label.text = "Space is within limits."
+			warning_label.modulate = Color(0.6, 0.6, 0.6)
+			capacity_label.modulate = Color.WHITE
 		
-		# Allow submitting even if over capacity to trigger the penalty, as requested
-		confirm_button.disabled = false 
+		confirm_button.disabled = false
 
 func _on_confirm_pressed() -> void:
 	if GameState.volunteer_club_completed:

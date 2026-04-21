@@ -82,7 +82,7 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	stats_row.add_child(dur_label)
 	
 	# Interaction
-	if status == "Available":
+	if status == "Available" or (status == "Completed" and activity["id"] in ["initial_festival_layout_mapping", "final_festival_layout_mapping"]):
 		card.gui_input.connect(func(event): 
 			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 				start_activity(activity)
@@ -137,6 +137,7 @@ func get_activity_emoji(id: String) -> String:
 		"transport_coordination": return "🚚"
 		"decoration_theme_decision": return "🎨"
 		"festival_cleaning_security": return "🧹"
+		"final_festival_layout_mapping": return "📍"
 	return "📋"
 
 func get_status_color(status: String) -> Color:
@@ -150,15 +151,15 @@ func get_activity_status(activity: Dictionary) -> String:
 	var activity_id = activity["id"]
 	if GameState.completed_activities.has(activity_id): return "Completed"
 	
-	# Manual Lock Logic
-	if activity_id == "sponsor_management" and GameState.week < 2: return "Locked"
-	if activity_id == "promotion_strategy" and GameState.week < 4: return "Locked"
-	if activity_id == "ticket_pricing" and GameState.week < 4: return "Locked"
-	if activity_id == "sound_system_choices" and GameState.week < 7: return "Locked"
-	if activity_id == "transport_coordination" and GameState.week < 7: return "Locked"
-	if activity_id == "decoration_theme_decision" and GameState.week < 8: return "Locked"
-	
-	if not _dependencies_completed(activity): return "Locked"
+	 ##Manual Lock Logic
+	#if activity_id == "sponsor_management" and GameState.week < 2: return "Locked"
+	#if activity_id == "promotion_strategy" and GameState.week < 4: return "Locked"
+	#if activity_id == "ticket_pricing" and GameState.week < 4: return "Locked"
+	#if activity_id == "sound_system_choices" and GameState.week < 7: return "Locked"
+	#if activity_id == "transport_coordination" and GameState.week < 7: return "Locked"
+	#if activity_id == "decoration_theme_decision" and GameState.week < 8: return "Locked"
+	#
+	#if not _dependencies_completed(activity): return "Locked"
 	return "Available"
 
 func _dependencies_completed(activity: Dictionary) -> bool:
@@ -182,7 +183,8 @@ func start_activity(activity: Dictionary) -> void:
 		"sound_system_choices": "SoundSystemChoicesPanel",
 		"transport_coordination": "TransportCoordinationPanel",
 		"decoration_theme_decision": "DecorationThemePanel",
-		"festival_cleaning_security": "FestivalCleaningSecurityPanel"
+		"festival_cleaning_security": "FestivalCleaningSecurityPanel",
+		"final_festival_layout_mapping": "FinalFacilityLayoutPanel"
 	}
 	
 	if activity_id in panels:

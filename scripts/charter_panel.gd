@@ -71,6 +71,7 @@ func _setup_styles() -> void:
 func _initialize_kpi_styles() -> void:
 	for key in kpi_bars:
 		var bar = kpi_bars[key]
+		bar.set_meta("target_val", bar.value)
 		var fill_style = StyleBoxFlat.new()
 		fill_style.set_corner_radius_all(10)
 		
@@ -101,10 +102,8 @@ func _on_tab_changed(tab_idx: int) -> void:
 	# Subtle punch animation when switching tabs
 	var content = tab_container.get_tab_control(tab_idx)
 	content.modulate.a = 0
-	content.position.y += 10
 	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
 	tween.tween_property(content, "modulate:a", 1.0, 0.3)
-	tween.tween_property(content, "position:y", content.position.y - 10, 0.3)
 	
 	if tab_container.get_tab_title(tab_idx) == "Success":
 		_animate_bars()
@@ -112,7 +111,7 @@ func _on_tab_changed(tab_idx: int) -> void:
 func _animate_bars() -> void:
 	for key in kpi_bars:
 		var bar = kpi_bars[key]
-		var target_val = bar.value
+		var target_val = bar.get_meta("target_val")
 		bar.value = 0
 		var tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 		tween.tween_property(bar, "value", target_val, 1.2).set_delay(randf() * 0.3)

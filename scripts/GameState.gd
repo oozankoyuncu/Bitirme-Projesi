@@ -6,7 +6,7 @@ signal time_changed
 # ---- Varsayılan başlangıç değerleri ----
 const START_MONEY: int = 400000
 const START_WEEK: int = 1
-const START_TIME_SECONDS: float = 1.0
+const START_TIME_SECONDS: float = 0.0
 
 # ---- Oyun state ----
 var money: int = START_MONEY
@@ -21,6 +21,9 @@ var team_motivation: float = 80.0
 var skip_onboarding: bool = false
 
 var layout_plan: Dictionary = {}
+
+var final_layout_plan: Dictionary = {}
+var final_layout_completed: bool = false
 
 # Week artışı için tick kontrolü
 var last_week_tick: int = -1
@@ -407,6 +410,11 @@ func finalize_food_vendor_selection(selected: Array, capacity: int, avg_hygiene:
 	
 	food_vendor_completed = true
 	complete_activity("food_vendor_selection")
+
+func finalize_final_layout(plan: Dictionary) -> void:
+	final_layout_plan = plan.duplicate(true)
+	final_layout_completed = true
+	complete_activity("final_festival_layout_mapping")
 	
 func load_stage_setups() -> void:
 	var file = FileAccess.open("res://data/stage_setups.json", FileAccess.READ)

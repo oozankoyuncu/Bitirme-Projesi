@@ -17,13 +17,57 @@ extends Panel
 @onready var back_button: Button = $MarginContainer/VBoxContainer/ButtonRow/BackButton
 
 
+@onready var available_panel = $MarginContainer/VBoxContainer/HBoxContainer/AvailableArtistsPanel
+@onready var selected_panel = $MarginContainer/VBoxContainer/HBoxContainer/SelectedLineupPanel
+@onready var summary_panel = $MarginContainer/VBoxContainer/SummaryPanel
+
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	back_button.pressed.connect(_on_back_pressed)
 
+	_setup_ui_styles()
+
 	create_available_artist_list()
 	refresh_selected_lists()
 	refresh_summary()
+
+func _setup_ui_styles() -> void:
+	var main_style = StyleBoxFlat.new()
+	main_style.bg_color = Color(0.05, 0.07, 0.1, 0.95)
+	main_style.border_width_left = 4
+	main_style.border_color = Color(0.1, 0.4, 0.7)
+	self.add_theme_stylebox_override("panel", main_style)
+
+	var panel_style = StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.1, 0.12, 0.15, 0.8)
+	panel_style.corner_radius_top_left = 10
+	panel_style.corner_radius_top_right = 10
+	panel_style.corner_radius_bottom_right = 10
+	panel_style.corner_radius_bottom_left = 10
+	panel_style.border_width_left = 1
+	panel_style.border_width_top = 1
+	panel_style.border_width_right = 1
+	panel_style.border_width_bottom = 1
+	panel_style.border_color = Color(0.2, 0.3, 0.4)
+
+	if available_panel: available_panel.add_theme_stylebox_override("panel", panel_style)
+	if selected_panel: selected_panel.add_theme_stylebox_override("panel", panel_style)
+	if summary_panel: summary_panel.add_theme_stylebox_override("panel", panel_style)
+
+	var btn_style = StyleBoxFlat.new()
+	btn_style.bg_color = Color(0.2, 0.5, 0.8)
+	btn_style.corner_radius_top_left = 5
+	btn_style.corner_radius_top_right = 5
+	btn_style.corner_radius_bottom_right = 5
+	btn_style.corner_radius_bottom_left = 5
+	
+	var btn_hover = btn_style.duplicate()
+	btn_hover.bg_color = Color(0.3, 0.6, 0.9)
+
+	confirm_button.add_theme_stylebox_override("normal", btn_style)
+	confirm_button.add_theme_stylebox_override("hover", btn_hover)
+	back_button.add_theme_stylebox_override("normal", btn_style)
+	back_button.add_theme_stylebox_override("hover", btn_hover)
 
 
 func create_available_artist_list() -> void:
@@ -35,38 +79,75 @@ func create_available_artist_list() -> void:
 		return
 
 	for artist in GameState.available_artists:
+		var card := PanelContainer.new()
+		var card_style = StyleBoxFlat.new()
+		card_style.bg_color = Color(0.15, 0.15, 0.15, 0.6)
+		card_style.border_width_left = 1
+		card_style.border_width_top = 1
+		card_style.border_width_right = 1
+		card_style.border_width_bottom = 1
+		card_style.border_color = Color(0.3, 0.3, 0.3)
+		card_style.corner_radius_top_left = 8
+		card_style.corner_radius_top_right = 8
+		card_style.corner_radius_bottom_right = 8
+		card_style.corner_radius_bottom_left = 8
+		card.add_theme_stylebox_override("panel", card_style)
+		card.custom_minimum_size = Vector2(0, 110)
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+		var margin := MarginContainer.new()
+		margin.add_theme_constant_override("margin_left", 15)
+		margin.add_theme_constant_override("margin_top", 15)
+		margin.add_theme_constant_override("margin_right", 15)
+		margin.add_theme_constant_override("margin_bottom", 15)
+		card.add_child(margin)
+
 		var row := HBoxContainer.new()
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-		row.custom_minimum_size = Vector2(0, 120)
+		margin.add_child(row)
 
-		var label := Label.new()
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var vbox_labels := VBoxContainer.new()
+		vbox_labels.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		vbox_labels.alignment = BoxContainer.ALIGNMENT_CENTER
 
-		var name_text: String = str(artist["name"])
-		var role_text: String = str(artist["role"])
-		var cost_text: String = str(artist["cost"])
-		var popularity_text: String = str(artist["popularity"])
-		var appeal_text: String = str(artist["crowd_appeal"])
+		var name_label := Label.new()
+		name_label.text = str(artist["name"])
+		name_label.add_theme_font_size_override("font_size", 18)
+		name_label.add_theme_color_override("font_color", Color(0.95, 0.85, 0.2))
+		name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		
+		var info_label := Label.new()
+		info_label.text = "Role: " + str(artist["role"]).capitalize() + " | Cost: " + str(artist["cost"]) + " TL\n" + \
+						  "Pop: " + str(artist["popularity"]) + " | Appeal: " + str(artist["crowd_appeal"])
+		info_label.add_theme_font_size_override("font_size", 13)
+		info_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+		info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
-		label.text = name_text + \
-			"\nRole: " + role_text + \
-			"\nCost: " + cost_text + \
-			"\nPopularity: " + popularity_text + \
-			"\nAppeal: " + appeal_text
+		vbox_labels.add_child(name_label)
+		vbox_labels.add_child(info_label)
 
 		var add_button := Button.new()
 		add_button.text = "Add"
-		add_button.custom_minimum_size = Vector2(90, 40)
+		add_button.custom_minimum_size = Vector2(80, 35)
 		add_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		
+		var btn_style = StyleBoxFlat.new()
+		btn_style.bg_color = Color(0.2, 0.6, 0.3)
+		btn_style.corner_radius_top_left = 5
+		btn_style.corner_radius_top_right = 5
+		btn_style.corner_radius_bottom_right = 5
+		btn_style.corner_radius_bottom_left = 5
+		var btn_hover = btn_style.duplicate()
+		btn_hover.bg_color = Color(0.3, 0.7, 0.4)
+		add_button.add_theme_stylebox_override("normal", btn_style)
+		add_button.add_theme_stylebox_override("hover", btn_hover)
+		
 		add_button.set_meta("artist_data", artist)
 		add_button.pressed.connect(func(): _on_add_artist_pressed(add_button.get_meta("artist_data")))
 
-		row.add_child(label)
+		row.add_child(vbox_labels)
 		row.add_child(add_button)
-		available_artists_list.add_child(row)
+		available_artists_list.add_child(card)
 
 
 func refresh_selected_lists() -> void:
@@ -95,33 +176,77 @@ func refresh_selected_lists() -> void:
 			supporting_list.add_child(_create_selected_artist_row(artist))
 
 
-func _create_selected_artist_row(artist: Dictionary) -> HBoxContainer:
+func _create_selected_artist_row(artist: Dictionary) -> PanelContainer:
+	var card := PanelContainer.new()
+	var card_style = StyleBoxFlat.new()
+	card_style.bg_color = Color(0.1, 0.25, 0.4, 0.6)
+	card_style.border_width_left = 1
+	card_style.border_width_top = 1
+	card_style.border_width_right = 1
+	card_style.border_width_bottom = 1
+	card_style.border_color = Color(0.3, 0.5, 0.7)
+	card_style.corner_radius_top_left = 8
+	card_style.corner_radius_top_right = 8
+	card_style.corner_radius_bottom_right = 8
+	card_style.corner_radius_bottom_left = 8
+	card.add_theme_stylebox_override("panel", card_style)
+	card.custom_minimum_size = Vector2(0, 110)
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 15)
+	margin.add_theme_constant_override("margin_top", 15)
+	margin.add_theme_constant_override("margin_right", 15)
+	margin.add_theme_constant_override("margin_bottom", 15)
+	card.add_child(margin)
+
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.custom_minimum_size = Vector2(0, 110)
+	margin.add_child(row)
 
-	var label := Label.new()
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var vbox_labels := VBoxContainer.new()
+	vbox_labels.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox_labels.alignment = BoxContainer.ALIGNMENT_CENTER
 
-	label.text = str(artist["name"]) + \
-		"\nRole: " + str(artist["role"]) + \
-		"\nCost: " + str(artist["cost"]) + \
-		"\nPopularity: " + str(artist["popularity"]) + \
-		"\nAppeal: " + str(artist["crowd_appeal"])
+	var name_label := Label.new()
+	name_label.text = str(artist["name"])
+	name_label.add_theme_font_size_override("font_size", 18)
+	name_label.add_theme_color_override("font_color", Color(0.4, 0.9, 1.0))
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	
+	var info_label := Label.new()
+	info_label.text = "Role: " + str(artist["role"]).capitalize() + " | Cost: " + str(artist["cost"]) + " TL\n" + \
+					  "Pop: " + str(artist["popularity"]) + " | Appeal: " + str(artist["crowd_appeal"])
+	info_label.add_theme_font_size_override("font_size", 13)
+	info_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+	vbox_labels.add_child(name_label)
+	vbox_labels.add_child(info_label)
 
 	var remove_button := Button.new()
 	remove_button.text = "Remove"
-	remove_button.custom_minimum_size = Vector2(90, 40)
+	remove_button.custom_minimum_size = Vector2(80, 35)
 	remove_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	
+	var btn_style = StyleBoxFlat.new()
+	btn_style.bg_color = Color(0.8, 0.2, 0.2)
+	btn_style.corner_radius_top_left = 5
+	btn_style.corner_radius_top_right = 5
+	btn_style.corner_radius_bottom_right = 5
+	btn_style.corner_radius_bottom_left = 5
+	var btn_hover = btn_style.duplicate()
+	btn_hover.bg_color = Color(0.9, 0.3, 0.3)
+	remove_button.add_theme_stylebox_override("normal", btn_style)
+	remove_button.add_theme_stylebox_override("hover", btn_hover)
+	
 	remove_button.set_meta("artist_data", artist)
 	remove_button.pressed.connect(func(): _on_remove_artist_pressed(remove_button.get_meta("artist_data")))
 
-	row.add_child(label)
+	row.add_child(vbox_labels)
 	row.add_child(remove_button)
 
-	return row
+	return card
 
 
 func _on_add_artist_pressed(artist: Dictionary) -> void:
@@ -197,16 +322,39 @@ func refresh_summary() -> void:
 	var total_attendance := GameState.get_total_expected_attendance()
 	var remaining_budget := GameState.money - total_cost
 
-	money_label.text = "Current Budget: " + str(GameState.money) + " TL"
+	money_label.text = "Budget: " + str(GameState.money) + " TL"
+	money_label.add_theme_font_size_override("font_size", 18)
+	money_label.add_theme_color_override("font_color", Color(0.3, 0.8, 0.3))
 
 	requirements_label.text = \
-		"Required: 1 Headliner, at least 2 Supporting Artists" + \
-		"\nSelected: " + str(GameState.selected_headliners.size()) + " Headliner, " + str(GameState.selected_supporting_artists.size()) + " Supporting"
+		"Requirements: 1 Headliner, 2+ Supporting" + \
+		"\nStatus: " + str(GameState.selected_headliners.size()) + " Headliner, " + str(GameState.selected_supporting_artists.size()) + " Supporting"
+	requirements_label.add_theme_font_size_override("font_size", 16)
+	requirements_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
 
-	total_cost_label.text = "Total Cost: " + str(total_cost) + " TL"
-	total_popularity_label.text = "Average Popularity: %.1f" % avg_popularity
-	total_attendance_label.text = "Expected Attendance: " + str(total_attendance)
-	remaining_budget_label.text = "Remaining Budget After Booking: " + str(remaining_budget) + " TL"
+	total_cost_label.text = "Total Lineup Cost: " + str(total_cost) + " TL"
+	total_cost_label.add_theme_font_size_override("font_size", 16)
+	total_cost_label.add_theme_color_override("font_color", Color(0.9, 0.4, 0.4))
+
+	total_popularity_label.text = "Lineup Popularity: %.1f / 100" % avg_popularity
+	total_popularity_label.add_theme_font_size_override("font_size", 16)
+	total_popularity_label.add_theme_color_override("font_color", Color(0.4, 0.9, 1.0))
+
+	total_attendance_label.text = "Expected Crowd: " + str(total_attendance)
+	total_attendance_label.add_theme_font_size_override("font_size", 16)
+	total_attendance_label.add_theme_color_override("font_color", Color(0.9, 0.8, 0.2))
+
+	remaining_budget_label.text = "Remaining Budget: " + str(remaining_budget) + " TL"
+	remaining_budget_label.add_theme_font_size_override("font_size", 18)
+	if remaining_budget < 0:
+		remaining_budget_label.add_theme_color_override("font_color", Color(0.9, 0.2, 0.2))
+	else:
+		remaining_budget_label.add_theme_color_override("font_color", Color(0.3, 0.8, 0.3))
+		
+	if result_label:
+		result_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		result_label.add_theme_font_size_override("font_size", 16)
+		result_label.add_theme_color_override("font_color", Color(0.9, 0.8, 0.2))
 
 
 func _on_confirm_pressed() -> void:

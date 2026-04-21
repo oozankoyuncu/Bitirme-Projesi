@@ -1,76 +1,28 @@
 extends Panel
 
-var selected_facility: String = ""
 var selected_area_name: String = ""
 
-# Area Data with quantitative metrics
+# Keep track of which items are placed where
+# "item_id": "AreaA" (if placed) or "" (if not placed)
+var placed_items = {}
+var unified_items = {}
+
 var areas = {
-	"AreaA": {
-		"electricity": true, 
-		"truck_access": true, 
-		"capacity": 100, 
-		"size_m2": 500, 
-		"elec_kw": 50, 
-		"assigned": []
-	},
-	"AreaB": {
-		"electricity": false, 
-		"truck_access": true, 
-		"capacity": 60, 
-		"size_m2": 300, 
-		"elec_kw": 0, 
-		"assigned": []
-	},
-	"AreaC": {
-		"electricity": true, 
-		"truck_access": false, 
-		"capacity": 80, 
-		"size_m2": 400, 
-		"elec_kw": 30, 
-		"assigned": []
-	},
-	"AreaD": {
-		"electricity": false, 
-		"truck_access": false, 
-		"capacity": 40, 
-		"size_m2": 200, 
-		"elec_kw": 0, 
-		"assigned": []
-	},
-	"AreaE": {
-		"electricity": true, 
-		"truck_access": true, 
-		"capacity": 120, 
-		"size_m2": 600, 
-		"elec_kw": 60, 
-		"assigned": []
-	},
-	"AreaF": {
-		"electricity": false, 
-		"truck_access": false, 
-		"capacity": 50, 
-		"size_m2": 250, 
-		"elec_kw": 0, 
-		"assigned": []
-	}
+	"AreaA": {"electricity": true, "truck_access": true, "capacity": 100, "size_m2": 500, "elec_kw": 50, "assigned": []},
+	"AreaB": {"electricity": false, "truck_access": true, "capacity": 60, "size_m2": 300, "elec_kw": 0, "assigned": []},
+	"AreaC": {"electricity": true, "truck_access": false, "capacity": 80, "size_m2": 400, "elec_kw": 30, "assigned": []},
+	"AreaD": {"electricity": false, "truck_access": false, "capacity": 40, "size_m2": 200, "elec_kw": 0, "assigned": []},
+	"AreaE": {"electricity": true, "truck_access": true, "capacity": 120, "size_m2": 600, "elec_kw": 60, "assigned": []},
+	"AreaF": {"electricity": false, "truck_access": false, "capacity": 50, "size_m2": 250, "elec_kw": 0, "assigned": []}
 }
 
-# Facility Requirements
-var requirements = {
-	"Stage": {"electricity": true, "truck_access": true, "min_size": 350},
-	"Food Vendor": {"electricity": true, "truck_access": true, "min_size": 100},
-	"Club Stand": {"electricity": false, "truck_access": false, "min_size": 20}
-}
-
-# UI References
 @onready var area_list: GridContainer = $MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea
 @onready var area_info_label: Label = $MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer/AreaInfoLabel
 @onready var warning_label: Label = $MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer/WarningLabel
 @onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
+@onready var confirm_button: Button = $MarginContainer/VBoxContainer/Footer/ConfirmButton
 
-@onready var stage_btn: Button = $MarginContainer/VBoxContainer/MainContent/Palette/PlacementButtons/StageButton
-@onready var food_btn: Button = $MarginContainer/VBoxContainer/MainContent/Palette/PlacementButtons/FoodButton
-@onready var club_btn: Button = $MarginContainer/VBoxContainer/MainContent/Palette/PlacementButtons/ClubButton
+@onready var placement_buttons: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/Palette/ScrollContainer/PlacementButtons
 
 @onready var info_btn: Button = $MarginContainer/VBoxContainer/Header/InfoButton
 @onready var guide_panel: PanelContainer = $GuidePanel
@@ -79,18 +31,15 @@ var requirements = {
 @onready var clear_area_btn: Button = $MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer/ClearAreaButton
 
 func _ready() -> void:
-	# Palette Connections (Drag Sources)
-	stage_btn.set_drag_forwarding(_get_drag_data_for_facility.bind("Stage"), Callable(), Callable())
-	food_btn.set_drag_forwarding(_get_drag_data_for_facility.bind("Food Vendor"), Callable(), Callable())
-	club_btn.set_drag_forwarding(_get_drag_data_for_facility.bind("Club Stand"), Callable(), Callable())
-
-	# Map Area Connections (Drop Targets)
+	visibility_changed.connect(_on_visibility_changed)
+	
+	# Map Connections
 	for area_name in areas.keys():
 		var btn = area_list.get_node(area_name)
 		btn.pressed.connect(func(): _on_area_pressed(area_name))
 		btn.set_drag_forwarding(Callable(), _can_drop_data_on_area.bind(area_name), _drop_data_on_area.bind(area_name))
 		
-		# Add Icon Label for electricity and truck
+		# Add icons
 		var icon_label = Label.new()
 		icon_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 		icon_label.offset_left = -70
@@ -101,7 +50,6 @@ func _ready() -> void:
 		var icons = ""
 		if areas[area_name]["electricity"]: icons += "⚡"
 		if areas[area_name]["truck_access"]: icons += "🚚"
-		
 		icon_label.text = icons
 		icon_label.add_theme_font_size_override("font_size", 20)
 		icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -109,49 +57,136 @@ func _ready() -> void:
 		btn.add_child(icon_label)
 
 	back_button.pressed.connect(_on_back_pressed)
+	confirm_button.pressed.connect(_on_confirm_pressed)
 	clear_area_btn.pressed.connect(_on_clear_area_pressed)
 	clear_area_btn.hide()
 	
-	# Guide Connections
-	info_btn.pressed.connect(_on_info_pressed)
+	info_btn.pressed.connect(func(): guide_panel.show())
 	close_guide_btn.pressed.connect(func(): guide_panel.hide())
 	_setup_guide_text()
-
 	_setup_ui_styles()
 
+func _on_visibility_changed() -> void:
+	if visible:
+		populate_unified_items()
 
+func populate_unified_items() -> void:
+	unified_items.clear()
+	placed_items.clear()
+	
+	# Food Vendors
+	var food_panel = get_parent().get_node_or_null("FoodVendorSelectionPanel")
+	if food_panel:
+		var food_options = food_panel.vendor_options
+		for f_id in GameState.selected_food_vendors:
+			if food_options.has(f_id):
+				var f = food_options[f_id]
+				var uid = "food_" + f_id
+				unified_items[uid] = {
+					"display_name": f["display_name"],
+					"type": "Food Vendor",
+					"electricity": f["electricity_requirement"] > 0,
+					"truck_access": true,
+					"min_size": f["space_requirement"]
+				}
+				placed_items[uid] = ""
+				
+	# Volunteer Clubs
+	var club_panel = get_parent().get_node_or_null("VolunteerClubPanel")
+	if club_panel:
+		var club_options = club_panel.club_options
+		for c_id in GameState.selected_volunteer_clubs:
+			if club_options.has(c_id):
+				var c = club_options[c_id]
+				var uid = "club_" + c_id
+				unified_items[uid] = {
+					"display_name": c["display_name"],
+					"type": "Club Stand",
+					"electricity": false,
+					"truck_access": false,
+					"min_size": c["space_requirement"]
+				}
+				placed_items[uid] = ""
+				
+	# Stage Setup
+	if GameState.selected_stage_setup.has("name"):
+		var s = GameState.selected_stage_setup
+		var uid = "stage_main"
+		unified_items[uid] = {
+			"display_name": s["name"],
+			"type": "Stage",
+			"electricity": true,
+			"truck_access": true,
+			"min_size": s.get("stage_size", 2) * 50
+		}
+		placed_items[uid] = ""
+		
+	# Reconcile placed_items with areas
+	for area_name in areas.keys():
+		var assigned = areas[area_name]["assigned"]
+		var valid_assigned = []
+		for uid in assigned:
+			if unified_items.has(uid):
+				valid_assigned.append(uid)
+				placed_items[uid] = area_name
+		areas[area_name]["assigned"] = valid_assigned
+		update_area_button_style(area_name)
+		
+	# Now generate the palette buttons
+	for child in placement_buttons.get_children():
+		child.queue_free()
+		
+	for uid in unified_items.keys():
+		var btn = Button.new()
+		btn.custom_minimum_size = Vector2(0, 50)
+		btn.name = uid
+		if placed_items[uid] != "":
+			btn.disabled = true
+			btn.text = "[PLACED] " + unified_items[uid]["display_name"]
+		else:
+			btn.text = unified_items[uid]["display_name"]
+		btn.set_drag_forwarding(_get_drag_data_for_item.bind(uid), Callable(), Callable())
+		placement_buttons.add_child(btn)
+		
+	if GameState.final_layout_completed:
+		confirm_button.text = "BACK TO BOARD"
+		# Pre-populate map if revisiting
+		# Simplification: assuming no save/load needed for map details for now
+		
 func _setup_ui_styles() -> void:
-	# Main Panel Glassmorphism
 	var main_style = StyleBoxFlat.new()
 	main_style.bg_color = Color(0.05, 0.07, 0.1, 0.95)
 	main_style.border_width_left = 4
-	main_style.border_color = Color(0.1, 0.6, 0.4)
+	main_style.border_color = Color(0.6, 0.2, 0.8) # Purple accent for final layout
 	add_theme_stylebox_override("panel", main_style)
 
-	# Details Panel
 	var side_style = StyleBoxFlat.new()
 	side_style.bg_color = Color(0.1, 0.12, 0.15, 0.8)
 	side_style.corner_radius_top_left = 10
 	side_style.corner_radius_top_right = 10
 	side_style.corner_radius_bottom_right = 10
 	side_style.corner_radius_bottom_left = 10
+	
 	side_style.border_width_left = 1
 	side_style.border_width_top = 1
 	side_style.border_width_right = 1
 	side_style.border_width_bottom = 1
-	side_style.border_color = Color(0.2, 0.4, 0.3)
+	side_style.border_color = Color(0.4, 0.3, 0.6)
 	$MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel.add_theme_stylebox_override("panel", side_style)
 
-	# Initial Area Button Styles
 	for area_name in areas.keys():
 		update_area_button_style(area_name)
 
-
-func _get_drag_data_for_facility(at_position: Vector2, facility_name: String) -> Variant:
+func _get_drag_data_for_item(at_position: Vector2, uid: String) -> Variant:
+	if placed_items[uid] != "":
+		return null # Already placed, cannot drag
+		
+	var item = unified_items[uid]
 	var drag_preview = Label.new()
-	drag_preview.text = facility_name
+	drag_preview.text = item["display_name"]
+	
 	var style = StyleBoxFlat.new()
-	style.bg_color = get_facility_color(facility_name).darkened(0.2)
+	style.bg_color = get_item_color(item["type"]).darkened(0.2)
 	style.border_width_left = 2
 	style.border_width_top = 2
 	style.border_width_right = 2
@@ -166,38 +201,41 @@ func _get_drag_data_for_facility(at_position: Vector2, facility_name: String) ->
 	var control = Control.new()
 	control.add_child(drag_preview)
 	drag_preview.position = -drag_preview.get_minimum_size() / 2.0
-	stage_btn.set_drag_preview(control)
+	placement_buttons.get_node(uid).set_drag_preview(control)
 	
-	return {"type": "facility", "name": facility_name}
+	return {"type": "facility", "uid": uid}
 
 func _can_drop_data_on_area(at_position: Vector2, data: Variant, area_name: String) -> bool:
 	if typeof(data) != TYPE_DICTIONARY or not data.has("type") or data["type"] != "facility":
 		return false
 		
-	var facility_name = data["name"]
-	var req = requirements.get(facility_name)
-	if not req:
-		return false
-		
+	var uid = data["uid"]
+	if not unified_items.has(uid): return false
+	
+	var item = unified_items[uid]
 	var area = areas[area_name]
 	
-	# Check used size and capacity
 	var used_size = 0
-	for assigned_item in area["assigned"]:
-		var item_req = requirements.get(assigned_item)
-		if item_req:
-			used_size += item_req["min_size"]
+	for assigned_uid in area["assigned"]:
+		used_size += unified_items[assigned_uid]["min_size"]
 			
 	var remaining_size = area["size_m2"] - used_size
 	
-	if remaining_size < req["min_size"]:
-		return false # Not enough space
+	if remaining_size < item["min_size"]:
+		return false
 		
 	return true
 
 func _drop_data_on_area(at_position: Vector2, data: Variant, area_name: String) -> void:
-	var facility_name = data["name"]
-	areas[area_name]["assigned"].append(facility_name)
+	var uid = data["uid"]
+	areas[area_name]["assigned"].append(uid)
+	placed_items[uid] = area_name
+	
+	# Disable palette button
+	if placement_buttons.has_node(uid):
+		placement_buttons.get_node(uid).disabled = true
+		placement_buttons.get_node(uid).text = "[PLACED] " + unified_items[uid]["display_name"]
+		
 	update_area_button_style(area_name)
 	if selected_area_name == area_name:
 		update_area_info(area_name)
@@ -208,10 +246,16 @@ func _on_area_pressed(area_name: String) -> void:
 	
 func _on_clear_area_pressed() -> void:
 	if selected_area_name != "":
+		# Re-enable palette buttons
+		for uid in areas[selected_area_name]["assigned"]:
+			placed_items[uid] = ""
+			if placement_buttons.has_node(uid):
+				placement_buttons.get_node(uid).disabled = false
+				placement_buttons.get_node(uid).text = unified_items[uid]["display_name"]
+				
 		areas[selected_area_name]["assigned"].clear()
 		update_area_button_style(selected_area_name)
 		update_area_info(selected_area_name)
-
 
 func update_area_button_style(area_name: String) -> void:
 	var btn = area_list.get_node(area_name)
@@ -225,30 +269,22 @@ func update_area_button_style(area_name: String) -> void:
 	style.corner_radius_bottom_left = 5
 	
 	if assigned.size() > 0:
-		var counts = {}
 		var used_size = 0
-		for item in assigned:
-			counts[item] = counts.get(item, 0) + 1
-			if requirements.has(item):
-				used_size += requirements[item]["min_size"]
-			
 		var assigned_text = ""
-		for item in counts:
-			if counts[item] > 1:
-				assigned_text += item.to_upper() + " x" + str(counts[item]) + "\n"
-			else:
-				assigned_text += item.to_upper() + "\n"
+		for uid in assigned:
+			used_size += unified_items[uid]["min_size"]
+			assigned_text += unified_items[uid]["display_name"] + "\n"
 		
 		var remaining_size = area_data["size_m2"] - used_size
+		var first_item = unified_items[assigned[0]]
 		
-		# Use color of the first item for background
-		var first_item = assigned[0]
-		style.bg_color = get_facility_color(first_item).darkened(0.5)
+		style.bg_color = get_item_color(first_item["type"]).darkened(0.5)
 		style.border_width_left = 3
 		style.border_width_top = 3
 		style.border_width_right = 3
 		style.border_width_bottom = 3
-		style.border_color = get_facility_color(first_item)
+		style.border_color = get_item_color(first_item["type"])
+		
 		btn.text = area_name + " (" + str(remaining_size) + " m² left)\n" + \
 				   "━━━━━━━━━━\n" + \
 				   assigned_text.strip_edges()
@@ -263,14 +299,12 @@ func update_area_button_style(area_name: String) -> void:
 		
 	btn.add_theme_stylebox_override("normal", style)
 
-
-func get_facility_color(facility: String) -> Color:
-	match facility:
+func get_item_color(type: String) -> Color:
+	match type:
 		"Stage": return Color(0.5, 0.2, 0.9)
 		"Food Vendor": return Color(0.9, 0.6, 0.1)
 		"Club Stand": return Color(0.2, 0.8, 0.3)
 	return Color.GRAY
-
 
 func update_area_info(area_name: String) -> void:
 	var area = areas[area_name]
@@ -282,15 +316,11 @@ func update_area_info(area_name: String) -> void:
 	var assigned_text = "NONE"
 	
 	if area["assigned"].size() > 0:
-		var counts = {}
-		for item in area["assigned"]:
-			counts[item] = counts.get(item, 0) + 1
-			used_size += requirements[item]["min_size"]
-			
 		var text_parts = []
-		for item in counts:
-			text_parts.append(item + " x" + str(counts[item]))
-		assigned_text = ", ".join(text_parts)
+		for uid in area["assigned"]:
+			used_size += unified_items[uid]["min_size"]
+			text_parts.append("- " + unified_items[uid]["display_name"])
+		assigned_text = "\n".join(text_parts)
 	
 	var remaining_size = area["size_m2"] - used_size
 	
@@ -304,30 +334,25 @@ func update_area_info(area_name: String) -> void:
 		"ASSIGNED:\n" + assigned_text
 
 	clear_area_btn.visible = area["assigned"].size() > 0
-
-	# Validation Warning
 	_check_validity(area_name)
-
 
 func _check_validity(area_name: String) -> void:
 	var area = areas[area_name]
 	var assigned = area["assigned"]
 	warning_label.text = ""
 	
-	if assigned.size() == 0:
-		return
+	if assigned.size() == 0: return
 		
 	var warnings = []
 	var needed_elec = false
 	var needed_truck = false
 	var required_size = 0
 	
-	for item in assigned:
-		var req = requirements.get(item)
-		if req:
-			if req["electricity"]: needed_elec = true
-			if req["truck_access"]: needed_truck = true
-			required_size += req["min_size"]
+	for uid in assigned:
+		var item = unified_items[uid]
+		if item["electricity"]: needed_elec = true
+		if item["truck_access"]: needed_truck = true
+		required_size += item["min_size"]
 			
 	if needed_elec and not area["electricity"]:
 		warnings.append("- Lack of Electricity!")
@@ -341,30 +366,27 @@ func _check_validity(area_name: String) -> void:
 	else:
 		warning_label.text = "Area is suitable for assigned facilities."
 
-
-func _on_info_pressed() -> void:
-	guide_panel.show()
-
-
 func _setup_guide_text() -> void:
-	guide_label.text = "INITIAL FESTIVAL LAYOUT MAPPING\n\n" + \
+	guide_label.text = "FINAL FESTIVAL LAYOUT MAPPING\n\n" + \
 		"Activity Overview:\n" + \
-		"In this stage, you explore the festival area and create an initial layout plan. The map presents multiple zones, each with different features, capacities, and technical constraints.\n\n" + \
-		"Your Objective:\n" + \
-		"Develop a clear understanding of the festival space and determine suitability for activities.\n\n" + \
-		"Understanding Area Features:\n" + \
-		"• Stage: Suitable for performances and large audiences. REQUIRES: Electricity, Truck Access, Min 350m².\n" + \
-		"• Food Vendors: Suitable for stands. REQUIRES: Electricity, Truck Access, Min 100m².\n" + \
-		"• Student Club Stands: Suitable for booths. REQUIRES: Min 20m².\n\n" + \
-		"Match Needs:\n" + \
-		"Ensure areas meet technical and logistical requirements."
+		"You must now accurately place the precise items you selected (Food Vendors, Club Stands, and your actual Stage). You must assign every chosen facility to an appropriate area to complete the map.\n\n" + \
+		"Rules:\n" + \
+		"• Each selected item appears in the palette exactly once.\n" + \
+		"• Once placed, the item cannot be dragged again unless you clear the area."
 
-
-func _on_back_pressed() -> void:
-	GameState.layout_plan = areas
-	if not GameState.completed_activities.has("initial_festival_layout_mapping"):
-		GameState.completed_activities.append("initial_festival_layout_mapping")
+func _on_confirm_pressed() -> void:
+	if GameState.final_layout_completed:
+		hide()
+		get_parent().get_node("ActivityBoard").show()
+		return
+		
+	GameState.finalize_final_layout(areas)
 	hide()
 	get_parent().get_node("ActivityBoard").show()
+	
 	if get_parent().get_node("ActivityBoard").has_method("refresh_board"):
 		get_parent().get_node("ActivityBoard").refresh_board()
+
+func _on_back_pressed() -> void:
+	hide()
+	get_parent().get_node("ActivityBoard").show()

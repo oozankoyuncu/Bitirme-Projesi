@@ -88,8 +88,8 @@ var security_teams = {
 }
 
 # ---------------- UI REFS ----------------
-@onready var cleaning_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftPalette/CleaningList
-@onready var security_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/RightPalette/SecurityList
+@onready var cleaning_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftPalette/LeftScroll/CleaningList
+@onready var security_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/RightPalette/RightScroll/SecurityList
 @onready var selected_teams_list: GridContainer = $MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/SelectedTeamsScroll/CenterContainer/SelectedTeamsList
 
 @onready var result_label: Label = $MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer/ResultLabel

@@ -1,6 +1,5 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=22 format=3 uid="uid://bhsj85gfykjw0"]
 
-[ext_resource type="PackedScene" uid="uid://bw8gq1qn06e22" path="res://time_label.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://pitj4dhy81jp" path="res://scripts/game.gd" id="1_u44n3"]
 [ext_resource type="Script" uid="uid://cq4igb2avy1fc" path="res://scripts/team_assignment_panel.gd" id="3_sb48q"]
 [ext_resource type="Script" uid="uid://bme2u86kmj21l" path="res://scripts/activity_board.gd" id="3_t88pq"]
@@ -13,22 +12,17 @@
 [ext_resource type="Script" uid="uid://cuta6qjpotnul" path="res://scripts/volunteer_club_panel.gd" id="11_club"]
 [ext_resource type="Script" uid="uid://s1jp4vvndgib" path="res://scripts/food_vendor_selection_panel.gd" id="12_food"]
 [ext_resource type="Script" uid="uid://8an48xdxkcty" path="res://scripts/stage_setup_choices_panel.gd" id="13_lvtmh"]
-[ext_resource type="Script" uid="uid://dummysound" path="res://scripts/sound_system_choices_panel.gd" id="14_sound"]
-[ext_resource type="Script" uid="uid://dummytrans" path="res://scripts/transport_coordination_panel.gd" id="15_transport"]
-[ext_resource type="Script" uid="uid://dummydecthem" path="res://scripts/decoration_theme_panel.gd" id="16_dtheme"]
-[ext_resource type="Script" path="res://scripts/festival_cleaning_security_panel.gd" id="17_clean"]
-[ext_resource type="Script" path="res://scripts/email_panel.gd" id="18_email"]
-[ext_resource type="Script" path="res://scripts/charter_panel.gd" id="19_charter"]
-[ext_resource type="Texture2D" path="res://resources/backround_campus.png" id="20_bg"]
-[ext_resource type="Texture2D" path="res://resources/mentor_student.png" id="21_mentor"]
-[ext_resource type="Shader" path="res://resources/background_remover.gdshader" id="22_shader"]
+[ext_resource type="Script" uid="uid://cjpc0yfkwdw7k" path="res://scripts/sound_system_choices_panel.gd" id="14_sound"]
+[ext_resource type="Script" uid="uid://wbgk3vvcdaa7" path="res://scripts/transport_coordination_panel.gd" id="15_transport"]
+[ext_resource type="Script" uid="uid://bpeltuf5xriwd" path="res://scripts/decoration_theme_panel.gd" id="16_dtheme"]
+[ext_resource type="Script" uid="uid://bl7dgx33wdm57" path="res://scripts/festival_cleaning_security_panel.gd" id="17_clean"]
+[ext_resource type="Script" uid="uid://b4mil22o27gkt" path="res://scripts/email_panel.gd" id="18_email"]
+[ext_resource type="Script" uid="uid://d0eqfjj83wvix" path="res://scripts/charter_panel.gd" id="19_charter"]
+[ext_resource type="Shader" uid="uid://3srho6l1efff" path="res://resources/background_remover.gdshader" id="22_shader"]
+[ext_resource type="Script" uid="uid://ch6yufrqnk2kh" path="res://scripts/final_facility_layout_panel.gd" id="23_final"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mascot"]
 shader = ExtResource("22_shader")
-shader_parameter/key_color = Color(1.0, 1.0, 1.0, 1)
-shader_parameter/threshold = 0.1
-shader_parameter/softness = 0.05
-
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -46,7 +40,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("20_bg")
 expand_mode = 1
 stretch_mode = 6
 
@@ -131,7 +124,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "00:00:00"
 
-
 [node name="EmailPanel" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -194,7 +186,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("21_mentor")
 expand_mode = 1
 stretch_mode = 5
 
@@ -266,9 +257,7 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 26
 text = "Accept & View Charter"
 
-
 [node name="CharterPanel" type="Panel" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -292,10 +281,12 @@ theme_override_constants/margin_bottom = 40
 [node name="TabContainer" type="TabContainer" parent="CharterPanel/MarginContainer"]
 layout_mode = 2
 tab_alignment = 1
+current_tab = 0
 
 [node name="Overview" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
+metadata/_tab_index = 0
 
 [node name="Margin" type="MarginContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview"]
 layout_mode = 2
@@ -473,6 +464,7 @@ text = "• Initial budget: 400,000 TL
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 15
+metadata/_tab_index = 1
 
 [node name="Margin" type="MarginContainer" parent="CharterPanel/MarginContainer/TabContainer/Success"]
 layout_mode = 2
@@ -518,9 +510,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
-
-
-
 
 [node name="TimeKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
 layout_mode = 2
@@ -698,7 +687,6 @@ material = SubResource("ShaderMaterial_mascot")
 custom_minimum_size = Vector2(400, 550)
 layout_mode = 2
 size_flags_vertical = 8
-texture = ExtResource("21_mentor")
 expand_mode = 1
 stretch_mode = 5
 
@@ -713,7 +701,6 @@ theme_override_font_sizes/font_size = 22
 text = "Accept and Start Project"
 
 [node name="ActivityBoard" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1009,7 +996,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 20
-columns = 2
+columns = 3
 
 [node name="AreaA" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
 custom_minimum_size = Vector2(180, 180)
@@ -1030,6 +1017,16 @@ text = "Area C"
 custom_minimum_size = Vector2(180, 180)
 layout_mode = 2
 text = "Area D"
+
+[node name="AreaE" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area E"
+
+[node name="AreaF" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area F"
 
 [node name="RightDetails" type="VBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent"]
 custom_minimum_size = Vector2(300, 0)
@@ -1067,6 +1064,10 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
 autowrap_mode = 3
 
+[node name="ClearAreaButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "CLEAR AREA"
+
 [node name="Footer" type="HBoxContainer" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
@@ -1076,11 +1077,6 @@ alignment = 2
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
 text = "BACK"
-
-[node name="ConfirmButton" type="Button" parent="InitialFacilityLayoutPanel/MarginContainer/VBoxContainer/Footer"]
-custom_minimum_size = Vector2(200, 45)
-layout_mode = 2
-text = "CONFIRM PLAN"
 
 [node name="GuidePanel" type="PanelContainer" parent="InitialFacilityLayoutPanel"]
 visible = false
@@ -1129,6 +1125,220 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="GuideLabel" type="Label" parent="InitialFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="FinalFacilityLayoutPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("23_final")
+
+[node name="MarginContainer" type="MarginContainer" parent="FinalFacilityLayoutPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "FINAL SITE PLANNING"
+
+[node name="InfoButton" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="Palette" type="VBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette"]
+layout_mode = 2
+text = "SELECTED FACILITIES"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="PlacementButtons" type="VBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/Palette/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="CenterMap" type="CenterContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MapArea" type="GridContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap"]
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 3
+
+[node name="AreaA" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area A"
+
+[node name="AreaB" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area B"
+
+[node name="AreaC" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area C"
+
+[node name="AreaD" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area D"
+
+[node name="AreaE" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area E"
+
+[node name="AreaF" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+text = "Area F"
+
+[node name="RightDetails" type="VBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="DetailsPanel" type="PanelContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "AREA DETAILS"
+horizontal_alignment = 1
+
+[node name="AreaInfoLabel" type="Label" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Select an area to view details"
+autowrap_mode = 3
+
+[node name="WarningLabel" type="Label" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+autowrap_mode = 3
+
+[node name="ClearAreaButton" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "CLEAR AREA"
+
+[node name="Footer" type="HBoxContainer" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 2
+
+[node name="ConfirmButton" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(180, 45)
+layout_mode = 2
+text = "CONFIRM LAYOUT"
+
+[node name="BackButton" type="Button" parent="FinalFacilityLayoutPanel/MarginContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(120, 45)
+layout_mode = 2
+text = "BACK"
+
+[node name="GuidePanel" type="PanelContainer" parent="FinalFacilityLayoutPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="FinalFacilityLayoutPanel/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FinalFacilityLayoutPanel/GuidePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FinalFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FinalFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "ACTIVITY GUIDE"
+
+[node name="CloseGuideButton" type="Button" parent="FinalFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="FinalFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="FinalFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GuideLabel" type="Label" parent="FinalFacilityLayoutPanel/GuidePanel/MarginContainer/VBoxContainer/ScrollContainer"]
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 autowrap_mode = 3
@@ -1234,7 +1444,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 15
 theme_override_constants/v_separation = 15
-columns = 1
 
 [node name="StatusColumn" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent"]
 custom_minimum_size = Vector2(280, 0)
@@ -1600,8 +1809,14 @@ layout_mode = 2
 text = "CLEANING CREWS"
 horizontal_alignment = 1
 
-[node name="CleaningList" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/LeftPalette"]
+[node name="LeftScroll" type="ScrollContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/LeftPalette"]
 layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CleaningList" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/LeftPalette/LeftScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="CenterDashboard" type="PanelContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent"]
@@ -1611,7 +1826,6 @@ size_flags_horizontal = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard"]
 layout_mode = 2
 theme_override_constants/separation = 15
-alignment = 0
 
 [node name="DashboardTitle" type="Label" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/CenterDashboard/VBoxContainer"]
 layout_mode = 2
@@ -1661,8 +1875,14 @@ layout_mode = 2
 text = "SECURITY TEAMS"
 horizontal_alignment = 1
 
-[node name="SecurityList" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
+[node name="RightScroll" type="ScrollContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/RightPalette"]
 layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SecurityList" type="VBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer/MainContent/RightPalette/RightScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="Footer" type="HBoxContainer" parent="FestivalCleaningSecurityPanel/MarginContainer/VBoxContainer"]
@@ -1924,27 +2144,8 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="InfoButton" type="Button" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel"]
-custom_minimum_size = Vector2(45, 45)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 24
-text = "?"
-
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 10
-
 [node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin"]
 layout_mode = 2
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 alignment = 1
 
 [node name="TitleBox" type="HBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin/VBoxContainer"]
@@ -1963,6 +2164,59 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
+
+[node name="InfoButton" type="Button" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 24
+text = "?"
+
+[node name="ContentPanel" type="PanelContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="MarginContainer" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ContentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="PromotionList" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SummaryPanel" type="PanelContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="Margin" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="SummaryLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Confirm Strategy"
 
 [node name="InfoPopup" type="PanelContainer" parent="PromotionStrategyPanel"]
 visible = false
@@ -2016,64 +2270,6 @@ text = "• Rule 1: Choose strategy options within your available budget context
 • Rule 3: You have 4 minutes to finalize strategies this week."
 autowrap_mode = 3
 
-
-
-[node name="ContentPanel" type="PanelContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"PanelContainerGlass"
-size_flags_vertical = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ContentPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="PromotionList" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="SummaryPanel" type="PanelContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_type_variation = &"PanelContainerGlass"
-
-[node name="Margin" type="MarginContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin"]
-layout_mode = 2
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="SummaryLabel" type="Label" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-horizontal_alignment = 1
-
-[node name="ButtonRow" type="HBoxContainer" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="ConfirmButton" type="Button" parent="PromotionStrategyPanel/MarginContainer/VBoxContainer/ButtonRow"]
-custom_minimum_size = Vector2(200, 50)
-layout_mode = 2
-text = "Confirm Strategy"
-
 [node name="TicketPricingPanel" type="Panel" parent="."]
 visible = false
 layout_mode = 1
@@ -2111,19 +2307,6 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="InfoButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel"]
-custom_minimum_size = Vector2(45, 45)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 24
-text = "?"
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 10
-
 [node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel/Margin"]
 layout_mode = 2
 alignment = 1
@@ -2135,6 +2318,98 @@ theme_override_font_sizes/font_size = 32
 text = "Ticket Pricing"
 horizontal_alignment = 1
 
+[node name="InfoButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/HeaderPanel"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 24
+text = "?"
+
+[node name="ContentPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="MarginContainer" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="DynamicContent" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="ConsultingPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent"]
+layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="HBox" type="HBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "Strategic Intelligence Service"
+
+[node name="Desc" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Unlock hidden Base Attendance and reveal precise individual impact percentages."
+
+[node name="PurchaseConsultingButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox"]
+custom_minimum_size = Vector2(240, 45)
+layout_mode = 2
+size_flags_vertical = 4
+text = "Purchase Consulting (5,000 TL)"
+
+[node name="PricingList" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SummaryPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"PanelContainerGlass"
+
+[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="SummaryLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Confirm Strategy"
 
 [node name="InfoPopup" type="PanelContainer" parent="TicketPricingPanel"]
 visible = false
@@ -2246,98 +2521,6 @@ text = "• Balance Price vs. Attendance: Higher attendance doesn't always mean 
 • Calculation: Attendance = Base + (Base * Impact). *Base is hidden unless consulting is bought."
 autowrap_mode = 3
 
-[node name="ContentPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"PanelContainerGlass"
-size_flags_vertical = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="DynamicContent" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="ConsultingPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent"]
-layout_mode = 2
-theme_type_variation = &"PanelContainerGlass"
-
-[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 10
-
-[node name="HBox" type="HBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin"]
-layout_mode = 2
-
-[node name="VBox" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
-theme_override_font_sizes/font_size = 18
-text = "Strategic Intelligence Service"
-
-[node name="Desc" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 14
-text = "Unlock hidden Base Attendance and reveal precise individual impact percentages."
-
-[node name="PurchaseConsultingButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox"]
-custom_minimum_size = Vector2(240, 45)
-layout_mode = 2
-size_flags_vertical = 4
-text = "Purchase Consulting (5,000 TL)"
-
-[node name="PricingList" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="SummaryPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_type_variation = &"PanelContainerGlass"
-
-[node name="Margin" type="MarginContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin"]
-layout_mode = 2
-alignment = 1
-alignment = 1
-
-[node name="SummaryLabel" type="Label" parent="TicketPricingPanel/MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-horizontal_alignment = 1
-
-[node name="ButtonRow" type="HBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="ConfirmButton" type="Button" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ButtonRow"]
-custom_minimum_size = Vector2(200, 50)
-layout_mode = 2
-text = "Confirm Strategy"
-
 [node name="VolunteerClubPanel" type="Panel" parent="."]
 visible = false
 layout_mode = 1
@@ -2355,84 +2538,94 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 60
-theme_override_constants/margin_top = 60
-theme_override_constants/margin_right = 60
-theme_override_constants/margin_bottom = 60
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="HeaderPanel" type="Panel" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 80)
+[node name="Header" type="HBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/HeaderPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="TitleLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Volunteer & Club Recruitment"
-horizontal_alignment = 1
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "VOLUNTEER & CLUB RECRUITMENT"
 
-[node name="CapacityLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+[node name="SubTitleLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Select organizations to enrich the festival"
 
-[node name="ContentPanel" type="Panel" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="LeftScroll" type="ScrollContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="ClubList" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/LeftScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="RightPanel" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="StatsPanel" type="PanelContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/ContentPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="ClubList" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 
-[node name="SummaryPanel" type="Panel" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
+[node name="VBoxContainer" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/SummaryPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="SummaryLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="StatsTitle" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "RECRUITMENT STATS"
 
-[node name="ButtonRow" type="HBoxContainer" parent="VolunteerClubPanel/MarginContainer/VBoxContainer"]
+[node name="CapacityLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-alignment = 1
+text = "Space Used: 0 / 200 sqm"
 
-[node name="ConfirmButton" type="Button" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/ButtonRow"]
-custom_minimum_size = Vector2(200, 50)
+[node name="EngagementLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Confirm Selection"
+text = "Total Engagement: 0"
+
+[node name="TypesLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Diversity (Types): 0"
+
+[node name="WarningLabel" type="Label" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+autowrap_mode = 3
+
+[node name="ConfirmButton" type="Button" parent="VolunteerClubPanel/MarginContainer/VBoxContainer/MainContent/RightPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "CONFIRM SELECTION"
 
 [node name="FoodVendorSelectionPanel" type="Panel" parent="."]
 visible = false
@@ -2451,84 +2644,106 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 60
-theme_override_constants/margin_top = 60
-theme_override_constants/margin_right = 60
-theme_override_constants/margin_bottom = 60
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="HeaderPanel" type="Panel" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 80)
+[node name="Header" type="HBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/HeaderPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="TitleLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Food Vendor Selection"
-horizontal_alignment = 1
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "FOOD VENDOR SELECTION"
 
-[node name="CapacityLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/HeaderPanel/VBoxContainer"]
+[node name="SubTitleLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Curate the culinary experience for the festival"
 
-[node name="ContentPanel" type="Panel" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContent" type="HBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="LeftScroll" type="ScrollContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VendorList" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/LeftScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="RightPanel" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="StatsPanel" type="PanelContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/ContentPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VendorList" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 
-[node name="SummaryPanel" type="Panel" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
+[node name="VBoxContainer" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/SummaryPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="SummaryLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="StatsTitle" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "VENDOR STATS"
 
-[node name="ButtonRow" type="HBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer"]
+[node name="BudgetLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-alignment = 1
+text = "Budget: 0 TL"
 
-[node name="ConfirmButton" type="Button" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/ButtonRow"]
-custom_minimum_size = Vector2(200, 50)
+[node name="CapacityLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Confirm Selection"
+text = "Capacity: 0 / 0"
+
+[node name="HygieneLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Avg Hygiene: 0.0"
+
+[node name="ElectricityLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Electricity: 0 / 50 kVA"
+
+[node name="SpaceLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Space Used: 0 / 100 sqm"
+
+[node name="DiversityLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Diversity: 0 types"
+
+[node name="WarningLabel" type="Label" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+autowrap_mode = 3
+
+[node name="ConfirmButton" type="Button" parent="FoodVendorSelectionPanel/MarginContainer/VBoxContainer/MainContent/RightPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "CONFIRM SELECTION"
 
 [node name="StageSetupChoicesPanel" type="Panel" parent="."]
 visible = false
