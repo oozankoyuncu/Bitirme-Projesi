@@ -172,7 +172,7 @@ func get_hud_text() -> String:
 	var seconds := total % 60
 
 	# 02:05:09 gibi
-	return "%02d:%02d:%02d" % [hours, minutes, seconds] + " Week: " + str(week) + "  Budget: " + str(money) +" TL"
+	return "%02d:%02d:%02d" % [hours, minutes, seconds] + "   |   Week: " + str(week) + "   |   Budget: " + str(money) +" TL"
 	
 	
 	# Her 4 saniyede week 1 artacak (deneme)

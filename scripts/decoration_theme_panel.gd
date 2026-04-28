@@ -36,6 +36,32 @@ func _ready() -> void:
 	_setup_guide_text()
 	_setup_ui_styles()
 	_create_theme_cards()
+	
+	# Move RightPalette below MainContent
+	var main_content = $MarginContainer/VBoxContainer/MainContent
+	var right_palette = $MarginContainer/VBoxContainer/MainContent/RightPalette
+	var vbox = $MarginContainer/VBoxContainer
+	
+	main_content.remove_child(right_palette)
+	vbox.add_child(right_palette)
+	vbox.move_child(right_palette, main_content.get_index() + 1)
+	
+	# Align the progress bars horizontally
+	var stats_container = right_palette.get_node("StatsContainer")
+	var hbox = HBoxContainer.new()
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	hbox.add_theme_constant_override("separation", 50)
+	
+	var stat_nodes = stats_container.get_children()
+	for child in stat_nodes:
+		stats_container.remove_child(child)
+		hbox.add_child(child)
+	
+	right_palette.remove_child(stats_container)
+	right_palette.add_child(hbox)
+	right_palette.move_child(hbox, 0)
+	stats_container.queue_free()
+	
 	_refresh_ui()
 
 func _process(_delta: float) -> void:

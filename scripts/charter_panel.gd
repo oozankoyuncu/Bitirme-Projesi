@@ -71,6 +71,7 @@ func _setup_styles() -> void:
 func _initialize_kpi_styles() -> void:
 	for key in kpi_bars:
 		var bar = kpi_bars[key]
+		bar.value = bar.max_value
 		bar.set_meta("target_val", bar.value)
 		var fill_style = StyleBoxFlat.new()
 		fill_style.set_corner_radius_all(10)

@@ -55,6 +55,21 @@ func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	_setup_ui_styles()
 	create_options()
+	
+	# Add Go to Layout button
+	var right_panel = $MarginContainer/VBoxContainer/MainContent/RightPanel
+	var go_to_layout_btn = Button.new()
+	go_to_layout_btn.text = "Go To Initial Layout Mapping"
+	go_to_layout_btn.add_theme_font_size_override("font_size", 18)
+	go_to_layout_btn.custom_minimum_size = Vector2(0, 50)
+	var btn_style = StyleBoxFlat.new()
+	btn_style.bg_color = Color(0.1, 0.4, 0.2, 0.8)
+	btn_style.set_corner_radius_all(8)
+	go_to_layout_btn.add_theme_stylebox_override("normal", btn_style)
+	
+	go_to_layout_btn.pressed.connect(_on_go_to_layout_pressed)
+	right_panel.add_child(go_to_layout_btn)
+	
 	refresh_ui()
 
 func _setup_ui_styles() -> void:
@@ -239,3 +254,9 @@ func go_back() -> void:
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()
+
+func _on_go_to_layout_pressed() -> void:
+	hide()
+	var layout_panel = get_parent().get_node("InitialFacilityLayoutPanel")
+	if layout_panel and layout_panel.has_method("open_from_volunteer"):
+		layout_panel.open_from_volunteer()

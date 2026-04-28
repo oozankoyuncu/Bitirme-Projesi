@@ -125,6 +125,7 @@ theme_override_font_sizes/font_size = 20
 text = "00:00:00"
 
 [node name="EmailPanel" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -229,7 +230,7 @@ text = "From: University Administration (Rectorate)"
 [node name="ToLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content/Details"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "To: Project Manager"
+text = "To: Student Representative"
 
 [node name="HSeparator" type="HSeparator" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
 layout_mode = 2
@@ -238,7 +239,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 22
-text = "Dear Manager,
+text = "Dear Student Representative,
 
 We are pleased to inform you that the university will host the Spring Student Festival on campus. The aim is enhancing student engagement, enriching campus life, and fostering community interaction.
 
@@ -361,7 +362,7 @@ text = "You"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_font_sizes/font_size = 14
-text = "Project Manager"
+text = "Student Representative"
 
 [node name="HSeparator" type="HSeparator" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
 layout_mode = 2
@@ -489,7 +490,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.75, 0, 1)
 theme_override_font_sizes/font_size = 28
-text = "OFS = 0.6 × Participant Satisfaction (SS) + 0.4 × Event Quality (EQ)"
+text = "OFS = 0.6 × Participant Satisfaction (PS) + 0.4 × Event Quality (EQ)"
 horizontal_alignment = 1
 
 [node name="Sub" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
@@ -635,7 +636,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Participant Satisfaction (SS)"
+text = "Participant Satisfaction (PS)"
 
 [node name="Spacer" type="Control" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI/HBox"]
 layout_mode = 2
@@ -701,6 +702,7 @@ theme_override_font_sizes/font_size = 22
 text = "Accept and Start Project"
 
 [node name="ActivityBoard" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

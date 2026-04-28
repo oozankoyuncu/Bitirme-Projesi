@@ -3,6 +3,9 @@ extends Panel
 var selected_facility: String = ""
 var selected_area_name: String = ""
 
+var came_from_volunteer: bool = false
+var return_to_volunteer_btn: Button
+
 # Area Data with quantitative metrics
 var areas = {
 	"AreaA": {
@@ -112,12 +115,23 @@ func _ready() -> void:
 	clear_area_btn.pressed.connect(_on_clear_area_pressed)
 	clear_area_btn.hide()
 	
-	# Guide Connections
 	info_btn.pressed.connect(_on_info_pressed)
 	close_guide_btn.pressed.connect(func(): guide_panel.hide())
 	_setup_guide_text()
 
 	_setup_ui_styles()
+	
+	# Special return button for Volunteer Club transition
+	return_to_volunteer_btn = Button.new()
+	return_to_volunteer_btn.text = "Return to Volunteer Club Selection"
+	return_to_volunteer_btn.add_theme_font_size_override("font_size", 18)
+	var rbtn_style = StyleBoxFlat.new()
+	rbtn_style.bg_color = Color(0.1, 0.4, 0.6, 0.8)
+	rbtn_style.set_corner_radius_all(8)
+	return_to_volunteer_btn.add_theme_stylebox_override("normal", rbtn_style)
+	return_to_volunteer_btn.pressed.connect(_on_return_to_volunteer_pressed)
+	return_to_volunteer_btn.hide()
+	$MarginContainer/VBoxContainer/Footer.add_child(return_to_volunteer_btn)
 
 
 func _setup_ui_styles() -> void:
@@ -361,6 +375,11 @@ func _setup_guide_text() -> void:
 
 
 func _on_back_pressed() -> void:
+	came_from_volunteer = false
+	if return_to_volunteer_btn:
+		return_to_volunteer_btn.hide()
+	back_button.show()
+	
 	GameState.layout_plan = areas
 	if not GameState.completed_activities.has("initial_festival_layout_mapping"):
 		GameState.completed_activities.append("initial_festival_layout_mapping")
@@ -368,3 +387,19 @@ func _on_back_pressed() -> void:
 	get_parent().get_node("ActivityBoard").show()
 	if get_parent().get_node("ActivityBoard").has_method("refresh_board"):
 		get_parent().get_node("ActivityBoard").refresh_board()
+
+func open_from_volunteer() -> void:
+	came_from_volunteer = true
+	back_button.hide()
+	return_to_volunteer_btn.show()
+	show()
+
+func _on_return_to_volunteer_pressed() -> void:
+	GameState.layout_plan = areas
+	came_from_volunteer = false
+	return_to_volunteer_btn.hide()
+	back_button.show()
+	hide()
+	var volunteer_panel = get_parent().get_node("VolunteerClubPanel")
+	if volunteer_panel:
+		volunteer_panel.show()
