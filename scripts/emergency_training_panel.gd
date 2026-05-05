@@ -33,7 +33,7 @@ var training_defs = {
 @onready var time_label: Label = $MarginContainer/VBoxContainer/Footer/TimerBox/TimeRemainingLabel
 @onready var money_label: Label = $MarginContainer/VBoxContainer/Footer/MoneyBox/MoneyLabel
 @onready var member_list_container: GridContainer = $MarginContainer/VBoxContainer/MainContent/MembersColumn/ScrollContainer/MemberList
-@onready var active_trainings_label: Label = $MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer/VBoxContainer/ActiveTrainingsLabel
+@onready var active_trainings_container: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer/VBoxContainer
 @onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
 
 @onready var elec_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/ElectricalButton
@@ -124,11 +124,12 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 	var pbar = ProgressBar.new()
 	pbar.max_value = 240.0
 	pbar.value = member.get("total_training_time", 0.0)
-	pbar.custom_minimum_size = Vector2(200, 10)
+	pbar.custom_minimum_size = Vector2(250, 15) # Larger bar
 	pbar.show_percentage = false
 	
 	# Color coding for load
 	var p_style = StyleBoxFlat.new()
+	p_style.set_corner_radius_all(8)
 	if pbar.value > 200: p_style.bg_color = Color(0.9, 0.2, 0.2)
 	elif pbar.value > 120: p_style.bg_color = Color(0.9, 0.6, 0.1)
 	else: p_style.bg_color = Color(0.2, 0.7, 0.9)
@@ -138,7 +139,7 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 	
 	var time_lbl = Label.new()
 	time_lbl.text = str(int(pbar.value)) + "s / 240s"
-	time_lbl.add_theme_font_size_override("font_size", 12)
+	time_lbl.add_theme_font_size_override("font_size", 14) # Larger font
 	load_box.add_child(time_lbl)
 
 	# Assign Button
@@ -190,15 +191,62 @@ func _on_assign_pressed(member: Dictionary) -> void:
 func _refresh_ui() -> void:
 	var remaining := GameState.get_emergency_training_remaining_time()
 	time_label.text = "Academy Window Remaining: %.1f sec" % remaining
+	time_label.add_theme_font_size_override("font_size", 24) # Bigger label
 	money_label.text = "Available Budget: $" + str(GameState.money)
+	money_label.add_theme_font_size_override("font_size", 24)
 
-	var text := ""
-	for training in GameState.active_trainings:
-		var left = max(0.0, training["end_time"] - GameState.game_seconds)
-		text += "• " + training["member_name"] + "\n  " + training_defs[training["training_type"]]["display_name"] + "\n  (" + str(int(left)) + "s left)\n\n"
-	
-	if text == "": text = "No active training sessions."
-	active_trainings_label.text = text
+	# Update active training bars
+	for child in active_trainings_container.get_children():
+		child.queue_free()
+		
+	if GameState.active_trainings.is_empty():
+		var empty_lbl = Label.new()
+		empty_lbl.text = "No active training sessions."
+		empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		active_trainings_container.add_child(empty_lbl)
+	else:
+		for training in GameState.active_trainings:
+			var t_box = VBoxContainer.new()
+			t_box.add_theme_constant_override("separation", 5)
+			active_trainings_container.add_child(t_box)
+			
+			var name_lbl = Label.new()
+			name_lbl.text = training["member_name"] + " - " + training_defs[training["training_type"]]["display_name"]
+			name_lbl.add_theme_font_size_override("font_size", 16)
+			t_box.add_child(name_lbl)
+			
+			var left = max(0.0, training["end_time"] - GameState.game_seconds)
+			var duration = training_defs[training["training_type"]]["duration"]
+			
+			var bar = ProgressBar.new()
+			bar.max_value = duration
+			bar.value = left # This will decrease as 'left' decreases
+			bar.custom_minimum_size = Vector2(0, 25) # Big enough bar
+			bar.show_percentage = false
+			
+			# Stylish fill
+			var style = StyleBoxFlat.new()
+			style.bg_color = Color(0.2, 0.8, 0.4) # Fresh green for progress
+			style.set_corner_radius_all(6)
+			bar.add_theme_stylebox_override("fill", style)
+			
+			var bg = StyleBoxFlat.new()
+			bg.bg_color = Color(0.1, 0.1, 0.1, 1.0)
+			bg.set_corner_radius_all(6)
+			bar.add_theme_stylebox_override("background", bg)
+			
+			t_box.add_child(bar)
+			
+			var countdown_lbl = Label.new()
+			countdown_lbl.text = str(int(left)) + " seconds remaining"
+			countdown_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			countdown_lbl.add_theme_font_size_override("font_size", 14)
+			t_box.add_child(countdown_lbl)
+			
+			# Spacing
+			var spacer = Control.new()
+			spacer.custom_minimum_size.y = 10
+			active_trainings_container.add_child(spacer)
 	
 	# Periodically refresh the member list to update "is_in_training" status
 	# (In a real game, you might use signals, but for 4 mins, a quick scan works)

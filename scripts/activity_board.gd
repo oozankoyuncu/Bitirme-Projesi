@@ -5,11 +5,42 @@ extends Control
 func _ready() -> void:
 	refresh_board()
 	_setup_dashboard_styles()
+	_add_budget_warning()
+
+func _process(_delta: float) -> void:
+	if GameState.money <= -300000 and not has_node("GameOverOverlay"):
+		show_game_over()
 
 func _setup_dashboard_styles() -> void:
 	var bg_style = StyleBoxFlat.new()
 	bg_style.bg_color = Color(0.08, 0.1, 0.13, 0.95)
 	$Background.add_theme_stylebox_override("panel", bg_style)
+
+func _add_budget_warning() -> void:
+	var warning_hbox = HBoxContainer.new()
+	warning_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	warning_hbox.add_theme_constant_override("separation", 10)
+	
+	# Add some margin
+	var warning_margin = MarginContainer.new()
+	warning_margin.add_theme_constant_override("margin_bottom", 10)
+	warning_margin.add_child(warning_hbox)
+	
+	var warning_icon = Label.new()
+	warning_icon.text = "ℹ️"
+	warning_icon.add_theme_font_size_override("font_size", 20)
+	warning_hbox.add_child(warning_icon)
+	
+	var warning_text = Label.new()
+	warning_text.text = "Financial Policy: If the budget drops to -300,000 TL or below, the project will be terminated immediately."
+	warning_text.add_theme_font_size_override("font_size", 22)
+	warning_text.modulate = Color(1.0, 0.8, 0.2, 1.0) # More noticeable color (amber)
+	warning_hbox.add_child(warning_text)
+	
+	# Insert at the top of the VBox
+	var vbox = $MarginContainer/VBox
+	vbox.add_child(warning_margin)
+	vbox.move_child(warning_margin, 0)
 
 func refresh_board() -> void:
 	# Clean old cards
@@ -20,6 +51,23 @@ func refresh_board() -> void:
 	for activity in GameState.activities:
 		var card = create_activity_card(activity)
 		activity_list.add_child(card)
+		
+	# Check for game completion
+	_check_game_completion()
+
+func _check_game_completion() -> void:
+	if GameState.completed_activities.size() >= GameState.activities.size():
+		var charter = get_parent().get_node("CharterPanel")
+		if charter:
+			charter.show()
+			# Switch to Success tab
+			var tab_container = charter.get_node("MarginContainer/TabContainer")
+			for i in range(tab_container.get_tab_count()):
+				if tab_container.get_tab_title(i) == "Success":
+					tab_container.current_tab = i
+					break
+			# Hide activity board
+			hide()
 
 func create_activity_card(activity: Dictionary) -> PanelContainer:
 	var card = PanelContainer.new()
@@ -198,3 +246,65 @@ func start_activity(activity: Dictionary) -> void:
 	print("Started: ", activity["name"])
 	GameState.completed_activities.append(activity_id)
 	refresh_board()
+
+func show_game_over() -> void:
+	# Stop the game timer
+	GameState.is_running = false
+	
+	# Create overlay
+	var overlay = ColorRect.new()
+	overlay.name = "GameOverOverlay"
+	overlay.color = Color(0, 0, 0, 0.85)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 100
+	add_child(overlay)
+	
+	var center_container = CenterContainer.new()
+	center_container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center_container)
+	
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 30)
+	center_container.add_child(vbox)
+	
+	# Icon
+	var icon = Label.new()
+	icon.text = "⚠️"
+	icon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	icon.add_theme_font_size_override("font_size", 120)
+	vbox.add_child(icon)
+	
+	# Title
+	var title = Label.new()
+	title.text = "PROJECT FAILED"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 72)
+	title.modulate = Color(1, 0.2, 0.2)
+	vbox.add_child(title)
+	
+	# Message
+	var msg = Label.new()
+	msg.text = "Critical Budget Loss: Your funding has dropped to " + str(GameState.money) + " TL.\n\nThe university has cancelled the festival due to financial instability.\nAll planning activities must cease immediately."
+	msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	msg.custom_minimum_size = Vector2(600, 0)
+	msg.add_theme_font_size_override("font_size", 24)
+	vbox.add_child(msg)
+	
+	# Restart Button
+	var btn = Button.new()
+	btn.text = "RETURN TO MAIN MENU"
+	btn.custom_minimum_size = Vector2(300, 60)
+	btn.pressed.connect(func(): get_tree().change_scene_to_file("res://main_menu.tscn"))
+	
+	var btn_center = CenterContainer.new()
+	btn_center.add_child(btn)
+	vbox.add_child(btn_center)
+	
+	# Animation
+	overlay.modulate.a = 0
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(overlay, "modulate:a", 1.0, 1.0)
+	
+	# Visual effects for the card board to show it's disabled
+	activity_list.modulate = Color(0.3, 0.3, 0.3)

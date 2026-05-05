@@ -3,11 +3,15 @@ extends Control
 @export var game_scene: PackedScene
 
 func _ready():
+	$CenterContainer/VBoxContainer/Label.add_theme_font_size_override("font_size", 64)
+	$CenterContainer/VBoxContainer/StartButton.custom_minimum_size = Vector2(400, 80)
+	$CenterContainer/VBoxContainer/StartButton.add_theme_font_size_override("font_size", 32)
 	$CenterContainer/VBoxContainer/StartButton.pressed.connect(_on_start_pressed)
 	
 	var skip_btn = Button.new()
 	skip_btn.text = "Direct to Activity Board"
-	skip_btn.custom_minimum_size = Vector2(200, 50)
+	skip_btn.custom_minimum_size = Vector2(400, 80)
+	skip_btn.add_theme_font_size_override("font_size", 32)
 	skip_btn.pressed.connect(_on_skip_pressed)
 
 	# Quit butonu varsa:

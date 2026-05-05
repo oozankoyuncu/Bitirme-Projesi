@@ -56,19 +56,37 @@ func _ready() -> void:
 	_setup_ui_styles()
 	create_options()
 	
-	# Add Go to Layout button
-	var right_panel = $MarginContainer/VBoxContainer/MainContent/RightPanel
+	# Add Go to Layout button at the top
+	var top_vbox = $MarginContainer/VBoxContainer
+	
+	var layout_btn_container = CenterContainer.new()
+	layout_btn_container.custom_minimum_size = Vector2(0, 80)
+	top_vbox.add_child(layout_btn_container)
+	top_vbox.move_child(layout_btn_container, 1) # Put it below the header but above main content
+	
 	var go_to_layout_btn = Button.new()
-	go_to_layout_btn.text = "Go To Initial Layout Mapping"
-	go_to_layout_btn.add_theme_font_size_override("font_size", 18)
-	go_to_layout_btn.custom_minimum_size = Vector2(0, 50)
+	go_to_layout_btn.text = "📍 GO TO INITIAL LAYOUT MAPPING (REVIEW CAPACITY)"
+	go_to_layout_btn.add_theme_font_size_override("font_size", 24)
+	go_to_layout_btn.custom_minimum_size = Vector2(600, 70)
+	
 	var btn_style = StyleBoxFlat.new()
-	btn_style.bg_color = Color(0.1, 0.4, 0.2, 0.8)
-	btn_style.set_corner_radius_all(8)
+	btn_style.bg_color = Color(0.1, 0.5, 0.25, 0.9) # Bright Green
+	btn_style.border_width_left = 4
+	btn_style.border_width_top = 4
+	btn_style.border_width_right = 4
+	btn_style.border_width_bottom = 4
+	btn_style.border_color = Color(0.4, 0.8, 0.5, 1.0)
+	btn_style.set_corner_radius_all(12)
+	
+	var btn_hover = btn_style.duplicate()
+	btn_hover.bg_color = Color(0.15, 0.7, 0.35, 1.0)
+	
 	go_to_layout_btn.add_theme_stylebox_override("normal", btn_style)
+	go_to_layout_btn.add_theme_stylebox_override("hover", btn_hover)
+	go_to_layout_btn.add_theme_stylebox_override("pressed", btn_style)
 	
 	go_to_layout_btn.pressed.connect(_on_go_to_layout_pressed)
-	right_panel.add_child(go_to_layout_btn)
+	layout_btn_container.add_child(go_to_layout_btn)
 	
 	refresh_ui()
 
