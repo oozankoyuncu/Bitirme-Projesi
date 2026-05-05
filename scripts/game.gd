@@ -23,6 +23,8 @@ func _ready() -> void:
 	GameState.load_team_members()
 	GameState.time_changed.connect(_on_time_changed)
 	
+	_apply_global_ui_improvements()
+	
 	# Hide all sub-panels
 	team_assignment_panel.hide()
 	initial_facility_layout_panel.hide()
@@ -45,7 +47,7 @@ func _ready() -> void:
 
 	var stats = $TopBar/Margin/HBox/Stats
 	if stats is BoxContainer:
-		stats.add_theme_constant_override("separation", 60)
+		stats.add_theme_constant_override("separation", 80) # Increased separation
 	
 	# Create Clock
 	var clock = Control.new()
@@ -101,6 +103,7 @@ func _draw():
 		email_panel.show()
 	
 	_update_hud()
+	_setup_persistent_hud()
 
 func _on_time_changed() -> void:
 	_update_hud()
@@ -114,3 +117,70 @@ func _update_hud() -> void:
 	var minutes := (total % 3600) / 60
 	var seconds := total % 60
 	time_label_hud.text = "%02d:%02d:%02d" % [hours, minutes, seconds]
+
+func _setup_persistent_hud() -> void:
+	# Ensure HUD is always on top
+	var canvas_layer = CanvasLayer.new()
+	canvas_layer.layer = 100
+	add_child(canvas_layer)
+	
+	var top_bar = $TopBar
+	top_bar.reparent(canvas_layer)
+	
+	# Center the stats in the TopBar
+	var hbox = top_bar.get_node("Margin/HBox")
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	
+	# Increase font sizes for HUD labels
+	var labels = [week_label, budget_label, time_label_hud]
+	for lbl in labels:
+		lbl.add_theme_font_size_override("font_size", 32)
+		lbl.add_theme_color_override("font_color", Color(1, 1, 1)) # White for clarity
+		
+		# Also find the icons next to them
+		var parent = lbl.get_parent()
+		if parent is HBoxContainer:
+			for child in parent.get_children():
+				if child is Label and child != lbl:
+					child.add_theme_font_size_override("font_size", 36)
+
+func _apply_global_ui_improvements() -> void:
+	# List of all potential sub-panels
+	var panels = [
+		team_assignment_panel, initial_facility_layout_panel, emergency_training_panel,
+		sponsor_management_panel, entertainment_lineup_panel, promotion_strategy_panel,
+		ticket_pricing_panel, volunteer_club_panel, stage_setup_choices_panel,
+		$FoodVendorSelectionPanel, $SoundSystemChoicesPanel, $TransportCoordinationPanel,
+		$DecorationThemePanel, $FestivalCleaningSecurityPanel, $FinalFacilityLayoutPanel
+	]
+	
+	for panel in panels:
+		if not panel: continue
+		
+		# Make panels larger and centered
+		panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		
+		# Add a nice background style
+		var style = StyleBoxFlat.new()
+		style.bg_color = Color(0.05, 0.07, 0.1, 0.98)
+		style.border_width_top = 80 # Leave space for the TopBar HUD
+		style.border_color = Color(0, 0, 0, 0)
+		panel.add_theme_stylebox_override("panel", style)
+		
+		# Recursively increase font sizes inside the panel
+		_enlarge_fonts_recursive(panel)
+
+func _enlarge_fonts_recursive(node: Node) -> void:
+	if node is Label:
+		var current_size = node.get_theme_font_size("font_size")
+		if current_size < 24:
+			node.add_theme_font_size_override("font_size", 24)
+		elif current_size < 32:
+			node.add_theme_font_size_override("font_size", 32)
+			
+	if node is Button:
+		node.custom_minimum_size.y = max(node.custom_minimum_size.y, 60)
+		node.add_theme_font_size_override("font_size", 24)
+		
+	for child in node.get_children():
+		_enlarge_fonts_recursive(child)

@@ -106,10 +106,13 @@ func _ready() -> void:
 		if areas[area_name]["truck_access"]: icons += "🚚"
 		
 		icon_label.text = icons
-		icon_label.add_theme_font_size_override("font_size", 20)
+		icon_label.add_theme_font_size_override("font_size", 28) # Increased
 		icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		icon_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 		btn.add_child(icon_label)
+		
+		btn.custom_minimum_size = Vector2(240, 180) # Larger buttons
+		btn.add_theme_font_size_override("font_size", 18) # Larger base font
 
 	back_button.pressed.connect(_on_back_pressed)
 	clear_area_btn.pressed.connect(_on_clear_area_pressed)
@@ -123,15 +126,37 @@ func _ready() -> void:
 	
 	# Special return button for Volunteer Club transition
 	return_to_volunteer_btn = Button.new()
-	return_to_volunteer_btn.text = "Return to Volunteer Club Selection"
-	return_to_volunteer_btn.add_theme_font_size_override("font_size", 18)
+	return_to_volunteer_btn.text = "↩️ RETURN TO VOLUNTEER CLUB SELECTION"
+	return_to_volunteer_btn.add_theme_font_size_override("font_size", 24)
+	return_to_volunteer_btn.custom_minimum_size = Vector2(600, 70)
+	
 	var rbtn_style = StyleBoxFlat.new()
-	rbtn_style.bg_color = Color(0.1, 0.4, 0.6, 0.8)
-	rbtn_style.set_corner_radius_all(8)
+	rbtn_style.bg_color = Color(0.1, 0.4, 0.6, 0.9) # Prominent Blue
+	rbtn_style.border_width_left = 4
+	rbtn_style.border_width_top = 4
+	rbtn_style.border_width_right = 4
+	rbtn_style.border_width_bottom = 4
+	rbtn_style.border_color = Color(0.3, 0.7, 1.0, 1.0)
+	rbtn_style.set_corner_radius_all(12)
+	
+	var rbtn_hover = rbtn_style.duplicate()
+	rbtn_hover.bg_color = Color(0.15, 0.5, 0.8, 1.0)
+	
 	return_to_volunteer_btn.add_theme_stylebox_override("normal", rbtn_style)
+	return_to_volunteer_btn.add_theme_stylebox_override("hover", rbtn_hover)
+	return_to_volunteer_btn.add_theme_stylebox_override("pressed", rbtn_style)
+	
 	return_to_volunteer_btn.pressed.connect(_on_return_to_volunteer_pressed)
 	return_to_volunteer_btn.hide()
-	$MarginContainer/VBoxContainer/Footer.add_child(return_to_volunteer_btn)
+	
+	# Create a top container for this button
+	var layout_btn_container = CenterContainer.new()
+	layout_btn_container.name = "ReturnToVolunteerContainer"
+	layout_btn_container.custom_minimum_size = Vector2(0, 80)
+	layout_btn_container.add_child(return_to_volunteer_btn)
+	
+	$MarginContainer/VBoxContainer.add_child(layout_btn_container)
+	$MarginContainer/VBoxContainer.move_child(layout_btn_container, 1) # Below header
 
 
 func _setup_ui_styles() -> void:
@@ -266,6 +291,7 @@ func update_area_button_style(area_name: String) -> void:
 		btn.text = area_name + " (" + str(remaining_size) + " m² left)\n" + \
 				   "━━━━━━━━━━\n" + \
 				   assigned_text.strip_edges()
+		btn.add_theme_font_size_override("font_size", 18)
 	else:
 		style.bg_color = Color(0.15, 0.18, 0.2, 0.6)
 		style.border_width_left = 1
@@ -316,6 +342,7 @@ func update_area_info(area_name: String) -> void:
 		"CAPACITY: " + str(area["capacity"]) + "\n" + \
 		"----------------------\n" + \
 		"ASSIGNED:\n" + assigned_text
+	area_info_label.add_theme_font_size_override("font_size", 20) # Larger sidebar text
 
 	clear_area_btn.visible = area["assigned"].size() > 0
 
@@ -377,7 +404,7 @@ func _setup_guide_text() -> void:
 func _on_back_pressed() -> void:
 	came_from_volunteer = false
 	if return_to_volunteer_btn:
-		return_to_volunteer_btn.hide()
+		return_to_volunteer_btn.get_parent().hide() # Hide the entire container
 	back_button.show()
 	
 	GameState.layout_plan = areas
@@ -391,13 +418,16 @@ func _on_back_pressed() -> void:
 func open_from_volunteer() -> void:
 	came_from_volunteer = true
 	back_button.hide()
-	return_to_volunteer_btn.show()
+	if return_to_volunteer_btn:
+		return_to_volunteer_btn.get_parent().show() # Show the container
+		return_to_volunteer_btn.show()
 	show()
 
 func _on_return_to_volunteer_pressed() -> void:
 	GameState.layout_plan = areas
 	came_from_volunteer = false
-	return_to_volunteer_btn.hide()
+	if return_to_volunteer_btn:
+		return_to_volunteer_btn.get_parent().hide()
 	back_button.show()
 	hide()
 	var volunteer_panel = get_parent().get_node("VolunteerClubPanel")
