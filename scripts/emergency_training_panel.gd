@@ -91,7 +91,7 @@ func refresh_member_list() -> void:
 
 func _create_member_card(member: Dictionary) -> PanelContainer:
 	var card = PanelContainer.new()
-	card.custom_minimum_size = Vector2(0, 70)
+	card.custom_minimum_size = Vector2(0, 95)
 	
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.15, 0.18, 0.25, 0.7)
@@ -114,7 +114,7 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 
 	var name_lbl = Label.new()
 	name_lbl.text = member["name"]
-	name_lbl.add_theme_font_size_override("font_size", 18)
+	name_lbl.add_theme_font_size_override("font_size", 22)
 	v_info.add_child(name_lbl)
 
 	# Training Load Progress
@@ -124,7 +124,7 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 	var pbar = ProgressBar.new()
 	pbar.max_value = 240.0
 	pbar.value = member.get("total_training_time", 0.0)
-	pbar.custom_minimum_size = Vector2(250, 15) # Larger bar
+	pbar.custom_minimum_size = Vector2(300, 20) # Larger bar
 	pbar.show_percentage = false
 	
 	# Color coding for load
@@ -139,13 +139,15 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 	
 	var time_lbl = Label.new()
 	time_lbl.text = str(int(pbar.value)) + "s / 240s"
-	time_lbl.add_theme_font_size_override("font_size", 14) # Larger font
+	time_lbl.add_theme_font_size_override("font_size", 18) # Larger font
 	load_box.add_child(time_lbl)
 
 	# Assign Button
 	var assign_btn = Button.new()
 	assign_btn.text = "ASSIGN"
-	assign_btn.custom_minimum_size = Vector2(100, 0)
+	assign_btn.custom_minimum_size = Vector2(140, 50)
+	assign_btn.add_theme_font_size_override("font_size", 18)
+	assign_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	
 	if member.get("is_in_training", false):
 		assign_btn.text = "TRAINING..."
@@ -203,6 +205,7 @@ func _refresh_ui() -> void:
 		var empty_lbl = Label.new()
 		empty_lbl.text = "No active training sessions."
 		empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		empty_lbl.add_theme_font_size_override("font_size", 20)
 		active_trainings_container.add_child(empty_lbl)
 	else:
 		for training in GameState.active_trainings:
@@ -212,7 +215,7 @@ func _refresh_ui() -> void:
 			
 			var name_lbl = Label.new()
 			name_lbl.text = training["member_name"] + " - " + training_defs[training["training_type"]]["display_name"]
-			name_lbl.add_theme_font_size_override("font_size", 16)
+			name_lbl.add_theme_font_size_override("font_size", 20)
 			t_box.add_child(name_lbl)
 			
 			var left = max(0.0, training["end_time"] - GameState.game_seconds)
@@ -221,7 +224,7 @@ func _refresh_ui() -> void:
 			var bar = ProgressBar.new()
 			bar.max_value = duration
 			bar.value = left # This will decrease as 'left' decreases
-			bar.custom_minimum_size = Vector2(0, 25) # Big enough bar
+			bar.custom_minimum_size = Vector2(0, 30) # Big enough bar
 			bar.show_percentage = false
 			
 			# Stylish fill
@@ -240,7 +243,7 @@ func _refresh_ui() -> void:
 			var countdown_lbl = Label.new()
 			countdown_lbl.text = str(int(left)) + " seconds remaining"
 			countdown_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-			countdown_lbl.add_theme_font_size_override("font_size", 14)
+			countdown_lbl.add_theme_font_size_override("font_size", 18)
 			t_box.add_child(countdown_lbl)
 			
 			# Spacing

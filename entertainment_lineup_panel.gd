@@ -7,10 +7,10 @@ extends Panel
 @onready var headliner_list: VBoxContainer = $MarginContainer/VBoxContainer/HBoxContainer/SelectedLineupPanel/VBoxContainer/HeadlinerScroll/HeadlinerList
 @onready var supporting_list: VBoxContainer = $MarginContainer/VBoxContainer/HBoxContainer/SelectedLineupPanel/VBoxContainer/SupportingScroll/SupportingList
 
-@onready var total_cost_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer/TotalCostLabel
-@onready var total_popularity_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer/TotalPopularityLabel
-@onready var total_attendance_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer/TotalAttendanceLabel
-@onready var remaining_budget_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer/RemainingBudgetLabel
+@onready var total_cost_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer/TotalCostLabel
+@onready var total_popularity_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer/TotalPopularityLabel
+@onready var total_attendance_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer/TotalAttendanceLabel
+@onready var remaining_budget_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer/RemainingBudgetLabel
 
 @onready var result_label: Label = $MarginContainer/VBoxContainer/ResultLabel
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonRow/ConfirmButton
@@ -112,14 +112,14 @@ func create_available_artist_list() -> void:
 
 		var name_label := Label.new()
 		name_label.text = str(artist["name"])
-		name_label.add_theme_font_size_override("font_size", 18)
+		name_label.add_theme_font_size_override("font_size", 28)
 		name_label.add_theme_color_override("font_color", Color(0.95, 0.85, 0.2))
 		name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		
 		var info_label := Label.new()
 		info_label.text = "Role: " + str(artist["role"]).capitalize() + " | Cost: " + str(artist["cost"]) + " TL\n" + \
 						  "Pop: " + str(artist["popularity"]) + " | Appeal: " + str(artist["crowd_appeal"])
-		info_label.add_theme_font_size_override("font_size", 13)
+		info_label.add_theme_font_size_override("font_size", 22)
 		info_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
 		info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
@@ -128,7 +128,8 @@ func create_available_artist_list() -> void:
 
 		var add_button := Button.new()
 		add_button.text = "Add"
-		add_button.custom_minimum_size = Vector2(80, 35)
+		add_button.custom_minimum_size = Vector2(100, 45)
+		add_button.add_theme_font_size_override("font_size", 18)
 		add_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		
 		var btn_style = StyleBoxFlat.new()
@@ -161,6 +162,7 @@ func refresh_selected_lists() -> void:
 	if GameState.selected_headliners.is_empty():
 		var empty_headliner := Label.new()
 		empty_headliner.text = "No headliner selected."
+		empty_headliner.add_theme_font_size_override("font_size", 22)
 		headliner_list.add_child(empty_headliner)
 	else:
 		for artist in GameState.selected_headliners:
@@ -170,6 +172,7 @@ func refresh_selected_lists() -> void:
 	if GameState.selected_supporting_artists.is_empty():
 		var empty_supporting := Label.new()
 		empty_supporting.text = "No supporting artists selected."
+		empty_supporting.add_theme_font_size_override("font_size", 22)
 		supporting_list.add_child(empty_supporting)
 	else:
 		for artist in GameState.selected_supporting_artists:
@@ -210,14 +213,14 @@ func _create_selected_artist_row(artist: Dictionary) -> PanelContainer:
 
 	var name_label := Label.new()
 	name_label.text = str(artist["name"])
-	name_label.add_theme_font_size_override("font_size", 18)
+	name_label.add_theme_font_size_override("font_size", 28)
 	name_label.add_theme_color_override("font_color", Color(0.4, 0.9, 1.0))
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	
 	var info_label := Label.new()
 	info_label.text = "Role: " + str(artist["role"]).capitalize() + " | Cost: " + str(artist["cost"]) + " TL\n" + \
 					  "Pop: " + str(artist["popularity"]) + " | Appeal: " + str(artist["crowd_appeal"])
-	info_label.add_theme_font_size_override("font_size", 13)
+	info_label.add_theme_font_size_override("font_size", 22)
 	info_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
@@ -226,7 +229,8 @@ func _create_selected_artist_row(artist: Dictionary) -> PanelContainer:
 
 	var remove_button := Button.new()
 	remove_button.text = "Remove"
-	remove_button.custom_minimum_size = Vector2(80, 35)
+	remove_button.custom_minimum_size = Vector2(100, 45)
+	remove_button.add_theme_font_size_override("font_size", 18)
 	remove_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	
 	var btn_style = StyleBoxFlat.new()
@@ -323,29 +327,29 @@ func refresh_summary() -> void:
 	var remaining_budget := GameState.money - total_cost
 
 	money_label.text = "Budget: " + str(GameState.money) + " TL"
-	money_label.add_theme_font_size_override("font_size", 18)
+	money_label.add_theme_font_size_override("font_size", 24)
 	money_label.add_theme_color_override("font_color", Color(0.3, 0.8, 0.3))
 
 	requirements_label.text = \
 		"Requirements: 1 Headliner, 2+ Supporting" + \
 		"\nStatus: " + str(GameState.selected_headliners.size()) + " Headliner, " + str(GameState.selected_supporting_artists.size()) + " Supporting"
-	requirements_label.add_theme_font_size_override("font_size", 16)
+	requirements_label.add_theme_font_size_override("font_size", 20)
 	requirements_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
 
 	total_cost_label.text = "Total Lineup Cost: " + str(total_cost) + " TL"
-	total_cost_label.add_theme_font_size_override("font_size", 16)
+	total_cost_label.add_theme_font_size_override("font_size", 20)
 	total_cost_label.add_theme_color_override("font_color", Color(0.9, 0.4, 0.4))
 
 	total_popularity_label.text = "Lineup Popularity: %.1f / 100" % avg_popularity
-	total_popularity_label.add_theme_font_size_override("font_size", 16)
+	total_popularity_label.add_theme_font_size_override("font_size", 20)
 	total_popularity_label.add_theme_color_override("font_color", Color(0.4, 0.9, 1.0))
 
 	total_attendance_label.text = "Expected Crowd: " + str(total_attendance)
-	total_attendance_label.add_theme_font_size_override("font_size", 16)
+	total_attendance_label.add_theme_font_size_override("font_size", 20)
 	total_attendance_label.add_theme_color_override("font_color", Color(0.9, 0.8, 0.2))
 
 	remaining_budget_label.text = "Remaining Budget: " + str(remaining_budget) + " TL"
-	remaining_budget_label.add_theme_font_size_override("font_size", 18)
+	remaining_budget_label.add_theme_font_size_override("font_size", 24)
 	if remaining_budget < 0:
 		remaining_budget_label.add_theme_color_override("font_color", Color(0.9, 0.2, 0.2))
 	else:
@@ -353,7 +357,7 @@ func refresh_summary() -> void:
 		
 	if result_label:
 		result_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		result_label.add_theme_font_size_override("font_size", 16)
+		result_label.add_theme_font_size_override("font_size", 22)
 		result_label.add_theme_color_override("font_color", Color(0.9, 0.8, 0.2))
 
 

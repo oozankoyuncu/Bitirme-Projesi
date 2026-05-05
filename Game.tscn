@@ -224,12 +224,12 @@ layout_mode = 2
 
 [node name="FromLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content/Details"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "From: University Administration (Rectorate)"
 
 [node name="ToLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content/Details"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "To: Student Representative"
 
 [node name="HSeparator" type="HSeparator" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
@@ -238,10 +238,12 @@ layout_mode = 2
 [node name="BodyLabel" type="Label" parent="EmailPanel/MarginContainer/HBox/EmailSide/EmailBox/Margin/Content"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 text = "Dear Student Representative,
 
 We are pleased to inform you that the university will host the Spring Student Festival on campus. The aim is enhancing student engagement, enriching campus life, and fostering community interaction.
+
+Please note that the university will provide financial support for this event, and it is strictly non-profit. If any profit is generated from the festival, it will be directly transferred to the school's scholarship fund.
 
 Your responsibilities will include managing the project timeline, budget, and scope, ensuring that the festival is delivered successfully and safely.
 
@@ -328,13 +330,13 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/University/Text"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "University Administration"
 
 [node name="Sub" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/University/Text"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 text = "From: Rectorate Office"
 
 [node name="Arrow" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow"]
@@ -355,13 +357,13 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/User/Text"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "You"
 
 [node name="Sub" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/AdminRow/User/Text"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 text = "Student Representative"
 
 [node name="HSeparator" type="HSeparator" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
@@ -374,12 +376,12 @@ theme_override_constants/separation = 5
 [node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ObjectiveSection"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.3, 0.3, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "🎯 Project Objective"
 
 [node name="Text" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ObjectiveSection"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "Successfully plan and deliver a one-day Spring Student Festival by managing time, budget, scope, and risks under realistic constraints, while maximizing overall project performance."
 autowrap_mode = 3
 
@@ -390,7 +392,7 @@ theme_override_constants/separation = 8
 [node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "📋 Project Scope Requirements"
 
 [node name="List" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection"]
@@ -399,22 +401,22 @@ theme_override_constants/separation = 5
 
 [node name="Item1" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "✅ Secure at least 2 sponsors contributing to the budget of at least $$"
 
 [node name="Item2" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "✅ Select one main headliner and at least 2 sub-performers"
 
 [node name="Item3" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "✅ Include different types of activity (volunteer/club) and at least two volunteers"
 
 [node name="Item4" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "✅ Have at least two different types of cuisine and have at least a 2.6 hygiene rating"
 
 [node name="ConstraintHeader" type="PanelContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
@@ -423,7 +425,7 @@ layout_mode = 2
 [node name="ConstraintTitle" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ConstraintHeader"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.75, 0, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "⚠️ Project Constraints"
 
 [node name="Grid" type="GridContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
@@ -436,13 +438,13 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/TimeBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "⌛ Time Constraint:"
 
 [node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/TimeBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "• Total preparation duration: 8 weeks
 • Total gameplay duration: 32 minutes"
 
@@ -451,13 +453,13 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/BudgetBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "💰 Budget Constraint:"
 
 [node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/BudgetBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "• Initial budget: 400,000 TL
 • No additional internal funding after start"
 
@@ -489,14 +491,14 @@ horizontal_alignment = 1
 [node name="OFSFormula" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.75, 0, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "OFS = 0.6 × Participant Satisfaction (PS) + 0.4 × Event Quality (EQ)"
 horizontal_alignment = 1
 
 [node name="Sub" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "Project success is evaluated using the following Key Performance Indicators (KPIs). Each indicator reflects a core project management competency and contributes to the final score."
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -537,7 +539,7 @@ show_percentage = false
 [node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/TimeKPI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "• Activities completed within the planned timeline
 + Delays reduce overall performance score"
 
@@ -566,9 +568,9 @@ show_percentage = false
 [node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/BudgetKPI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 18
-text = "• Staying within the allocated budget
-• Efficient use of sponsorship income and ticket revenue"
+theme_override_font_sizes/font_size = 22
+text = "Tracks positive and negative financial flows. Revenue is generated through sponsors and ticket sales, while operational and experiential decisions incur costs. You must balance financial sustainability with decision quality."
+autowrap_mode = 3
 
 [node name="ScopeKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
 layout_mode = 2
@@ -595,8 +597,9 @@ show_percentage = false
 [node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/ScopeKPI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 18
-text = "• Completion of all required deliverables defined in the Project Charter"
+theme_override_font_sizes/font_size = 22
+text = "Evaluates the fulfillment of structural requirements, such as team capability, sponsor quality, target attendance, entertainment composition, vendor variety, and operational services. Ensures a complete and balanced festival structure."
+autowrap_mode = 3
 
 [node name="MotivationKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
 layout_mode = 2
@@ -623,7 +626,7 @@ show_percentage = false
 [node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/MotivationKPI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "• Balanced workload across teams
 + Maintain high engagement"
 
@@ -652,8 +655,9 @@ show_percentage = false
 [node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/SatisfactionKPI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 18
-text = "Reflects attendee experience, comfort, and entertainment quality"
+theme_override_font_sizes/font_size = 22
+text = "Determined through key experiential decisions using a threshold-based logic. Each major component—such as entertainment selection, volunteer and club structure, sound system choice, and decoration theme—is assessed based on whether it meets a predefined minimum requirement. Overall satisfaction increases as more of these requirements are fulfilled. This structure ensures that you must consistently meet baseline expectations across multiple areas rather than relying on a single strong decision."
+autowrap_mode = 3
 
 [node name="QualityKPI" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List"]
 layout_mode = 2
@@ -680,8 +684,9 @@ show_percentage = false
 [node name="Desc" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List/QualityKPI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 18
-text = "Reflects attendance levels, artist quality, and operational success"
+theme_override_font_sizes/font_size = 22
+text = "Calculated based on quantitative outcomes generated by strategic decisions. It combines the expected attendance from ticket pricing, the reach achieved through promotion strategies, the attractiveness of the entertainment lineup, and the engagement contribution of volunteer and club activities. These outputs are aggregated and normalized to form a comparable index. Decisions which increase attendance, visibility, and engagement directly improve the perceived quality of the event."
+autowrap_mode = 3
 
 [node name="SuccessMascot" type="TextureRect" parent="CharterPanel/MarginContainer/TabContainer/Success/Margin/VBox/TabContent"]
 material = SubResource("ShaderMaterial_mascot")
@@ -1394,7 +1399,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 30
 
 [node name="ProgramsColumn" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent"]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 theme_override_constants/separation = 15
 
@@ -1408,22 +1413,26 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="ElectricalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 80)
+theme_override_font_sizes/font_size = 20
 layout_mode = 2
 text = "ELECTRICAL FAILURE"
 
 [node name="CrowdButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 80)
+theme_override_font_sizes/font_size = 20
 layout_mode = 2
 text = "CROWD CONTROL"
 
 [node name="MedicalButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 80)
+theme_override_font_sizes/font_size = 20
 layout_mode = 2
 text = "MEDICAL RESPONSE"
 
 [node name="CrisisButton" type="Button" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 80)
+theme_override_font_sizes/font_size = 20
 layout_mode = 2
 text = "CRISIS MGMT"
 
@@ -1448,7 +1457,7 @@ theme_override_constants/h_separation = 15
 theme_override_constants/v_separation = 15
 
 [node name="StatusColumn" type="VBoxContainer" parent="EmergencyTrainingPanel/MarginContainer/VBoxContainer/MainContent"]
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 theme_override_constants/separation = 15
 
@@ -1989,13 +1998,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 60
 
 [node name="VBoxContainer" type="VBoxContainer" parent="EntertainmentLineupPanel/MarginContainer"]
 layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Entertainment Line-Up"
 
 [node name="MoneyLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer"]
@@ -2023,6 +2036,7 @@ grow_vertical = 2
 
 [node name="AvailableArtistsTitle" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/HBoxContainer/AvailableArtistsPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Available Artists"
 
 [node name="AvailableScroll" type="ScrollContainer" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/HBoxContainer/AvailableArtistsPanel/VBoxContainer"]
@@ -2067,46 +2081,49 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SummaryPanel" type="Panel" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer"]
+[node name="SummaryPanel" type="PanelContainer" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 80.0
-offset_bottom = 241.0
-grow_horizontal = 2
+[node name="MarginContainer" type="MarginContainer" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 
-[node name="TotalCostLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="TotalPopularityLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="TotalCostLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="TotalAttendanceLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="TotalPopularityLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="RemainingBudgetLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/VBoxContainer"]
+[node name="TotalAttendanceLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RemainingBudgetLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/SummaryPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="ResultLabel" type="Label" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(30, 30)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
-size_flags_vertical = 3
 autowrap_mode = 3
 
 [node name="ButtonRow" type="HBoxContainer" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="ConfirmButton" type="Button" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/ButtonRow"]
-custom_minimum_size = Vector2(120, 40)
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Confirm"
 
 [node name="BackButton" type="Button" parent="EntertainmentLineupPanel/MarginContainer/VBoxContainer/ButtonRow"]
-custom_minimum_size = Vector2(120, 40)
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Back"
 
 [node name="PromotionStrategyPanel" type="Panel" parent="."]
@@ -2342,6 +2359,7 @@ theme_override_constants/margin_bottom = 20
 
 [node name="DynamicContent" type="VBoxContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer"]
 layout_mode = 2
+alignment = 1
 theme_override_constants/separation = 15
 
 [node name="ConsultingPanel" type="PanelContainer" parent="TicketPricingPanel/MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent"]
@@ -2647,9 +2665,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 100
-theme_override_constants/margin_top = 80
+theme_override_constants/margin_top = 150
 theme_override_constants/margin_right = 100
-theme_override_constants/margin_bottom = 80
+theme_override_constants/margin_bottom = 150
 
 [node name="VBoxContainer" type="VBoxContainer" parent="FoodVendorSelectionPanel/MarginContainer"]
 layout_mode = 2

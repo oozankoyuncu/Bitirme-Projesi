@@ -76,7 +76,7 @@ func _setup_styles() -> void:
 func _apply_ui_scaling() -> void:
 	# Enlarge the main container
 	if margin_container:
-		margin_container.custom_minimum_size = Vector2(1100, 750)
+		margin_container.custom_minimum_size = Vector2(1100, 950)
 		margin_container.add_theme_constant_override("margin_top", 100) # Ensure tabs are below HUD
 	
 	# Increase Header Font Sizes
@@ -102,7 +102,7 @@ func _apply_ui_scaling() -> void:
 		
 	# Adjust Tab Bar Scaling
 	if tab_container:
-		tab_container.add_theme_font_size_override("font_size", 22)
+		tab_container.add_theme_font_size_override("font_size", 26)
 	
 	# Adjust KPI List Container
 	var kpi_list = get_node_or_null("MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List")
@@ -115,10 +115,10 @@ func _add_ofs_explanation() -> void:
 	if not ofs_formula_label: return
 	
 	var explanation = Label.new()
-	explanation.text = "Overall Festival Score (OFS) is the final success score of the project. It is calculated based on Participant Satisfaction (PS) and Event Quality (EQ). A higher OFS means the festival was managed more successfully."
+	explanation.text = "The overall scoring system evaluates performance through a multi-dimensional structure integrating Participant Satisfaction, Event Quality, Overall Festival Success, Scope Adherence, and Budget Control.\nNote: Time, Budget, and Scope management directly impact the final Event Quality and Participant Satisfaction scores."
 	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	explanation.custom_minimum_size = Vector2(800, 0)
-	explanation.add_theme_font_size_override("font_size", 22) # Increased from 18
+	explanation.add_theme_font_size_override("font_size", 24)
 	explanation.modulate = Color(0.8, 0.9, 1.0, 1.0) # Brighter
 	
 	var parent = ofs_formula_label.get_parent()
@@ -135,7 +135,7 @@ func _add_ofs_explanation() -> void:
 	# Add Budget Warning Note
 	var budget_warning = Label.new()
 	budget_warning.text = "⚠️ FAILURE CONDITION: If the budget drops to -300,000 TL or below, the project is terminated immediately."
-	budget_warning.add_theme_font_size_override("font_size", 22)
+	budget_warning.add_theme_font_size_override("font_size", 26)
 	budget_warning.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4)) # Reddish for warning
 	budget_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	budget_warning.custom_minimum_size = Vector2(800, 0)
@@ -167,7 +167,7 @@ func _create_ofs_metric() -> void:
 	
 	var label = Label.new()
 	label.text = "OVERALL FESTIVAL SCORE (OFS)"
-	label.add_theme_font_size_override("font_size", 26) # Increased from 22
+	label.add_theme_font_size_override("font_size", 28) # Increased from 26
 	label.add_theme_color_override("font_color", Color(0.15, 0.55, 0.9))
 	hbox.add_child(label)
 	
@@ -197,8 +197,8 @@ func _initialize_kpi_styles() -> void:
 			
 			var name_label = hbox.get_child(0)
 			if name_label is Label:
-				name_label.add_theme_font_size_override("font_size", 24) # Increased from 20
-				name_label.custom_minimum_size.x = 280 # Wider for longer names/bigger font
+				name_label.add_theme_font_size_override("font_size", 28) # Increased from 24
+				name_label.custom_minimum_size.x = 420 # Align all bars horizontally
 			
 			for child in hbox.get_children():
 				if child is Control and not child is Label and not child is ProgressBar:
@@ -209,7 +209,7 @@ func _initialize_kpi_styles() -> void:
 		val_label.text = str(int(bar.value)) + " / 100"
 		val_label.custom_minimum_size = Vector2(120, 0)
 		val_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		val_label.add_theme_font_size_override("font_size", 24) # Increased from 20
+		val_label.add_theme_font_size_override("font_size", 28) # Increased from 24
 		hbox.add_child(val_label)
 		value_labels[key] = val_label
 		

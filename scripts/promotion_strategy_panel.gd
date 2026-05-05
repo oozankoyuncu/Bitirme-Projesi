@@ -51,6 +51,7 @@ var promotion_options = {
 
 var option_buttons: Array = []
 var card_visuals: Dictionary = {}
+var secret_nodes: Array = []
 
 var normal_style: StyleBoxFlat
 var hover_style: StyleBoxFlat
@@ -65,7 +66,55 @@ func _ready() -> void:
 	_setup_styles()
 	create_options()
 	refresh_ui()
+	
+	self.visibility_changed.connect(_on_visibility_changed)
 
+var _popup_timer_started = false
+func _on_visibility_changed() -> void:
+	if is_visible_in_tree() and not GameState.promotion_phase_completed and not GameState.promotion_intelligence_bought and not _popup_timer_started:
+		_popup_timer_started = true
+		_start_popup_timer()
+
+func _start_popup_timer() -> void:
+	await get_tree().create_timer(2.0).timeout
+	if not is_inside_tree() or not is_visible_in_tree() or GameState.promotion_intelligence_bought:
+		return
+	_show_intelligence_popup()
+
+func _show_intelligence_popup() -> void:
+	var dialog = ConfirmationDialog.new()
+	dialog.title = "Consulting Intelligence Service"
+	dialog.dialog_text = "Would you like to purchase intelligence data to see the Effectiveness score and Actual Impact estimates?\nCost: 2000 TL"
+	dialog.ok_button_text = "Yes (Pay 2000 TL)"
+	dialog.cancel_button_text = "No"
+	
+	dialog.min_size = Vector2(650, 200)
+	var lbl = dialog.get_label()
+	if lbl:
+		lbl.add_theme_font_size_override("font_size", 20)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	dialog.get_ok_button().add_theme_font_size_override("font_size", 18)
+	dialog.get_ok_button().custom_minimum_size = Vector2(180, 50)
+	dialog.get_cancel_button().add_theme_font_size_override("font_size", 18)
+	dialog.get_cancel_button().custom_minimum_size = Vector2(100, 50)
+	
+	dialog.confirmed.connect(func():
+		if GameState.money >= 2000:
+			GameState.money -= 2000
+			GameState.promotion_intelligence_bought = true
+			refresh_ui()
+			_reveal_intelligence()
+	)
+	
+	add_child(dialog)
+	dialog.popup_centered()
+
+func _reveal_intelligence() -> void:
+	for node in secret_nodes:
+		if is_instance_valid(node):
+			node.visible = true
+	refresh_ui()
 
 func _setup_styles() -> void:
 	# General Panel Style
@@ -99,6 +148,7 @@ func create_options() -> void:
 		c.queue_free()
 	option_buttons.clear()
 	card_visuals.clear()
+	secret_nodes.clear()
 
 	for id in promotion_options.keys():
 		var p = promotion_options[id]
@@ -184,28 +234,45 @@ func create_options() -> void:
 		var lbl_cost = Label.new()
 		lbl_cost.text = "Cost:"
 		lbl_cost.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+		lbl_cost.custom_minimum_size = Vector2(140, 0)
 		var val_cost = Label.new()
 		val_cost.text = str(p["cost"]) + " TL"
 		val_cost.add_theme_color_override("font_color", Color(0.9, 0.4, 0.4))
+		val_cost.custom_minimum_size = Vector2(160, 0)
 		
 		var lbl_reach = Label.new()
 		lbl_reach.text = "Expected Reach:"
 		lbl_reach.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+		lbl_reach.custom_minimum_size = Vector2(140, 0)
 		var val_reach = Label.new()
 		val_reach.text = str(expected)
+		val_reach.custom_minimum_size = Vector2(160, 0)
 		
 		var lbl_rel = Label.new()
 		lbl_rel.text = "Reliability:"
 		lbl_rel.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+		lbl_rel.custom_minimum_size = Vector2(140, 0)
 		var val_rel = Label.new()
 		val_rel.text = str(rel * 100) + "%"
+		val_rel.custom_minimum_size = Vector2(160, 0)
 		
 		var lbl_act = Label.new()
 		lbl_act.text = "Actual Impact:"
 		lbl_act.add_theme_color_override("font_color", Color(0.4, 0.8, 0.4))
+		lbl_act.custom_minimum_size = Vector2(140, 0)
 		var val_act = Label.new()
 		val_act.text = "≈ " + str(actual) + " attendees"
 		val_act.add_theme_color_override("font_color", Color(0.4, 0.8, 0.4))
+		val_act.custom_minimum_size = Vector2(160, 0)
+
+		if not GameState.promotion_intelligence_bought:
+			ef_label.visible = false
+			lbl_act.visible = false
+			val_act.visible = false
+			
+		secret_nodes.append(ef_label)
+		secret_nodes.append(lbl_act)
+		secret_nodes.append(val_act)
 		
 		stats_grid.add_child(lbl_cost); stats_grid.add_child(val_cost)
 		stats_grid.add_child(lbl_reach); stats_grid.add_child(val_reach)
@@ -274,7 +341,11 @@ func get_totals() -> Dictionary:
 func refresh_ui() -> void:
 	var data = get_totals()
 	budget_label.text = "Current Budget: " + str(GameState.money) + " TL"
-	summary_label.text = "Total Investment: " + str(data["cost"]) + " TL     |     Combined Reach Impact: ≈" + str(data["reach"]) + " attendees"
+	
+	if GameState.promotion_intelligence_bought:
+		summary_label.text = "Total Investment: " + str(data["cost"]) + " TL     |     Combined Reach Impact: ≈" + str(data["reach"]) + " attendees"
+	else:
+		summary_label.text = "Total Investment: " + str(data["cost"]) + " TL     |     Combined Reach Impact: ???"
 	
 	if GameState.promotion_phase_completed:
 		confirm_button.text = "Back to Module Overview"

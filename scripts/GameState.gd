@@ -47,6 +47,7 @@ var sponsor_phase_end_time: float = 0.0
 var accepted_sponsors: Array = []
 var rejected_sponsors: Array = []
 var sponsor_attempts_left: int = 3
+var sponsor_intelligence_bought: bool = false
 
 #Entertainment Line-up
 var available_artists: Array = []
@@ -60,6 +61,7 @@ var university_debt_limit: int = -300000
 
 # Promotion Strategy
 var promotion_phase_completed: bool = false
+var promotion_intelligence_bought: bool = false
 var promotion_total_actual_reach: float = 0.0
 
 # Ticket Pricing

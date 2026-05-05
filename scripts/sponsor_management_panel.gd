@@ -9,7 +9,7 @@ var sponsor_defs = {
 		"audience": 4,
 		"logo": 3,
 		"area": 2,
-		"acceptance": 0.8,
+		"acceptance": 0.25,
 		"conflicts": ["soundmax"],
 		"desc": "Leading tech solutions provider."
 	},
@@ -20,7 +20,7 @@ var sponsor_defs = {
 		"audience": 5,
 		"logo": 4,
 		"area": 3,
-		"acceptance": 0.6,
+		"acceptance": 0.15,
 		"conflicts": ["techcorp"],
 		"desc": "Premium audio equipment."
 	},
@@ -31,7 +31,7 @@ var sponsor_defs = {
 		"audience": 5,
 		"logo": 1,
 		"area": 1,
-		"acceptance": 0.9,
+		"acceptance": 0.45,
 		"conflicts": [],
 		"desc": "Eco-friendly snacks and drinks."
 	},
@@ -42,7 +42,7 @@ var sponsor_defs = {
 		"audience": 4,
 		"logo": 4,
 		"area": 2,
-		"acceptance": 0.75,
+		"acceptance": 0.20,
 		"conflicts": ["globallogistics"],
 		"desc": "Telecommunications provider."
 	},
@@ -53,7 +53,7 @@ var sponsor_defs = {
 		"audience": 3,
 		"logo": 2,
 		"area": 2,
-		"acceptance": 0.85,
+		"acceptance": 0.30,
 		"conflicts": [],
 		"desc": "Dynamic energy drinks."
 	},
@@ -64,7 +64,7 @@ var sponsor_defs = {
 		"audience": 5,
 		"logo": 5,
 		"area": 4,
-		"acceptance": 0.55,
+		"acceptance": 0.05,
 		"conflicts": [],
 		"desc": "Luxury vehicle displays."
 	},
@@ -75,7 +75,7 @@ var sponsor_defs = {
 		"audience": 2,
 		"logo": 3,
 		"area": 3,
-		"acceptance": 0.8,
+		"acceptance": 0.10,
 		"conflicts": [],
 		"desc": "High-end apparel." # Score: 1.7
 	},
@@ -86,7 +86,7 @@ var sponsor_defs = {
 		"audience": 3,
 		"logo": 4,
 		"area": 4,
-		"acceptance": 0.95,
+		"acceptance": 0.35,
 		"conflicts": [],
 		"desc": "Street style clothing." # Score: 1.4
 	},
@@ -97,7 +97,7 @@ var sponsor_defs = {
 		"audience": 2,
 		"logo": 4,
 		"area": 5,
-		"acceptance": 0.7,
+		"acceptance": 0.15,
 		"conflicts": ["bluenetwork"],
 		"desc": "Transport solutions."
 	}
@@ -119,6 +119,9 @@ var sponsor_defs = {
 
 # ---------------- LOGIC ----------------
 
+var secret_nodes: Array = []
+var _popup_timer_started: bool = false
+
 func _ready() -> void:
 	check_button.pressed.connect(_on_check_pressed)
 	back_button.pressed.connect(_on_back_pressed)
@@ -130,6 +133,52 @@ func _ready() -> void:
 	
 	create_sponsors()
 	refresh_ui()
+	
+	self.visibility_changed.connect(_on_visibility_changed)
+
+func _on_visibility_changed() -> void:
+	if is_visible_in_tree() and not GameState.sponsor_intelligence_bought and not _popup_timer_started:
+		_popup_timer_started = true
+		_start_popup_timer()
+
+func _start_popup_timer() -> void:
+	await get_tree().create_timer(2.0).timeout
+	if not is_inside_tree() or not is_visible_in_tree() or GameState.sponsor_intelligence_bought:
+		return
+	_show_intelligence_popup()
+
+func _show_intelligence_popup() -> void:
+	var dialog = ConfirmationDialog.new()
+	dialog.title = "Consulting Intelligence Service"
+	dialog.dialog_text = "Would you like to purchase intelligence data to see the true probability (CHANCE) of each sponsor accepting your offer?\nCost: 5000 TL"
+	dialog.ok_button_text = "Yes (Pay 5000 TL)"
+	dialog.cancel_button_text = "No"
+	
+	dialog.min_size = Vector2(650, 200)
+	var lbl = dialog.get_label()
+	if lbl:
+		lbl.add_theme_font_size_override("font_size", 20)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	dialog.get_ok_button().add_theme_font_size_override("font_size", 18)
+	dialog.get_ok_button().custom_minimum_size = Vector2(180, 50)
+	dialog.get_cancel_button().add_theme_font_size_override("font_size", 18)
+	dialog.get_cancel_button().custom_minimum_size = Vector2(100, 50)
+	
+	dialog.confirmed.connect(func():
+		if GameState.money >= 5000:
+			GameState.money -= 5000
+			GameState.sponsor_intelligence_bought = true
+			_reveal_intelligence()
+	)
+	
+	add_child(dialog)
+	dialog.popup_centered()
+
+func _reveal_intelligence() -> void:
+	for node in secret_nodes:
+		if is_instance_valid(node):
+			node.visible = true
 
 func _process(_delta: float) -> void:
 	money_label.text = "Budget: " + str(GameState.money) + " TL"
@@ -151,6 +200,7 @@ func _setup_ui_styles() -> void:
 func create_sponsors() -> void:
 	for c in sponsor_list.get_children():
 		c.queue_free()
+	secret_nodes.clear()
 
 	for id in sponsor_defs.keys():
 		var s = sponsor_defs[id]
@@ -214,6 +264,11 @@ func _create_sponsor_card(id: String, s: Dictionary, is_accepted: bool) -> Panel
 	success_lbl.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
 	success_lbl.add_theme_font_size_override("font_size", 12)
 	v_stats.add_child(success_lbl)
+	
+	if not GameState.sponsor_intelligence_bought:
+		success_lbl.visible = false
+		
+	secret_nodes.append(success_lbl)
 
 	return card
 

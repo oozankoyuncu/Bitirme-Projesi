@@ -49,7 +49,7 @@ var pricing_options = {
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonRow/ConfirmButton
 
 @onready var consulting_panel: PanelContainer = $MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel
-@onready var purchase_consulting_btn: Button = $MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel/Margin/HBox/PurchaseConsultingButton
+# @onready var purchase_consulting_btn: Button = ... (removed)
 
 @onready var info_popup: PanelContainer = $InfoPopup
 @onready var info_button: Button = $MarginContainer/VBoxContainer/HeaderPanel/InfoButton
@@ -67,12 +67,57 @@ func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	info_button.pressed.connect(func(): info_popup.show())
 	info_close.pressed.connect(func(): info_popup.hide())
-	purchase_consulting_btn.pressed.connect(_on_purchase_consulting_pressed)
 	info_popup.hide()
+	
+	if consulting_panel:
+		consulting_panel.hide()
 	
 	_setup_styles()
 	create_options()
 	refresh_ui()
+	
+	self.visibility_changed.connect(_on_visibility_changed)
+
+var _popup_timer_started = false
+func _on_visibility_changed() -> void:
+	if is_visible_in_tree() and not GameState.ticket_pricing_completed and not GameState.ticket_consulting_purchased and not _popup_timer_started:
+		_popup_timer_started = true
+		_start_popup_timer()
+
+func _start_popup_timer() -> void:
+	await get_tree().create_timer(2.0).timeout
+	if not is_inside_tree() or not is_visible_in_tree() or GameState.ticket_consulting_purchased:
+		return
+	_show_intelligence_popup()
+
+func _show_intelligence_popup() -> void:
+	var dialog = ConfirmationDialog.new()
+	dialog.title = "Consulting Intelligence Service"
+	dialog.dialog_text = "Would you like to purchase intelligence data to see Event Quality stars and exact Attendance impacts?\nCost: 5000 TL"
+	dialog.ok_button_text = "Yes (Pay 5000 TL)"
+	dialog.cancel_button_text = "No"
+	
+	dialog.min_size = Vector2(650, 200)
+	var lbl = dialog.get_label()
+	if lbl:
+		lbl.add_theme_font_size_override("font_size", 20)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	dialog.get_ok_button().add_theme_font_size_override("font_size", 18)
+	dialog.get_ok_button().custom_minimum_size = Vector2(180, 50)
+	dialog.get_cancel_button().add_theme_font_size_override("font_size", 18)
+	dialog.get_cancel_button().custom_minimum_size = Vector2(100, 50)
+	
+	dialog.confirmed.connect(func():
+		if GameState.money >= 5000:
+			GameState.money -= 5000
+			GameState.ticket_consulting_purchased = true
+			refresh_ui()
+			create_options()
+	)
+	
+	add_child(dialog)
+	dialog.popup_centered()
 
 func _setup_styles() -> void:
 	normal_style = StyleBoxFlat.new()
@@ -96,15 +141,7 @@ func _setup_styles() -> void:
 	selected_style.shadow_size = 15
 
 func _on_purchase_consulting_pressed() -> void:
-	if GameState.money >= GameState.TICKET_CONSULTING_COST:
-		GameState.money -= GameState.TICKET_CONSULTING_COST
-		GameState.ticket_consulting_purchased = true
-		purchase_consulting_btn.disabled = true
-		purchase_consulting_btn.text = "Consulting Active"
-		create_options() # Re-create cards with precise info
-		refresh_ui()
-	else:
-		purchase_consulting_btn.text = "Insufficient Funds!"
+	pass # Deprecated
 
 func create_options() -> void:
 	for c in pricing_list.get_children():
@@ -152,12 +189,13 @@ func create_options() -> void:
 		
 		var title = Label.new()
 		title.text = p["display_name"]
-		title.add_theme_font_size_override("font_size", 22)
+		title.add_theme_font_size_override("font_size", 26)
 		title.add_theme_color_override("font_color", p["color"])
 		
 		var desc = Label.new()
 		desc.text = p["desc"]
 		desc.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+		desc.add_theme_font_size_override("font_size", 18)
 		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		desc.custom_minimum_size.x = 400
 		
@@ -189,7 +227,11 @@ func create_options() -> void:
 		_add_stat(stats_grid, "Attendance:", impact_text, impact_color)
 		
 		var stars = ""
-		for i in range(p["quality"]): stars += "★"
+		if GameState.ticket_consulting_purchased:
+			for i in range(p["quality"]): stars += "★"
+		else:
+			stars = "?"
+			
 		_add_stat(stats_grid, "Event Quality:", stars, Color(0.9, 0.7, 0.2))
 		
 		hbox.add_child(stats_grid)
@@ -201,10 +243,17 @@ func create_options() -> void:
 func _add_stat(grid: GridContainer, label_text: String, value_text: String, color: Color) -> void:
 	var lbl = Label.new()
 	lbl.text = label_text
+	lbl.custom_minimum_size = Vector2(130, 0) # Fixed width for left alignment
 	lbl.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	lbl.add_theme_font_size_override("font_size", 20)
+	
 	var val = Label.new()
 	val.text = value_text
+	val.custom_minimum_size = Vector2(130, 0) # Fixed width for right alignment
+	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	val.add_theme_color_override("font_color", color)
+	val.add_theme_font_size_override("font_size", 20)
+	
 	grid.add_child(lbl)
 	grid.add_child(val)
 
@@ -260,12 +309,7 @@ func get_totals() -> Dictionary:
 	}
 
 func refresh_ui() -> void:
-	if GameState.ticket_consulting_purchased:
-		purchase_consulting_btn.text = "Consulting Active"
-		purchase_consulting_btn.disabled = true
-	else:
-		purchase_consulting_btn.text = "Purchase Consulting (" + str(GameState.TICKET_CONSULTING_COST) + " TL)"
-		purchase_consulting_btn.disabled = false
+	# purchase_consulting_btn logic removed
 	
 	var data = get_totals()
 	if data["selected"]:
