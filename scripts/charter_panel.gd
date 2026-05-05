@@ -77,6 +77,7 @@ func _apply_ui_scaling() -> void:
 	# Enlarge the main container
 	if margin_container:
 		margin_container.custom_minimum_size = Vector2(1100, 750)
+		margin_container.add_theme_constant_override("margin_top", 100) # Ensure tabs are below HUD
 	
 	# Increase Header Font Sizes
 	var header_paths = [

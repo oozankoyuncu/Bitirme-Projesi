@@ -126,10 +126,15 @@ func _setup_persistent_hud() -> void:
 	
 	var top_bar = $TopBar
 	top_bar.reparent(canvas_layer)
+	top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE # Don't block clicks
+	
+	var margin = top_bar.get_node("Margin")
+	if margin: margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	# Center the stats in the TopBar
 	var hbox = top_bar.get_node("Margin/HBox")
 	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	# Increase font sizes for HUD labels
 	var labels = [week_label, budget_label, time_label_hud]
