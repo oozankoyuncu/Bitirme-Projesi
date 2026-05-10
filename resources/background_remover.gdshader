@@ -9,12 +9,12 @@ void fragment() {
     float dist = distance(col.rgb, key_color.rgb);
     
     // Smooth transition for transparency
-    float α = smoothstep(threshold, threshold + softness, dist);
+    float alpha = smoothstep(threshold, threshold + softness, dist);
     
     // Discard pixels that are very close to the key color
-    if (α < 0.1) {
+    if (alpha < 0.1) {
         discard;
     }
     
-    COLOR = vec4(col.rgb, col.a * α);
+    COLOR = vec4(col.rgb, col.a * alpha);
 }

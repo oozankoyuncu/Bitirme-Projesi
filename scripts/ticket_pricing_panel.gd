@@ -167,8 +167,13 @@ func create_options() -> void:
 		if GameState.ticket_pricing_completed:
 			btn.disabled = true
 			if GameState.chosen_ticket_price == p["price"]:
-				btn.button_pressed = true
 				selected_id = id
+		
+		# Restore selection visually
+		if selected_id == id:
+			btn.set_pressed_no_signal(true)
+			card.add_theme_stylebox_override("panel", selected_style)
+			
 		option_buttons.append(btn)
 		
 		var margin = MarginContainer.new()
@@ -249,8 +254,8 @@ func _add_stat(grid: GridContainer, label_text: String, value_text: String, colo
 	
 	var val = Label.new()
 	val.text = value_text
-	val.custom_minimum_size = Vector2(130, 0) # Fixed width for right alignment
-	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	val.custom_minimum_size = Vector2(130, 0) # Fixed width for left alignment
+	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	val.add_theme_color_override("font_color", color)
 	val.add_theme_font_size_override("font_size", 20)
 	

@@ -87,7 +87,7 @@ func populate_unified_items() -> void:
 					"type": "Food Vendor",
 					"electricity": f["electricity_requirement"] > 0,
 					"truck_access": true,
-					"min_size": f["space_requirement"]
+					"min_size": f.get("space_requirement", f.get("min_space", 10))
 				}
 				placed_items[uid] = ""
 				

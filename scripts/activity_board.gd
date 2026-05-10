@@ -46,11 +46,28 @@ func refresh_board() -> void:
 	# Clean old cards
 	for child in activity_list.get_children():
 		child.queue_free()
+		
+	# Clean old top-right container
+	var old_rc = get_node_or_null("FestivalRightContainer")
+	if old_rc: old_rc.queue_free()
+	
+	# Create top-right container
+	var rc = MarginContainer.new()
+	rc.name = "FestivalRightContainer"
+	rc.set_anchors_preset(PRESET_TOP_RIGHT)
+	rc.grow_horizontal = GROW_DIRECTION_BEGIN
+	rc.add_theme_constant_override("margin_right", 120)
+	rc.add_theme_constant_override("margin_top", 210) # Align with the first row of activities
+	add_child(rc)
 
 	# Populate with new cards
 	for activity in GameState.activities:
 		var card = create_activity_card(activity)
-		activity_list.add_child(card)
+		
+		if activity["id"] == "festival_day":
+			rc.add_child(card)
+		else:
+			activity_list.add_child(card)
 		
 	# Check for game completion
 	_check_game_completion()
@@ -71,11 +88,16 @@ func _check_game_completion() -> void:
 
 func create_activity_card(activity: Dictionary) -> PanelContainer:
 	var card = PanelContainer.new()
-	card.custom_minimum_size = Vector2(380, 260)
+	
+	if activity["id"] == "festival_day":
+		card.custom_minimum_size = Vector2(480, 320)
+	else:
+		card.custom_minimum_size = Vector2(380, 260)
+		
 	card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	
 	var status = get_activity_status(activity)
-	_style_card(card, status)
+	_style_card(card, status, activity["id"])
 	
 	var margin = MarginContainer.new()
 	margin.add_theme_constant_override("margin_left", 20)
@@ -94,7 +116,10 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	
 	var icon_label = Label.new()
 	icon_label.text = get_activity_emoji(activity["id"])
-	icon_label.add_theme_font_size_override("font_size", 42)
+	if activity["id"] == "festival_day":
+		icon_label.add_theme_font_size_override("font_size", 60)
+	else:
+		icon_label.add_theme_font_size_override("font_size", 42)
 	header.add_child(icon_label)
 	
 	var spacer = Control.new()
@@ -110,7 +135,10 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	# Title
 	var title = Label.new()
 	title.text = activity["name"]
-	title.add_theme_font_size_override("font_size", 28)
+	if activity["id"] == "festival_day":
+		title.add_theme_font_size_override("font_size", 36)
+	else:
+		title.add_theme_font_size_override("font_size", 28)
 	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vbox.add_child(title)
 	
@@ -144,20 +172,27 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	
 	return card
 
-func _style_card(card: PanelContainer, status: String) -> void:
+func _style_card(card: PanelContainer, status: String, activity_id: String = "") -> void:
 	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0.15, 0.18, 0.22, 0.8)
+	if activity_id == "festival_day":
+		style.bg_color = Color(0.1, 0.4, 0.1, 0.9) # Distinct green background
+	else:
+		style.bg_color = Color(0.15, 0.18, 0.22, 0.8)
 	style.set_corner_radius_all(12)
 	style.border_width_bottom = 4
 	
 	match status:
 		"Available":
 			style.border_color = Color(0.15, 0.55, 0.9) # Blue
+			if activity_id == "festival_day":
+				style.border_color = Color(0.2, 0.9, 0.3) # Bright green border when available
 		"Completed":
 			style.border_color = Color(0.2, 0.8, 0.2) # Green
 			style.bg_color = Color(0.1, 0.15, 0.1, 0.8)
 		"Locked":
 			style.border_color = Color(0.4, 0.4, 0.4) # Grey
+			if activity_id == "festival_day":
+				style.bg_color = Color(0.1, 0.2, 0.1, 0.6) # Darker green when locked
 			
 	card.add_theme_stylebox_override("panel", style)
 
@@ -186,6 +221,7 @@ func get_activity_emoji(id: String) -> String:
 		"decoration_theme_decision": return "🎨"
 		"festival_cleaning_security": return "🧹"
 		"final_festival_layout_mapping": return "📍"
+		"festival_day": return "🎉"
 	return "📋"
 
 func get_status_color(status: String) -> Color:
@@ -232,7 +268,8 @@ func start_activity(activity: Dictionary) -> void:
 		"transport_coordination": "TransportCoordinationPanel",
 		"decoration_theme_decision": "DecorationThemePanel",
 		"festival_cleaning_security": "FestivalCleaningSecurityPanel",
-		"final_festival_layout_mapping": "FinalFacilityLayoutPanel"
+		"final_festival_layout_mapping": "FinalFacilityLayoutPanel",
+		"festival_day": "FestivalDayPanel"
 	}
 	
 	if activity_id in panels:
