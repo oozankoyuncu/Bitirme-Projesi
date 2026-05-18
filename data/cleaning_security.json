@@ -1,0 +1,70 @@
+{
+  "cleaning_crews": {
+    "sparkclean_services": {
+      "name": "SparkClean Services",
+      "speed": 1,
+      "reliability": 3,
+      "cost": 53000,
+      "space": 11,
+      "score": 1.82
+    },
+    "urbansweep_crew": {
+      "name": "UrbanSweep Crew",
+      "speed": 2,
+      "reliability": 2,
+      "cost": 54000,
+      "space": 7,
+      "score": 2.86
+    },
+    "primesanitation_group": {
+      "name": "PrimeSanitation Group",
+      "speed": 1,
+      "reliability": 2,
+      "cost": 37000,
+      "space": 16,
+      "score": 0.94
+    },
+    "clearspace_maintenance": {
+      "name": "ClearSpace Maintenance",
+      "speed": 5,
+      "reliability": 5,
+      "cost": 83000,
+      "space": 9,
+      "score": 5.56
+    }
+  },
+  "security_teams": {
+    "shieldguard_security": {
+      "name": "ShieldGuard Security",
+      "speed": 5,
+      "reliability": 4,
+      "cost": 54000,
+      "space": 18,
+      "score": 2.5
+    },
+    "safezone_patrol": {
+      "name": "SafeZone Patrol",
+      "speed": 5,
+      "reliability": 2,
+      "cost": 51000,
+      "space": 13,
+      "score": 2.69
+    },
+    "ironwall_security": {
+      "name": "IronWall Security",
+      "speed": 3,
+      "reliability": 5,
+      "cost": 64000,
+      "space": 10,
+      "score": 4.0
+    },
+    "vertex_protection_unit": {
+      "name": "Vertex Protection Unit",
+      "speed": 1,
+      "reliability": 5,
+      "cost": 54000,
+      "space": 15,
+      "score": 2.0
+    }
+  }
+}

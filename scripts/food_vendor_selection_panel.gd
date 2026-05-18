@@ -1,77 +1,9 @@
 extends Control
 
-var vendor_options = {
-	"burger_truck": {
-		"display_name": "Gourmet Burgers",
-		"cuisine_type": "American",
-		"revenue_per_sqm": 80,
-		"cap_per_sqm": 90,
-		"speed": "Normal", # Fast, Normal, Slow
-		"hygiene_rating": 4.5,
-		"electricity_requirement": 10,
-		"min_space": 10,
-		"max_space": 30
-	},
-	"taco_stand": {
-		"display_name": "Taco Fiesta",
-		"cuisine_type": "Mexican",
-		"revenue_per_sqm": 60,
-		"cap_per_sqm": 80,
-		"speed": "Fast",
-		"hygiene_rating": 3.8,
-		"electricity_requirement": 5,
-		"min_space": 10,
-		"max_space": 20
-	},
-	"pizza_oven": {
-		"display_name": "Woodfire Pizza",
-		"cuisine_type": "Italian",
-		"revenue_per_sqm": 100,
-		"cap_per_sqm": 60,
-		"speed": "Slow",
-		"hygiene_rating": 4.8,
-		"electricity_requirement": 15,
-		"min_space": 15,
-		"max_space": 35
-	},
-	"sushi_cart": {
-		"display_name": "Quick Sushi",
-		"cuisine_type": "Japanese",
-		"revenue_per_sqm": 120,
-		"cap_per_sqm": 90,
-		"speed": "Fast",
-		"hygiene_rating": 4.9,
-		"electricity_requirement": 8,
-		"min_space": 5,
-		"max_space": 15
-	},
-	"kebab_grill": {
-		"display_name": "Street Kebabs",
-		"cuisine_type": "Middle Eastern",
-		"revenue_per_sqm": 50,
-		"cap_per_sqm": 75,
-		"speed": "Normal",
-		"hygiene_rating": 2.1,
-		"electricity_requirement": 5,
-		"min_space": 10,
-		"max_space": 25
-	},
-	"vegan_bowl": {
-		"display_name": "Green Bowls",
-		"cuisine_type": "Healthy/Vegan",
-		"revenue_per_sqm": 70,
-		"cap_per_sqm": 65,
-		"speed": "Normal",
-		"hygiene_rating": 4.6,
-		"electricity_requirement": 5,
-		"min_space": 10,
-		"max_space": 20
-	}
-}
+var vendor_options = {}
 
 # PLACEHOLDERS: Limits for resources
 const MAX_SPACE: int = 100
-const MAX_ELECTRICITY: int = 50
 
 @onready var vendor_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/VendorList
 @onready var budget_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/BudgetLabel
@@ -87,10 +19,28 @@ var option_checkboxes: Array = []
 var space_sliders: Dictionary = {}
 
 func _ready() -> void:
+	_load_vendors()
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	_setup_ui_styles()
 	create_options()
 	refresh_ui()
+
+func _load_vendors() -> void:
+	var file = FileAccess.open("res://data/food_vendors.json", FileAccess.READ)
+	if file == null:
+		print("ERROR: food_vendors.json could not be opened")
+		return
+	
+	var content = file.get_as_text()
+	file.close()
+	
+	var data = JSON.parse_string(content)
+	if data == null or not data.has("food_vendors"):
+		print("ERROR: Failed to parse food_vendors.json")
+		return
+	
+	vendor_options = data["food_vendors"]
+	print("Food vendors loaded: ", vendor_options.size())
 
 func _setup_ui_styles() -> void:
 	# Main Panel Glassmorphism
@@ -149,7 +99,6 @@ func create_options() -> void:
 		cb.text = "  " + v_data["display_name"]
 		cb.add_theme_font_size_override("font_size", 20)
 		cb.set_meta("id", id)
-		cb.toggled.connect(func(toggled_on): _on_option_toggled(toggled_on, card, card_style))
 		
 		if GameState.food_vendor_completed:
 			cb.disabled = true
@@ -168,40 +117,47 @@ func create_options() -> void:
 		details_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 		hbox.add_child(details_vbox)
 		
+		# Top line: cuisine, price, capacity
 		var top_label = Label.new()
-		top_label.text = v_data["cuisine_type"] + " | Rev: " + str(v_data["revenue_per_sqm"]) + " TL/sqm | Cap: " + str(v_data["cap_per_sqm"]) + "/sqm"
+		top_label.text = v_data["cuisine_type"] + " | Cost: " + str(int(v_data["price"])) + " TL | Cap: " + str(int(v_data["service_capacity"]))
 		top_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		top_label.add_theme_font_size_override("font_size", 18)
 		top_label.modulate = Color(1.0, 0.8, 0.6)
 		details_vbox.add_child(top_label)
 		
+		# Bottom line: hygiene, speed, electricity, space
 		var bottom_label = Label.new()
-		bottom_label.text = "Hyg: " + str(v_data["hygiene_rating"]) + " | Speed: " + v_data["speed"] + " | Elec: " + str(v_data["electricity_requirement"]) + "kVA"
+		bottom_label.text = "Hyg: " + str(int(v_data["hygiene_rating"])) + " | Spd: " + str(int(v_data["speed"])) + " | Elec: " + str(int(v_data["electricity_requirement"])) + " | Min Space: " + str(int(v_data["space_requirement"])) + " sqm"
 		bottom_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		bottom_label.modulate = Color(0.7, 0.7, 0.7)
-		bottom_label.add_theme_font_size_override("font_size", 14)
+		bottom_label.add_theme_font_size_override("font_size", 18)
 		details_vbox.add_child(bottom_label)
 		
+		# Space allocation slider row
 		var slider_hbox = HBoxContainer.new()
 		slider_hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		slider_hbox.alignment = BoxContainer.ALIGNMENT_END
 		
+		var min_space = int(v_data["space_requirement"])
+		var max_space = min_space * 2
+		
 		var slider_label = Label.new()
-		slider_label.text = "Space: " + str(v_data["min_space"]) + " sqm"
-		slider_label.add_theme_font_size_override("font_size", 14)
+		slider_label.text = "Allocated: " + str(min_space) + " sqm"
+		slider_label.add_theme_font_size_override("font_size", 18)
 		slider_label.modulate = Color(0.8, 0.9, 1.0)
 		
 		var slider = HSlider.new()
-		slider.min_value = v_data["min_space"]
-		slider.max_value = v_data["max_space"]
+		slider.min_value = min_space
+		slider.max_value = max_space
 		slider.step = 1
-		slider.value = v_data["min_space"]
+		slider.value = min_space
 		slider.custom_minimum_size = Vector2(150, 20)
 		slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		slider.visible = false
 		slider_label.visible = false
 		
 		slider.value_changed.connect(func(val):
-			slider_label.text = "Space: " + str(val) + " sqm"
+			slider_label.text = "Allocated: " + str(int(val)) + " sqm"
 			refresh_ui()
 		)
 		
@@ -211,7 +167,16 @@ func create_options() -> void:
 		slider_hbox.add_child(slider)
 		details_vbox.add_child(slider_hbox)
 		
-		cb.toggled.connect(func(toggled_on): 
+		# Efficiency score
+		var score_label = Label.new()
+		score_label.text = "Efficiency: " + str(snapped(v_data["efficiency_score"], 0.01))
+		score_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		score_label.add_theme_font_size_override("font_size", 18)
+		score_label.modulate = Color(0.5, 0.9, 1.0)
+		details_vbox.add_child(score_label)
+		
+		# Connect checkbox to show/hide slider
+		cb.toggled.connect(func(toggled_on):
 			slider.visible = toggled_on
 			slider_label.visible = toggled_on
 			_on_option_toggled(toggled_on, card, card_style)
@@ -231,6 +196,11 @@ func _on_option_toggled(toggled_on: bool, card: PanelContainer, style: StyleBoxF
 	_style_selected_card(style, toggled_on)
 	refresh_ui()
 
+func get_allocated_space(id: String) -> int:
+	if space_sliders.has(id):
+		return int(space_sliders[id].value)
+	return int(vendor_options[id]["space_requirement"])
+
 func get_totals() -> Dictionary:
 	var selected_ids = []
 	var total_capacity = 0
@@ -238,31 +208,33 @@ func get_totals() -> Dictionary:
 	var total_hygiene = 0.0
 	var total_electricity = 0
 	var total_space = 0
+	var total_speed = 0
 	var cuisine_types = []
-	var has_slow_speed = false
 	
 	for cb in option_checkboxes:
 		if cb.button_pressed:
 			var id = cb.get_meta("id")
 			selected_ids.append(id)
 			var v_data = vendor_options[id]
-			var chosen_space = space_sliders[id].value
+			var allocated = get_allocated_space(id)
 			
-			total_capacity += chosen_space * v_data["cap_per_sqm"]
-			total_price += chosen_space * v_data["revenue_per_sqm"] # this is revenue now!
+			var base_space = int(v_data["space_requirement"])
+			var space_ratio = float(allocated) / float(base_space)
+			total_capacity += int(int(v_data["service_capacity"]) * space_ratio)
+			total_price += int(int(v_data["price"]) * space_ratio)
 			total_hygiene += v_data["hygiene_rating"]
-			total_electricity += v_data["electricity_requirement"]
-			total_space += chosen_space
-			
-			if v_data["speed"] == "Slow":
-				has_slow_speed = true
+			total_electricity += int(v_data["electricity_requirement"])
+			total_space += allocated
+			total_speed += int(v_data["speed"])
 			
 			if not cuisine_types.has(v_data["cuisine_type"]):
 				cuisine_types.append(v_data["cuisine_type"])
 				
 	var avg_hygiene = 0.0
+	var avg_speed = 0.0
 	if selected_ids.size() > 0:
 		avg_hygiene = total_hygiene / selected_ids.size()
+		avg_speed = float(total_speed) / selected_ids.size()
 		
 	var diversity_count = cuisine_types.size()
 	
@@ -280,14 +252,14 @@ func get_totals() -> Dictionary:
 	if selected_ids.size() > 0 and diversity_count < 2:
 		satisfaction_impact -= 2.0 # Penalty for missing variety
 		
-	if has_slow_speed:
+	if avg_speed > 0 and avg_speed < 2.5:
 		satisfaction_impact -= 2.0 # Penalty for slow speed
 		
-	if total_space > MAX_SPACE or total_electricity > MAX_ELECTRICITY:
+	if total_space > MAX_SPACE:
 		quality_impact -= 3.0 # System overload / crowding penalty
 		satisfaction_impact -= 2.0
 		
-	var constraints_exceeded = total_space > MAX_SPACE or total_electricity > MAX_ELECTRICITY
+	var space_exceeded = total_space > MAX_SPACE
 	var budget_exceeded = total_price > GameState.money
 		
 	return {
@@ -295,12 +267,13 @@ func get_totals() -> Dictionary:
 		"capacity": total_capacity,
 		"price": total_price,
 		"avg_hygiene": avg_hygiene,
+		"avg_speed": avg_speed,
 		"electricity": total_electricity,
 		"space": total_space,
 		"diversity_count": diversity_count,
 		"satisfaction_impact": satisfaction_impact,
 		"quality_impact": quality_impact,
-		"constraints_exceeded": constraints_exceeded,
+		"space_exceeded": space_exceeded,
 		"budget_exceeded": budget_exceeded,
 		"low_capacity": attendance > 0 and total_capacity < attendance,
 		"low_hygiene": avg_hygiene > 0 and avg_hygiene < 2.5,
@@ -310,10 +283,11 @@ func get_totals() -> Dictionary:
 func refresh_ui() -> void:
 	var data = get_totals()
 	
-	budget_label.text = "Revenue: +" + str(data["price"]) + " TL"
-	capacity_label.text = "Capacity: " + str(data["capacity"]) + " / " + str(GameState.final_attendance)
-	hygiene_label.text = "Avg Hygiene: " + str(snapped(data["avg_hygiene"], 0.1))
-	electricity_label.text = "Electricity: " + str(data["electricity"]) + " / " + str(MAX_ELECTRICITY) + " kVA"
+	budget_label.text = "Total Cost: " + str(data["price"]) + " TL"
+	var attendance_str = str(int(GameState.final_attendance)) if GameState.final_attendance > 0 else "N/A"
+	capacity_label.text = "Capacity: " + str(data["capacity"]) + " / " + attendance_str
+	hygiene_label.text = "Avg Hygiene: " + str(snapped(data["avg_hygiene"], 0.1)) + " / 5"
+	electricity_label.text = "Avg Speed: " + str(snapped(data["avg_speed"], 0.1)) + " / 5"
 	space_label.text = "Space Used: " + str(data["space"]) + " / " + str(MAX_SPACE) + " sqm"
 	diversity_label.text = "Diversity: " + str(data["diversity_count"]) + " types"
 	
@@ -327,7 +301,7 @@ func refresh_ui() -> void:
 		
 		var warnings = []
 		if data["budget_exceeded"]: warnings.append("OVER BUDGET")
-		if data["constraints_exceeded"]: warnings.append("OVER LIMITS")
+		if data["space_exceeded"]: warnings.append("OVER SPACE LIMIT")
 		if data["low_capacity"]: warnings.append("LOW CAPACITY")
 		if data["low_hygiene"]: warnings.append("BAD HYGIENE")
 		if data["low_diversity"]: warnings.append("POOR VARIETY")
@@ -339,9 +313,8 @@ func refresh_ui() -> void:
 			warning_label.text = "All constraints met."
 			warning_label.modulate = Color(0.6, 0.6, 0.6)
 			
-		budget_label.modulate = Color(0.4, 1.0, 0.4) if data["price"] > 0 else Color.WHITE
-		electricity_label.modulate = Color(1.0, 0.2, 0.2) if data["electricity"] > MAX_ELECTRICITY else Color.WHITE
-		space_label.modulate = Color(1.0, 0.2, 0.2) if data["space"] > MAX_SPACE else Color.WHITE
+		budget_label.modulate = Color(1.0, 0.2, 0.2) if data["budget_exceeded"] else Color.WHITE
+		space_label.modulate = Color(1.0, 0.2, 0.2) if data["space_exceeded"] else Color.WHITE
 		capacity_label.modulate = Color(1.0, 0.6, 0.2) if data["low_capacity"] else Color.WHITE
 		hygiene_label.modulate = Color(1.0, 0.6, 0.2) if data["low_hygiene"] else Color.WHITE
 		diversity_label.modulate = Color(1.0, 0.6, 0.2) if data["low_diversity"] else Color.WHITE
@@ -355,13 +328,11 @@ func _on_confirm_pressed() -> void:
 		return
 		
 	var data = get_totals()
-	# Multiply revenue by -1 to ADD to money since finalize_food_vendor_selection subtracts it
-	var revenue_as_negative_cost = -data["price"]
 	GameState.finalize_food_vendor_selection(
 		data["selected_ids"], 
 		data["capacity"], 
 		data["avg_hygiene"], 
-		revenue_as_negative_cost, 
+		data["price"], 
 		data["satisfaction_impact"], 
 		data["quality_impact"]
 	)

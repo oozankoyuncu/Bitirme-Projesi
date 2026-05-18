@@ -1,91 +1,8 @@
 extends Control
 
 # ---------------- DATA ----------------
-var cleaning_crews = {
-	"ecoclean": {
-		"name": "EcoClean",
-		"speed": 6,
-		"reliability": 8,
-		"cost": 1200,
-		"space": 25,
-		"desc": "Environmentally friendly, highly reliable."
-	},
-	"rapidteam": {
-		"name": "RapidTeam",
-		"speed": 9,
-		"reliability": 5,
-		"cost": 1800,
-		"space": 20,
-		"desc": "Extremely fast performance."
-	},
-	"proservices": {
-		"name": "ProServices",
-		"speed": 7,
-		"reliability": 7,
-		"cost": 1500,
-		"space": 30,
-		"desc": "Balanced performance and cost."
-	},
-	"swiftscrub": {
-		"name": "SwiftScrub",
-		"speed": 8,
-		"reliability": 6,
-		"cost": 1400,
-		"space": 22,
-		"desc": "Agile cleaning for large areas."
-	},
-	"purepoint": {
-		"name": "PurePoint",
-		"speed": 5,
-		"reliability": 9,
-		"cost": 2200,
-		"space": 35,
-		"desc": "Premium sanitation standards."
-	}
-}
-
-var security_teams = {
-	"safeguard": {
-		"name": "SafeGuard",
-		"speed": 5,
-		"reliability": 9,
-		"cost": 1400,
-		"space": 35,
-		"desc": "Rock-solid reliability."
-	},
-	"shieldforce": {
-		"name": "ShieldForce",
-		"speed": 8,
-		"reliability": 6,
-		"cost": 2100,
-		"space": 25,
-		"desc": "Rapid incident response."
-	},
-	"eliteunit": {
-		"name": "EliteUnit",
-		"speed": 9,
-		"reliability": 9,
-		"cost": 4500,
-		"space": 20,
-		"desc": "Elite tactical security."
-	},
-	"guardiangrid": {
-		"name": "GuardianGrid",
-		"speed": 7,
-		"reliability": 8,
-		"cost": 3200,
-		"space": 40,
-		"desc": "Wide coverage protection."
-	},
-	"titanwatch": {
-		"name": "TitanWatch",
-		"speed": 6,
-		"reliability": 10,
-		"cost": 5500,
-		"space": 45,
-		"desc": "Absolute zero-failure defense."
-	}
-}
+var cleaning_crews = {}
+var security_teams = {}
 
 # ---------------- UI REFS ----------------
 @onready var cleaning_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftPalette/LeftScroll/CleaningList
@@ -111,6 +28,7 @@ var selected_security_ids: Array = []
 # ---------------- LOGIC ----------------
 
 func _ready() -> void:
+	_load_data()
 	confirm_btn.pressed.connect(_on_confirm_pressed)
 	back_btn.pressed.connect(_on_back_pressed)
 	info_btn.pressed.connect(func(): guide_panel.show())
@@ -121,6 +39,26 @@ func _ready() -> void:
 	
 	_create_team_cards()
 	_refresh_ui()
+
+func _load_data() -> void:
+	var file = FileAccess.open("res://data/cleaning_security.json", FileAccess.READ)
+	if file == null:
+		print("ERROR: cleaning_security.json could not be opened")
+		return
+	
+	var content = file.get_as_text()
+	file.close()
+	
+	var data = JSON.parse_string(content)
+	if data == null:
+		print("ERROR: Failed to parse cleaning_security.json")
+		return
+	
+	if data.has("cleaning_crews"):
+		cleaning_crews = data["cleaning_crews"]
+	if data.has("security_teams"):
+		security_teams = data["security_teams"]
+	print("Cleaning/Security loaded: ", cleaning_crews.size(), " crews, ", security_teams.size(), " teams")
 
 func _process(_delta: float) -> void:
 	_update_live_stats()
@@ -189,19 +127,19 @@ func _create_card(id: String, team: Dictionary, is_cleaning: bool) -> PanelConta
 	v_info.add_child(name_lbl)
 
 	var stats_lbl = Label.new()
-	stats_lbl.text = "Speed: %d | Reliability: %d | Space: %d" % [team["speed"], team["reliability"], team["space"]]
-	stats_lbl.add_theme_font_size_override("font_size", 16)
+	stats_lbl.text = "Speed: %d | Reliability: %d | Space: %d sqm" % [int(team["speed"]), int(team["reliability"]), int(team["space"])]
+	stats_lbl.add_theme_font_size_override("font_size", 18)
 	stats_lbl.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 	v_info.add_child(stats_lbl)
 
-	var desc_lbl = Label.new()
-	desc_lbl.text = team["desc"]
-	desc_lbl.add_theme_font_size_override("font_size", 14)
-	desc_lbl.add_theme_color_override("font_color", Color(0.6, 0.8, 1.0))
-	v_info.add_child(desc_lbl)
+	var score_lbl = Label.new()
+	score_lbl.text = "Score: " + str(snapped(team.get("score", 0.0), 0.01))
+	score_lbl.add_theme_font_size_override("font_size", 18)
+	score_lbl.add_theme_color_override("font_color", Color(0.5, 0.9, 1.0))
+	v_info.add_child(score_lbl)
 
 	var cost_lbl = Label.new()
-	cost_lbl.text = "Weekly: $" + str(team["cost"])
+	cost_lbl.text = "Daily Cost: " + str(int(team["cost"])) + " TL"
 	cost_lbl.add_theme_font_size_override("font_size", 18)
 	cost_lbl.add_theme_color_override("font_color", Color(1, 0.8, 0.2))
 	v_info.add_child(cost_lbl)
@@ -220,11 +158,11 @@ func _on_team_toggled(id: String, pressed: bool, is_cleaning: bool, card: PanelC
 	_refresh_ui()
 
 func _update_live_stats() -> void:
-	money_label.text = "Available Budget: $" + str(GameState.money)
+	money_label.text = "Available Budget: " + str(GameState.money) + " TL"
 	
 	var total_space = 0
-	for id in selected_cleaning_ids: total_space += cleaning_crews[id]["space"]
-	for id in selected_security_ids: total_space += security_teams[id]["space"]
+	for id in selected_cleaning_ids: total_space += int(cleaning_crews[id]["space"])
+	for id in selected_security_ids: total_space += int(security_teams[id]["space"])
 	
 	space_label.text = "On-Site Footprint: %d / %d Units" % [total_space, GameState.max_site_space]
 	space_bar.max_value = GameState.max_site_space
@@ -253,17 +191,17 @@ func _refresh_ui() -> void:
 
 	for id in selected_cleaning_ids:
 		var t = cleaning_crews[id]
-		total_cost += t["cost"]
+		total_cost += int(t["cost"])
 		avg_speed += t["speed"]
 		avg_rel += t["reliability"]
-		total_space += t["space"]
+		total_space += int(t["space"])
 
 	for id in selected_security_ids:
 		var t = security_teams[id]
-		total_cost += t["cost"]
+		total_cost += int(t["cost"])
 		avg_speed += t["speed"]
 		avg_rel += t["reliability"]
-		total_space += t["space"]
+		total_space += int(t["space"])
 
 	if count > 0:
 		avg_speed /= count
@@ -301,7 +239,7 @@ func _add_selected_entry(team_name: String, type: String, color: Color) -> void:
 	type_lbl.text = type.to_upper()
 	type_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	type_lbl.add_theme_color_override("font_color", color)
-	type_lbl.add_theme_font_size_override("font_size", 14)
+	type_lbl.add_theme_font_size_override("font_size", 18)
 	v_box.add_child(type_lbl)
 	
 	selected_teams_list.add_child(entry)
@@ -310,8 +248,8 @@ func _validate_requirements() -> void:
 	var has_clean = selected_cleaning_ids.size() >= 1
 	var has_sec = selected_security_ids.size() >= 1
 	var total_space = 0
-	for id in selected_cleaning_ids: total_space += cleaning_crews[id]["space"]
-	for id in selected_security_ids: total_space += security_teams[id]["space"]
+	for id in selected_cleaning_ids: total_space += int(cleaning_crews[id]["space"])
+	for id in selected_security_ids: total_space += int(security_teams[id]["space"])
 	
 	var space_ok = total_space <= GameState.max_site_space
 	

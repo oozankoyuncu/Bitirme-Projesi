@@ -1,107 +1,7 @@
 extends Control
 
 # ---------------- DATA ----------------
-var sponsor_defs = {
-	"techcorp": {
-		"display_name": "TechCorp",
-		"price": 5000,
-		"contribution": 5,
-		"audience": 4,
-		"logo": 3,
-		"area": 2,
-		"acceptance": 0.25,
-		"conflicts": ["soundmax"],
-		"desc": "Leading tech solutions provider."
-	},
-	"soundmax": {
-		"display_name": "SoundMax",
-		"price": 4500,
-		"contribution": 4,
-		"audience": 5,
-		"logo": 4,
-		"area": 3,
-		"acceptance": 0.15,
-		"conflicts": ["techcorp"],
-		"desc": "Premium audio equipment."
-	},
-	"greenbite": {
-		"display_name": "GreenBite",
-		"price": 2500,
-		"contribution": 3,
-		"audience": 5,
-		"logo": 1,
-		"area": 1,
-		"acceptance": 0.45,
-		"conflicts": [],
-		"desc": "Eco-friendly snacks and drinks."
-	},
-	"bluenetwork": {
-		"display_name": "BlueNetwork",
-		"price": 6000,
-		"contribution": 4,
-		"audience": 4,
-		"logo": 4,
-		"area": 2,
-		"acceptance": 0.20,
-		"conflicts": ["globallogistics"],
-		"desc": "Telecommunications provider."
-	},
-	"redenergy": {
-		"display_name": "RedEnergy",
-		"price": 3500,
-		"contribution": 5,
-		"audience": 3,
-		"logo": 2,
-		"area": 2,
-		"acceptance": 0.30,
-		"conflicts": [],
-		"desc": "Dynamic energy drinks."
-	},
-	"silverauto": {
-		"display_name": "SilverAuto",
-		"price": 8000,
-		"contribution": 3,
-		"audience": 5,
-		"logo": 5,
-		"area": 4,
-		"acceptance": 0.05,
-		"conflicts": [],
-		"desc": "Luxury vehicle displays."
-	},
-	"goldfashion": {
-		"display_name": "GoldFashion",
-		"price": 4000,
-		"contribution": 3,
-		"audience": 2,
-		"logo": 3,
-		"area": 3,
-		"acceptance": 0.10,
-		"conflicts": [],
-		"desc": "High-end apparel." # Score: 1.7
-	},
-	"urbanwear": {
-		"display_name": "UrbanWear",
-		"price": 2000,
-		"contribution": 2,
-		"audience": 3,
-		"logo": 4,
-		"area": 4,
-		"acceptance": 0.35,
-		"conflicts": [],
-		"desc": "Street style clothing." # Score: 1.4
-	},
-	"globallogistics": {
-		"display_name": "GlobalLogistics",
-		"price": 7000,
-		"contribution": 5,
-		"audience": 2,
-		"logo": 4,
-		"area": 5,
-		"acceptance": 0.15,
-		"conflicts": ["bluenetwork"],
-		"desc": "Transport solutions."
-	}
-}
+var sponsor_defs = {}
 
 # ---------------- UI ----------------
 @onready var sponsor_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/CenterSponsors/ScrollContainer/SponsorList
@@ -123,6 +23,8 @@ var secret_nodes: Array = []
 var _popup_timer_started: bool = false
 
 func _ready() -> void:
+	_load_sponsors()
+	
 	check_button.pressed.connect(_on_check_pressed)
 	back_button.pressed.connect(_on_back_pressed)
 	info_btn.pressed.connect(func(): guide_panel.show())
@@ -135,6 +37,23 @@ func _ready() -> void:
 	refresh_ui()
 	
 	self.visibility_changed.connect(_on_visibility_changed)
+
+func _load_sponsors() -> void:
+	var file = FileAccess.open("res://data/sponsors.json", FileAccess.READ)
+	if file == null:
+		print("ERROR: sponsors.json could not be opened")
+		return
+	
+	var content = file.get_as_text()
+	file.close()
+	
+	var data = JSON.parse_string(content)
+	if data == null or not data.has("sponsors"):
+		print("ERROR: Failed to parse sponsors.json")
+		return
+	
+	sponsor_defs = data["sponsors"]
+	print("Sponsors loaded: ", sponsor_defs.size())
 
 func _on_visibility_changed() -> void:
 	if is_visible_in_tree() and not GameState.sponsor_intelligence_bought and not _popup_timer_started:
@@ -245,24 +164,47 @@ func _create_sponsor_card(id: String, s: Dictionary, is_accepted: bool) -> Panel
 	v_info.add_child(name_lbl)
 	
 	var grant_lbl = Label.new()
-	grant_lbl.text = "GRANT: $" + str(s["price"])
+	grant_lbl.text = "GRANT: " + str(s["price"]) + " TL"
+	grant_lbl.add_theme_font_size_override("font_size", 18)
 	grant_lbl.add_theme_color_override("font_color", Color(1, 0.8, 0.2))
 	v_info.add_child(grant_lbl)
+
+	# Branding demands info
+	var branding_lbl = Label.new()
+	branding_lbl.text = "Logo: " + str(s["branding_logo_placement"]) + " | Area: " + str(s["branding_area_demand"]) + " | Audience: " + str(s["target_audience_compatibility"])
+	branding_lbl.add_theme_font_size_override("font_size", 16)
+	branding_lbl.modulate = Color(0.7, 0.7, 0.7)
+	v_info.add_child(branding_lbl)
+
+	# Conflict info
+	var conflict_brands = s.get("conflict_brands", [])
+	if conflict_brands.size() > 0:
+		var conflict_names = []
+		for cid in conflict_brands:
+			if sponsor_defs.has(cid):
+				conflict_names.append(sponsor_defs[cid]["display_name"])
+			else:
+				conflict_names.append(cid)
+		var conflict_lbl = Label.new()
+		conflict_lbl.text = "⚠ Conflict: " + ", ".join(conflict_names)
+		conflict_lbl.add_theme_font_size_override("font_size", 16)
+		conflict_lbl.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+		v_info.add_child(conflict_lbl)
 
 	var v_stats = VBoxContainer.new()
 	v_stats.alignment = BoxContainer.ALIGNMENT_CENTER
 	hbox.add_child(v_stats)
 
-	var score = (0.5 * s["contribution"]) + (0.4 * s["audience"]) - (0.1 * (s["logo"] + s["area"]))
+	var score = s.get("sponsor_score", 0.0)
 	var score_lbl = Label.new()
-	score_lbl.text = "SCORE: " + str(snapped(score, 0.1))
-	score_lbl.add_theme_font_size_override("font_size", 14)
+	score_lbl.text = "SCORE: " + str(snapped(score, 0.01))
+	score_lbl.add_theme_font_size_override("font_size", 18)
 	v_stats.add_child(score_lbl)
 
 	var success_lbl = Label.new()
 	success_lbl.text = str(int(s["acceptance"] * 100)) + "% CHANCE"
 	success_lbl.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
-	success_lbl.add_theme_font_size_override("font_size", 12)
+	success_lbl.add_theme_font_size_override("font_size", 16)
 	v_stats.add_child(success_lbl)
 	
 	if not GameState.sponsor_intelligence_bought:
@@ -293,19 +235,24 @@ func _on_check_pressed() -> void:
 	# Conflict Check
 	for i in range(selected.size()):
 		for j in range(i + 1, selected.size()):
-			if selected[j] in sponsor_defs[selected[i]].get("conflicts", []):
+			var conflicts_i = sponsor_defs[selected[i]].get("conflict_brands", [])
+			if selected[j] in conflicts_i:
 				result_label.text = "CONFLICT: " + sponsor_defs[selected[i]]["display_name"] + " and " + sponsor_defs[selected[j]]["display_name"] + " cannot be together."
+				return
+			var conflicts_j = sponsor_defs[selected[j]].get("conflict_brands", [])
+			if selected[i] in conflicts_j:
+				result_label.text = "CONFLICT: " + sponsor_defs[selected[j]]["display_name"] + " and " + sponsor_defs[selected[i]]["display_name"] + " cannot be together."
 				return
 
 	# Score Check (Aim to keep average > 2)
 	var avg_score = 0.0
 	for id in selected:
 		var s = sponsor_defs[id]
-		avg_score += (0.5 * s["contribution"]) + (0.4 * s["audience"]) - (0.1 * (s["logo"] + s["area"]))
+		avg_score += s.get("sponsor_score", 0.0)
 	avg_score /= selected.size()
 
 	if avg_score < 2.0:
-		result_label.text = "PROPOSAL REJECTED: Average score is too low (" + str(snapped(avg_score, 0.1)) + "). Aim for > 2.0."
+		result_label.text = "PROPOSAL REJECTED: Average score is too low (" + str(snapped(avg_score, 0.01)) + "). Aim for > 2.0."
 		return
 
 	var results = GameState.process_sponsor_acceptance(selected, sponsor_defs)
@@ -323,11 +270,12 @@ func refresh_ui() -> void:
 	var signed_text = ""
 	var total_grant = 0
 	for id in GameState.accepted_sponsors:
-		signed_text += "✓ " + sponsor_defs[id]["display_name"] + " ($" + str(sponsor_defs[id]["price"]) + ")\n"
-		total_grant += sponsor_defs[id]["price"]
+		if sponsor_defs.has(id):
+			signed_text += "✓ " + sponsor_defs[id]["display_name"] + " (" + str(sponsor_defs[id]["price"]) + " TL)\n"
+			total_grant += int(sponsor_defs[id]["price"])
 	
 	if signed_text == "": signed_text = "No deals signed."
-	signed_list_label.text = signed_text + "\n\nSecured: $" + str(total_grant)
+	signed_list_label.text = signed_text + "\n\nSecured: " + str(total_grant) + " TL"
 
 func _on_back_pressed() -> void:
 	GameState.complete_activity("sponsor_management")
@@ -343,6 +291,12 @@ func _setup_guide_text() -> void:
 		"• Click 'NEGOTIATE DEAL' to see which sponsors accept or reject your offer.\n" + \
 		"• If some sponsors reject: You can reselect and try again (up to 2 additional attempts).\n" + \
 		"• Sponsors that have already been accepted will remain fixed and cannot be changed.\n\n" + \
+		"Sponsor Card Info:\n" + \
+		"• GRANT: The amount the sponsor will contribute to your budget.\n" + \
+		"• Logo Placement: How much branding space the sponsor demands for logo.\n" + \
+		"• Area Demand: How much festival area the sponsor requires.\n" + \
+		"• Audience Compatibility: How well the sponsor fits your target audience (1-5).\n" + \
+		"• Conflict: Some brands cannot appear together.\n\n" + \
 		"Key Constraints & Rules:\n" + \
 		"• Not all selected sponsors will accept your offer immediately.\n" + \
 		"• You can retry selection up to 2 times after rejections.\n" + \

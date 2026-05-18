@@ -1,0 +1,169 @@
+{
+  "sponsors": {
+    "novapeak_labs": {
+      "display_name": "NovaPeak Labs",
+      "price": 82000,
+      "target_audience_compatibility": 2,
+      "branding_logo_placement": 0.2,
+      "branding_visibility": 34,
+      "branding_area_demand": 3.2,
+      "conflict_brands": ["altis_core"],
+      "acceptance": 0.60,
+      "sponsor_score": 0.96
+    },
+    "lumera_works": {
+      "display_name": "Lumera Works",
+      "price": 105000,
+      "target_audience_compatibility": 1,
+      "branding_logo_placement": 1.8,
+      "branding_visibility": 28,
+      "branding_area_demand": 1,
+      "conflict_brands": ["vistora_media"],
+      "acceptance": 0.75,
+      "sponsor_score": 1.12
+    },
+    "vistora_media": {
+      "display_name": "Vistora Media",
+      "price": 256000,
+      "target_audience_compatibility": 4,
+      "branding_logo_placement": 1.5,
+      "branding_visibility": 19,
+      "branding_area_demand": 0.4,
+      "conflict_brands": [],
+      "acceptance": 0.90,
+      "sponsor_score": 2.41
+    },
+    "nexora_tech": {
+      "display_name": "Nexora Tech",
+      "price": 154000,
+      "target_audience_compatibility": 2,
+      "branding_logo_placement": 3.2,
+      "branding_visibility": 38,
+      "branding_area_demand": 0.6,
+      "conflict_brands": ["lumera_works"],
+      "acceptance": 0.55,
+      "sponsor_score": 1.42
+    },
+    "altis_core": {
+      "display_name": "Altis Core",
+      "price": 338000,
+      "target_audience_compatibility": 5,
+      "branding_logo_placement": 1,
+      "branding_visibility": 12,
+      "branding_area_demand": 0.2,
+      "conflict_brands": [],
+      "acceptance": 0.70,
+      "sponsor_score": 3.38
+    },
+    "brivon_energy": {
+      "display_name": "Brivon Energy",
+      "price": 195000,
+      "target_audience_compatibility": 2,
+      "branding_logo_placement": 0.4,
+      "branding_visibility": 28,
+      "branding_area_demand": 2.4,
+      "conflict_brands": [],
+      "acceptance": 0.85,
+      "sponsor_score": 2.02
+    },
+    "solvix_group": {
+      "display_name": "Solvix Group",
+      "price": 246000,
+      "target_audience_compatibility": 3,
+      "branding_logo_placement": 1.5,
+      "branding_visibility": 27,
+      "branding_area_demand": 1.2,
+      "conflict_brands": ["crestel_dynamics"],
+      "acceptance": 0.65,
+      "sponsor_score": 2.43
+    },
+    "argena_studio": {
+      "display_name": "Argena Studio",
+      "price": 272000,
+      "target_audience_compatibility": 4,
+      "branding_logo_placement": 2.4,
+      "branding_visibility": 32,
+      "branding_area_demand": 0.8,
+      "conflict_brands": ["lumera_works"],
+      "acceptance": 0.50,
+      "sponsor_score": 2.79
+    },
+    "velora_systems": {
+      "display_name": "Velora Systems",
+      "price": 277000,
+      "target_audience_compatibility": 3,
+      "branding_logo_placement": 1.8,
+      "branding_visibility": 30,
+      "branding_area_demand": 1.2,
+      "conflict_brands": [],
+      "acceptance": 0.72,
+      "sponsor_score": 2.9
+    },
+    "inomix_ventures": {
+      "display_name": "Inomix Ventures",
+      "price": 190000,
+      "target_audience_compatibility": 1,
+      "branding_logo_placement": 0.4,
+      "branding_visibility": 40,
+      "branding_area_demand": 3.6,
+      "conflict_brands": ["solvix_group"],
+      "acceptance": 0.58,
+      "sponsor_score": 2
+    },
+    "crestel_dynamics": {
+      "display_name": "Crestel Dynamics",
+      "price": 308000,
+      "target_audience_compatibility": 4,
+      "branding_logo_placement": 3.6,
+      "branding_visibility": 60,
+      "branding_area_demand": 2.4,
+      "conflict_brands": [],
+      "acceptance": 0.88,
+      "sponsor_score": 3
+    },
+    "zyphra_solutions": {
+      "display_name": "Zyphra Solutions",
+      "price": 307000,
+      "target_audience_compatibility": 2,
+      "branding_logo_placement": 0.4,
+      "branding_visibility": 6,
+      "branding_area_demand": 0.2,
+      "conflict_brands": ["aurelix_partners"],
+      "acceptance": 0.68,
+      "sponsor_score": 3.24
+    },
+    "talvora_network": {
+      "display_name": "Talvora Network",
+      "price": 360000,
+      "target_audience_compatibility": 4,
+      "branding_logo_placement": 1.2,
+      "branding_visibility": 40,
+      "branding_area_demand": 2.8,
+      "conflict_brands": [],
+      "acceptance": 0.62,
+      "sponsor_score": 3.7
+    },
+    "merqon_industries": {
+      "display_name": "Merqon Industries",
+      "price": 404000,
+      "target_audience_compatibility": 4,
+      "branding_logo_placement": 0.4,
+      "branding_visibility": 8,
+      "branding_area_demand": 0.4,
+      "conflict_brands": ["talvora_network"],
+      "acceptance": 0.73,
+      "sponsor_score": 4.02
+    },
+    "aurelix_partners": {
+      "display_name": "Aurelix Partners",
+      "price": 359000,
+      "target_audience_compatibility": 4,
+      "branding_logo_placement": 1,
+      "branding_visibility": 46,
+      "branding_area_demand": 3.6,
+      "conflict_brands": [],
+      "acceptance": 0.80,
+      "sponsor_score": 3.64
+    }
+  }
+}

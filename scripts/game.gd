@@ -37,13 +37,13 @@ func _ready() -> void:
 	stage_setup_choices_panel.hide()
 	
 	# TopBar enhancements
-	week_label.add_theme_font_size_override("font_size", 24)
-	budget_label.add_theme_font_size_override("font_size", 24)
-	time_label_hud.add_theme_font_size_override("font_size", 24)
+	week_label.add_theme_font_size_override("font_size", 20)
+	budget_label.add_theme_font_size_override("font_size", 20)
+	time_label_hud.add_theme_font_size_override("font_size", 20)
 	
-	week_label.add_theme_constant_override("outline_size", 4)
-	budget_label.add_theme_constant_override("outline_size", 4)
-	time_label_hud.add_theme_constant_override("outline_size", 4)
+	week_label.add_theme_constant_override("outline_size", 3)
+	budget_label.add_theme_constant_override("outline_size", 3)
+	time_label_hud.add_theme_constant_override("outline_size", 3)
 
 	var stats = $TopBar/Margin/HBox/Stats
 	if stats is BoxContainer:
@@ -139,7 +139,7 @@ func _setup_persistent_hud() -> void:
 	# Increase font sizes for HUD labels
 	var labels = [week_label, budget_label, time_label_hud]
 	for lbl in labels:
-		lbl.add_theme_font_size_override("font_size", 32)
+		lbl.add_theme_font_size_override("font_size", 24)
 		lbl.add_theme_color_override("font_color", Color(1, 1, 1)) # White for clarity
 		
 		# Also find the icons next to them
@@ -147,7 +147,7 @@ func _setup_persistent_hud() -> void:
 		if parent is HBoxContainer:
 			for child in parent.get_children():
 				if child is Label and child != lbl:
-					child.add_theme_font_size_override("font_size", 36)
+					child.add_theme_font_size_override("font_size", 28)
 
 func _apply_global_ui_improvements() -> void:
 	# List of all potential sub-panels
@@ -174,18 +174,38 @@ func _apply_global_ui_improvements() -> void:
 		
 		# Recursively increase font sizes inside the panel
 		_enlarge_fonts_recursive(panel)
+		
+		# Style guide panel if it exists
+		var guide = panel.get_node_or_null("GuidePanel")
+		if guide:
+			_style_guide_panel(guide)
+
+func _style_guide_panel(guide: PanelContainer) -> void:
+	# Opaque dark background for readability
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.08, 0.10, 0.14, 1.0) # Fully opaque
+	style.set_corner_radius_all(12)
+	style.border_width_left = 3
+	style.border_width_top = 3
+	style.border_width_right = 3
+	style.border_width_bottom = 3
+	style.border_color = Color(0.15, 0.55, 0.9, 0.8)
+	style.shadow_color = Color(0, 0, 0, 0.6)
+	style.shadow_size = 20
+	guide.add_theme_stylebox_override("panel", style)
 
 func _enlarge_fonts_recursive(node: Node) -> void:
 	if node is Label:
 		var current_size = node.get_theme_font_size("font_size")
-		if current_size < 24:
-			node.add_theme_font_size_override("font_size", 24)
-		elif current_size < 32:
-			node.add_theme_font_size_override("font_size", 32)
+		if current_size < 18:
+			node.add_theme_font_size_override("font_size", 18)
 			
 	if node is Button:
-		node.custom_minimum_size.y = max(node.custom_minimum_size.y, 60)
-		node.add_theme_font_size_override("font_size", 24)
+		node.custom_minimum_size.y = max(node.custom_minimum_size.y, 45)
+		var current_btn_size = node.get_theme_font_size("font_size")
+		if current_btn_size < 18:
+			node.add_theme_font_size_override("font_size", 18)
 		
 	for child in node.get_children():
 		_enlarge_fonts_recursive(child)
+

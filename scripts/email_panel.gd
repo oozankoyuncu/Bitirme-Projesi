@@ -22,6 +22,7 @@ func _ready() -> void:
 	accept_button.disabled = true
 	
 	_setup_styles()
+	_fit_to_viewport()
 	
 	# Initial states for animations
 	character_container.modulate.a = 0
@@ -47,6 +48,33 @@ func _setup_styles() -> void:
 	bubble_style.bg_color = Color(0.15, 0.55, 0.9)
 	bubble_style.set_corner_radius_all(15)
 	welcome_bubble.add_theme_stylebox_override("panel", bubble_style)
+
+func _fit_to_viewport() -> void:
+	# Scale down character and email box to fit 1920x1080
+	var mentor_container = get_node_or_null("MarginContainer/HBox/CharacterContainer/MentorCharacterContainer")
+	if mentor_container:
+		mentor_container.custom_minimum_size = Vector2(350, 450)
+	if mentor_character:
+		mentor_character.custom_minimum_size = Vector2(350, 450)
+	
+	# Reduce email box size
+	email_box.custom_minimum_size = Vector2(800, 500)
+	
+	# Reduce margins
+	var margin = get_node_or_null("MarginContainer")
+	if margin:
+		margin.add_theme_constant_override("margin_left", 30)
+		margin.add_theme_constant_override("margin_top", 30)
+		margin.add_theme_constant_override("margin_right", 30)
+		margin.add_theme_constant_override("margin_bottom", 30)
+	
+	# Reduce email content margins  
+	var content_margin = get_node_or_null("MarginContainer/HBox/EmailSide/EmailBox/Margin")
+	if content_margin:
+		content_margin.add_theme_constant_override("margin_left", 25)
+		content_margin.add_theme_constant_override("margin_top", 25)
+		content_margin.add_theme_constant_override("margin_right", 25)
+		content_margin.add_theme_constant_override("margin_bottom", 25)
 
 func _start_onboarding_sequence() -> void:
 	# 1. Character Entry

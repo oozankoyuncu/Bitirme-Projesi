@@ -143,14 +143,14 @@ func add_stat_row(parent: Control, label_text: String, value: float) -> void:
 	
 	var lbl = Label.new()
 	lbl.text = label_text
-	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_font_size_override("font_size", 18)
 	lbl.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label_hbox.add_child(lbl)
 	
 	var percent_lbl = Label.new()
 	percent_lbl.text = "%d%%" % (value * 20)
-	percent_lbl.add_theme_font_size_override("font_size", 14)
+	percent_lbl.add_theme_font_size_override("font_size", 18)
 	percent_lbl.add_theme_color_override("font_color", Color(1, 1, 1))
 	label_hbox.add_child(percent_lbl)
 	
@@ -261,14 +261,14 @@ func _add_right_panel_stat_row(parent: Control, label_text: String) -> ProgressB
 	
 	var lbl = Label.new()
 	lbl.text = label_text
-	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_font_size_override("font_size", 18)
 	lbl.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label_hbox.add_child(lbl)
 	
 	var percent_lbl = Label.new()
 	percent_lbl.text = "0%"
-	percent_lbl.add_theme_font_size_override("font_size", 12)
+	percent_lbl.add_theme_font_size_override("font_size", 18)
 	percent_lbl.add_theme_color_override("font_color", Color(1, 1, 1))
 	label_hbox.add_child(percent_lbl)
 	

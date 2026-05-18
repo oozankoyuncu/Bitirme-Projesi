@@ -128,7 +128,7 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	
 	var status_label = Label.new()
 	status_label.text = status.to_upper()
-	status_label.add_theme_font_size_override("font_size", 16)
+	status_label.add_theme_font_size_override("font_size", 18)
 	status_label.modulate = get_status_color(status)
 	header.add_child(status_label)
 	

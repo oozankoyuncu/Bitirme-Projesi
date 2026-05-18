@@ -176,7 +176,7 @@ func create_options() -> void:
 		req_label.text = str(c_data["space_requirement"]) + " sqm | " + c_data["operational_needs"]
 		req_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		req_label.modulate = Color(0.7, 0.7, 0.7)
-		req_label.add_theme_font_size_override("font_size", 14)
+		req_label.add_theme_font_size_override("font_size", 18)
 		details_vbox.add_child(req_label)
 		
 		club_list.add_child(card)

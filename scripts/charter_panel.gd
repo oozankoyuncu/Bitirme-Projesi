@@ -74,87 +74,172 @@ func _setup_styles() -> void:
 	get_node("MarginContainer/TabContainer/Overview/Margin/VBox/ConstraintHeader").add_theme_stylebox_override("panel", constraint_style)
 
 func _apply_ui_scaling() -> void:
-	# Enlarge the main container
+	# Ensure the main container fits within viewport
 	if margin_container:
-		margin_container.custom_minimum_size = Vector2(1100, 950)
-		margin_container.add_theme_constant_override("margin_top", 100) # Ensure tabs are below HUD
+		margin_container.add_theme_constant_override("margin_top", 90)
+		margin_container.add_theme_constant_override("margin_bottom", 10)
+		margin_container.add_theme_constant_override("margin_left", 40)
+		margin_container.add_theme_constant_override("margin_right", 40)
 	
-	# Increase Header Font Sizes
+	# Wrap both tabs in ScrollContainers
+	_wrap_success_in_scroll()
+	_wrap_overview_in_scroll()
+	
+	# Header Font Sizes (reasonable for 1920x1080)
 	var header_paths = [
-		"MarginContainer/TabContainer/Success/Margin/VBox/Header",
-		"MarginContainer/TabContainer/Overview/Margin/VBox/Header/Title" # Fixed path
+		"MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/Header",
+		"MarginContainer/TabContainer/Overview/Margin/ScrollContainer/VBox/Header/Title"
 	]
 	for path in header_paths:
 		var h = get_node_or_null(path)
 		if h and h.has_method("add_theme_font_size_override"):
-			h.add_theme_font_size_override("font_size", 42)
+			h.add_theme_font_size_override("font_size", 32)
 	
-	# Increase Subtitles
+	# Subtitles
 	var sub_paths = [
-		"MarginContainer/TabContainer/Success/Margin/VBox/OFSFormula",
-		"MarginContainer/TabContainer/Success/Margin/VBox/Sub",
-		"MarginContainer/TabContainer/Overview/Margin/VBox/ConstraintHeader/ConstraintTitle"
+		"MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/OFSFormula",
+		"MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/Sub",
+		"MarginContainer/TabContainer/Overview/Margin/ScrollContainer/VBox/ConstraintHeader/ConstraintTitle"
 	]
 	for path in sub_paths:
 		var s = get_node_or_null(path)
 		if s and s.has_method("add_theme_font_size_override"):
-			s.add_theme_font_size_override("font_size", 28) # Increased from 24
+			s.add_theme_font_size_override("font_size", 22)
 		
-	# Adjust Tab Bar Scaling
+	# Tab Bar Scaling
 	if tab_container:
-		tab_container.add_theme_font_size_override("font_size", 26)
+		tab_container.add_theme_font_size_override("font_size", 20)
 	
-	# Adjust KPI List Container
-	var kpi_list = get_node_or_null("MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List")
+	# KPI List Container
+	var kpi_list = get_node_or_null("MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/TabContent/KPI_List")
 	if kpi_list:
 		kpi_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		kpi_list.add_theme_constant_override("separation", 25) 
+		kpi_list.add_theme_constant_override("separation", 12)
+	
+	# Remove the mascot image to save vertical space
+	var mascot = get_node_or_null("MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/TabContent/SuccessMascot")
+	if mascot:
+		mascot.queue_free()
+	
+	# Reduce KPI description font sizes
+	var kpi_descs = [
+		"TimeKPI/Desc", "BudgetKPI/Desc", "ScopeKPI/Desc",
+		"MotivationKPI/Desc", "SatisfactionKPI/Desc", "QualityKPI/Desc"
+	]
+	for desc_path in kpi_descs:
+		var desc = get_node_or_null("MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/TabContent/KPI_List/" + desc_path)
+		if desc:
+			desc.add_theme_font_size_override("font_size", 16)
+	
+	# Reduce Overview section font sizes
+	_scale_overview_fonts()
+
+func _wrap_success_in_scroll() -> void:
+	var success_margin = get_node_or_null("MarginContainer/TabContainer/Success/Margin")
+	if not success_margin: return
+	
+	var vbox = success_margin.get_node_or_null("VBox")
+	if not vbox: return
+	
+	# Create ScrollContainer
+	var scroll = ScrollContainer.new()
+	scroll.name = "ScrollContainer"
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	
+	# Reparent VBox into ScrollContainer
+	success_margin.remove_child(vbox)
+	scroll.add_child(vbox)
+	success_margin.add_child(scroll)
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL 
+
+func _wrap_overview_in_scroll() -> void:
+	var overview_margin = get_node_or_null("MarginContainer/TabContainer/Overview/Margin")
+	if not overview_margin: return
+	
+	var vbox = overview_margin.get_node_or_null("VBox")
+	if not vbox: return
+	
+	var scroll = ScrollContainer.new()
+	scroll.name = "ScrollContainer"
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	
+	overview_margin.remove_child(vbox)
+	scroll.add_child(vbox)
+	overview_margin.add_child(scroll)
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+func _scale_overview_fonts() -> void:
+	# Reduce Overview section title font sizes (from 32 to 24)
+	var section_titles = [
+		"MarginContainer/TabContainer/Overview/Margin/ScrollContainer/VBox/ObjectiveSection/Title",
+		"MarginContainer/TabContainer/Overview/Margin/ScrollContainer/VBox/ScopeSection/Title",
+	]
+	for path in section_titles:
+		var node = get_node_or_null(path)
+		if node:
+			node.add_theme_font_size_override("font_size", 24)
+	
+	# Reduce objective text (from 28 to 20)
+	var obj_text = get_node_or_null("MarginContainer/TabContainer/Overview/Margin/ScrollContainer/VBox/ObjectiveSection/Text")
+	if obj_text:
+		obj_text.add_theme_font_size_override("font_size", 20)
+	
+	# Reduce scope list items (from 28 to 20)
+	var scope_list = get_node_or_null("MarginContainer/TabContainer/Overview/Margin/ScrollContainer/VBox/ScopeSection/List")
+	if scope_list:
+		for child in scope_list.get_children():
+			if child is Label:
+				child.add_theme_font_size_override("font_size", 20)
+	
+	# Reduce constraint details (from 26/28 to 20/22)
+	var grid = get_node_or_null("MarginContainer/TabContainer/Overview/Margin/ScrollContainer/VBox/Grid")
+	if grid:
+		for box in grid.get_children():
+			if box is VBoxContainer:
+				for child in box.get_children():
+					if child is Label:
+						var current = child.get_theme_font_size("font_size")
+						if current >= 28:
+							child.add_theme_font_size_override("font_size", 22)
+						elif current >= 26:
+							child.add_theme_font_size_override("font_size", 18)
 
 func _add_ofs_explanation() -> void:
-	var ofs_formula_label = get_node_or_null("MarginContainer/TabContainer/Success/Margin/VBox/OFSFormula")
+	var ofs_formula_label = get_node_or_null("MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/OFSFormula")
 	if not ofs_formula_label: return
 	
 	var explanation = Label.new()
-	explanation.text = "The overall scoring system evaluates performance through a multi-dimensional structure integrating Participant Satisfaction, Event Quality, Overall Festival Success, Scope Adherence, and Budget Control.\nNote: Time, Budget, and Scope management directly impact the final Event Quality and Participant Satisfaction scores."
+	explanation.text = "The overall scoring system evaluates performance through a multi-dimensional structure integrating Participant Satisfaction, Event Quality, Overall Festival Success, Scope Adherence, and Budget Control."
 	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	explanation.custom_minimum_size = Vector2(800, 0)
-	explanation.add_theme_font_size_override("font_size", 24)
-	explanation.modulate = Color(0.8, 0.9, 1.0, 1.0) # Brighter
+	explanation.add_theme_font_size_override("font_size", 18)
+	explanation.modulate = Color(0.8, 0.9, 1.0, 1.0)
 	
 	var parent = ofs_formula_label.get_parent()
 	var idx = ofs_formula_label.get_index()
 	parent.add_child(explanation)
 	parent.move_child(explanation, idx + 1)
 	
-	# Add some spacing
-	var spacer = Control.new()
-	spacer.custom_minimum_size = Vector2(0, 10)
-	parent.add_child(spacer)
-	parent.move_child(spacer, idx + 2)
-	
-	# Add Budget Warning Note
+	# Budget Warning Note
 	var budget_warning = Label.new()
-	budget_warning.text = "⚠️ FAILURE CONDITION: If the budget drops to -300,000 TL or below, the project is terminated immediately."
-	budget_warning.add_theme_font_size_override("font_size", 26)
-	budget_warning.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4)) # Reddish for warning
+	budget_warning.text = "⚠️ FAILURE: Budget drops to -300,000 TL → project terminated."
+	budget_warning.add_theme_font_size_override("font_size", 18)
+	budget_warning.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 	budget_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	budget_warning.custom_minimum_size = Vector2(800, 0)
 	
 	parent.add_child(budget_warning)
-	parent.move_child(budget_warning, idx + 3)
-	
-	var spacer2 = Control.new()
-	spacer2.custom_minimum_size = Vector2(0, 20)
-	parent.add_child(spacer2)
-	parent.move_child(spacer2, idx + 4)
+	parent.move_child(budget_warning, idx + 2)
 
 func _create_ofs_metric() -> void:
-	var kpi_list = get_node_or_null("MarginContainer/TabContainer/Success/Margin/VBox/TabContent/KPI_List")
+	var kpi_list = get_node_or_null("MarginContainer/TabContainer/Success/Margin/ScrollContainer/VBox/TabContent/KPI_List")
 	if not kpi_list: return
 	
 	# Create a separator
 	var sep = HSeparator.new()
-	sep.add_theme_constant_override("separation", 20)
+	sep.add_theme_constant_override("separation", 10)
 	kpi_list.add_child(sep)
 	
 	# Create OFS KPI entry
@@ -167,17 +252,17 @@ func _create_ofs_metric() -> void:
 	
 	var label = Label.new()
 	label.text = "OVERALL FESTIVAL SCORE (OFS)"
-	label.add_theme_font_size_override("font_size", 28) # Increased from 26
+	label.add_theme_font_size_override("font_size", 22)
 	label.add_theme_color_override("font_color", Color(0.15, 0.55, 0.9))
 	hbox.add_child(label)
 	
 	var spacer = Control.new()
-	spacer.custom_minimum_size.x = 30 # Slightly more gap
+	spacer.custom_minimum_size.x = 15
 	hbox.add_child(spacer)
 	
 	var bar = ProgressBar.new()
 	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bar.custom_minimum_size = Vector2(0, 30) # Slightly thinner for balance
+	bar.custom_minimum_size = Vector2(0, 22)
 	bar.show_percentage = false
 	hbox.add_child(bar)
 	
@@ -187,29 +272,29 @@ func _initialize_kpi_styles() -> void:
 	for key in kpi_bars:
 		var bar = kpi_bars[key]
 		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		bar.custom_minimum_size.y = 25 # Slightly thinner for balance
+		bar.custom_minimum_size.y = 18
 		bar.value = 100
 		bar.set_meta("target_val", bar.value)
 		
 		var hbox = bar.get_parent()
 		if hbox is HBoxContainer:
-			hbox.add_theme_constant_override("separation", 25)
+			hbox.add_theme_constant_override("separation", 15)
 			
 			var name_label = hbox.get_child(0)
 			if name_label is Label:
-				name_label.add_theme_font_size_override("font_size", 28) # Increased from 24
-				name_label.custom_minimum_size.x = 420 # Align all bars horizontally
+				name_label.add_theme_font_size_override("font_size", 20)
+				name_label.custom_minimum_size.x = 300
 			
 			for child in hbox.get_children():
 				if child is Control and not child is Label and not child is ProgressBar:
-					child.custom_minimum_size.x = 30
+					child.custom_minimum_size.x = 15
 		
 		var val_label = Label.new()
 		val_label.name = "ValueLabel"
 		val_label.text = str(int(bar.value)) + " / 100"
-		val_label.custom_minimum_size = Vector2(120, 0)
+		val_label.custom_minimum_size = Vector2(90, 0)
 		val_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		val_label.add_theme_font_size_override("font_size", 28) # Increased from 24
+		val_label.add_theme_font_size_override("font_size", 20)
 		hbox.add_child(val_label)
 		value_labels[key] = val_label
 		

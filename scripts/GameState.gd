@@ -289,7 +289,7 @@ func process_sponsor_acceptance(selection: Array, sponsor_defs: Dictionary) -> D
 		if randf() <= chance:
 			accepted.append(id)
 			accepted_sponsors.append(id)
-			money += sponsor_defs[id]["price"]
+			money += int(sponsor_defs[id]["price"])
 		else:
 			rejected.append(id)
 
@@ -516,3 +516,22 @@ func choose_decoration_theme(theme: Dictionary) -> bool:
 	decoration_theme_score = calculate_decoration_theme_impact(theme)
 
 	return true
+
+# ---- UI Scaling Helpers ----
+# These are optional helpers for DPI-aware scaling.
+# The canvas_items stretch mode in project.godot handles resolution scaling automatically.
+# Use these for additional fine-tuning if needed.
+
+## Returns a DPI-aware scale factor (1.0 = standard 96 DPI)
+static func ui_scale() -> float:
+	var screen_dpi = DisplayServer.screen_get_dpi()
+	return clamp(screen_dpi / 96.0, 0.75, 2.0)
+
+## Returns a font size scaled by UI scale factor
+static func scaled_font(base_size: int) -> int:
+	return int(base_size * ui_scale())
+
+## Returns a Vector2 scaled by UI scale factor
+static func scaled_size(base: Vector2) -> Vector2:
+	var s = ui_scale()
+	return Vector2(base.x * s, base.y * s)

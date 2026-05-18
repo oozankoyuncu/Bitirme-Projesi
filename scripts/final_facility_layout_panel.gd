@@ -82,12 +82,15 @@ func populate_unified_items() -> void:
 			if food_options.has(f_id):
 				var f = food_options[f_id]
 				var uid = "food_" + f_id
+				var allocated_space = f.get("space_requirement", 10)
+				if food_panel.has_method("get_allocated_space"):
+					allocated_space = food_panel.get_allocated_space(f_id)
 				unified_items[uid] = {
 					"display_name": f["display_name"],
 					"type": "Food Vendor",
 					"electricity": f["electricity_requirement"] > 0,
 					"truck_access": true,
-					"min_size": f.get("space_requirement", f.get("min_space", 10))
+					"min_size": allocated_space
 				}
 				placed_items[uid] = ""
 				

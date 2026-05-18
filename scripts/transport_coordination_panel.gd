@@ -84,7 +84,7 @@ func _create_card(delivery: Dictionary) -> PanelContainer:
 
 	var stats_lbl = Label.new()
 	stats_lbl.text = "Slot: %s | Workload: %d" % [delivery["arrival_time"], delivery["workload"]]
-	stats_lbl.add_theme_font_size_override("font_size", 12)
+	stats_lbl.add_theme_font_size_override("font_size", 18)
 	stats_lbl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
 	v_box.add_child(stats_lbl)
 
