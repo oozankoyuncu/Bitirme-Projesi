@@ -69,8 +69,8 @@ func _start_popup_timer() -> void:
 func _show_intelligence_popup() -> void:
 	var dialog = ConfirmationDialog.new()
 	dialog.title = "Consulting Intelligence Service"
-	dialog.dialog_text = "Would you like to purchase intelligence data to see the true probability (CHANCE) of each sponsor accepting your offer?\nCost: 5000 TL"
-	dialog.ok_button_text = "Yes (Pay 5000 TL)"
+	dialog.dialog_text = "Would you like to purchase intelligence data to see the true probability (CHANCE) of each sponsor accepting your offer?\nCost: 10000 TL"
+	dialog.ok_button_text = "Yes (Pay 10000 TL)"
 	dialog.cancel_button_text = "No"
 	
 	dialog.min_size = Vector2(650, 200)
@@ -85,8 +85,8 @@ func _show_intelligence_popup() -> void:
 	dialog.get_cancel_button().custom_minimum_size = Vector2(100, 50)
 	
 	dialog.confirmed.connect(func():
-		if GameState.money >= 5000:
-			GameState.money -= 5000
+		if GameState.money >= 10000:
+			GameState.money -= 10000
 			GameState.sponsor_intelligence_bought = true
 			_reveal_intelligence()
 	)

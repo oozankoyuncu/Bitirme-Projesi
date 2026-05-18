@@ -206,8 +206,9 @@ func _setup_guide_text() -> void:
 		"• Choose a theme that maximizes satisfaction while managing costs and space.\n" + \
 		"• Higher complexity might lead to longer setup times or higher risks.\n\n" + \
 		"Calculations:\n" + \
-		"• Synergy Score = (Satisfaction * 0.6) / ((Complexity + Space) * 0.4)\n" + \
-		"• Higher Satisfaction = Better participant reviews.\n" + \
+		"• Synergy Score = (Satisfaction Impact * 0.6) / ((Complexity + Space) * 0.4)\n" + \
+		"  Synergy Score serves as a comprehensive indicator of how well a theme balances visual appeal and participant enjoyment against the logistical burdens of construction and space utilization. A higher score means you are getting more value out of your setup.\n" + \
+		"• Higher Satisfaction Impact = Translates to much better participant reviews, stronger social media presence, and significantly boosts the overall Event Quality metric of the festival.\n" + \
 		"• Higher Complexity = Increased engineering challenge.\n\n" + \
 		"Rules:\n" + \
 		"• You can only finalize one primary theme.\n" + \

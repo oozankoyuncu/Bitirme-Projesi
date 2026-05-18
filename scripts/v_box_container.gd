@@ -44,9 +44,19 @@ func _draw():
 			pts.append(center + Vector2(cos(a), sin(a)) * radius)
 		pts.append(center)
 		if pts.size() >= 3:
-			draw_polygon(pts, PackedColorArray([Color(0.2, 0.8, 0.2)]))
+			draw_polygon(pts, PackedColorArray([Color(0.4, 0.7, 1.0, 0.8)]))
 	
 	draw_arc(center, radius, 0, TAU, 32, Color(1, 1, 1, 0.5), 2.0, true)
+	
+	# Minute hand
+	var minute_angle = (current_time / 60.0) * TAU - PI / 2.0
+	var minute_hand_end = center + Vector2(cos(minute_angle), sin(minute_angle)) * (radius * 0.8)
+	draw_line(center, minute_hand_end, Color(1.0, 1.0, 1.0), 1.5, true)
+	
+	# Hour hand
+	var hour_angle = (current_time / 240.0) * TAU - PI / 2.0
+	var hour_hand_end = center + Vector2(cos(hour_angle), sin(hour_angle)) * (radius * 0.5)
+	draw_line(center, hour_hand_end, Color(1.0, 1.0, 1.0), 2.5, true)
 """
 	clock_script.reload()
 	clock.set_script(clock_script)

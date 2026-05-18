@@ -21,11 +21,17 @@ extends Panel
 @onready var selected_panel = $MarginContainer/VBoxContainer/HBoxContainer/SelectedLineupPanel
 @onready var summary_panel = $MarginContainer/VBoxContainer/SummaryPanel
 
+var guide_panel: PanelContainer
+var guide_label: Label
+var info_button: Button
+
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	back_button.pressed.connect(_on_back_pressed)
 
 	_setup_ui_styles()
+	_setup_guide_ui()
+	_setup_guide_text()
 
 	create_available_artist_list()
 	refresh_selected_lists()
@@ -68,6 +74,97 @@ func _setup_ui_styles() -> void:
 	confirm_button.add_theme_stylebox_override("hover", btn_hover)
 	back_button.add_theme_stylebox_override("normal", btn_style)
 	back_button.add_theme_stylebox_override("hover", btn_hover)
+
+func _setup_guide_ui() -> void:
+	var header = HBoxContainer.new()
+	var vbox = $MarginContainer/VBoxContainer
+	var title = $MarginContainer/VBoxContainer/TitleLabel
+	
+	vbox.remove_child(title)
+	vbox.add_child(header)
+	vbox.move_child(header, 0)
+	
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(title)
+	
+	info_button = Button.new()
+	info_button.text = "?"
+	info_button.custom_minimum_size = Vector2(40, 40)
+	header.add_child(info_button)
+	
+	guide_panel = PanelContainer.new()
+	guide_panel.visible = false
+	guide_panel.set_anchors_preset(Control.PRESET_CENTER)
+	guide_panel.custom_minimum_size = Vector2(800, 600)
+	
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.08, 0.10, 0.14, 1.0)
+	style.set_corner_radius_all(12)
+	style.border_width_left = 3
+	style.border_width_top = 3
+	style.border_width_right = 3
+	style.border_width_bottom = 3
+	style.border_color = Color(0.15, 0.55, 0.9, 0.8)
+	style.shadow_color = Color(0, 0, 0, 0.6)
+	style.shadow_size = 20
+	guide_panel.add_theme_stylebox_override("panel", style)
+	
+	var g_margin = MarginContainer.new()
+	g_margin.add_theme_constant_override("margin_left", 20)
+	g_margin.add_theme_constant_override("margin_right", 20)
+	g_margin.add_theme_constant_override("margin_top", 20)
+	g_margin.add_theme_constant_override("margin_bottom", 20)
+	guide_panel.add_child(g_margin)
+	
+	var g_vbox = VBoxContainer.new()
+	g_margin.add_child(g_vbox)
+	
+	var g_header = HBoxContainer.new()
+	g_vbox.add_child(g_header)
+	
+	var g_title = Label.new()
+	g_title.text = "ACTIVITY GUIDE"
+	g_title.add_theme_font_size_override("font_size", 24)
+	g_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	g_header.add_child(g_title)
+	
+	var close_btn = Button.new()
+	close_btn.text = "X"
+	close_btn.custom_minimum_size = Vector2(40, 40)
+	g_header.add_child(close_btn)
+	
+	var g_sep = HSeparator.new()
+	g_vbox.add_child(g_sep)
+	
+	var g_scroll = ScrollContainer.new()
+	g_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	g_vbox.add_child(g_scroll)
+	
+	guide_label = Label.new()
+	guide_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	guide_label.custom_minimum_size = Vector2(740, 0)
+	g_scroll.add_child(guide_label)
+	
+	add_child(guide_panel)
+	
+	# Center the guide panel on the screen
+	guide_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	
+	info_button.pressed.connect(func():
+		guide_panel.show()
+		guide_panel.position = (size - guide_panel.size) / 2
+	)
+	close_btn.pressed.connect(func(): guide_panel.hide())
+
+func _setup_guide_text() -> void:
+	guide_label.text = "ACTIVITY GUIDE: ENTERTAINMENT LINE-UP\n\n" + \
+		"What You Need to Pay Attention To:\n" + \
+		"• Budget Constraints: You must not exceed the debt limit (-300,000 TL). However, remember that you will need funds for future stages. Spending your entire budget here will heavily restrict your options later.\n" + \
+		"• Minimum Requirements: You must select exactly 1 Main Headliner and at least 2 Supporting Artists.\n\n" + \
+		"How You Gather Points & Impact Success:\n" + \
+		"• Participant Satisfaction: Determined by the average Popularity of your lineup. Choosing highly popular artists directly boosts your final Event Quality and Satisfaction scores.\n" + \
+		"• Festival Attendance: Determined by the Expected Crowd Appeal of your artists. (e.g., 'Very High' = 1000 people, 'Medium' = 400 people). Higher attendance means a more successful festival.\n" + \
+		"• Strategic Balance: Do not just pick the most expensive artists. Your goal is to maximize Popularity (for satisfaction) and Crowd Appeal (for attendance) while maintaining a healthy budget for the rest of the game."
 
 
 func create_available_artist_list() -> void:

@@ -50,10 +50,15 @@ const MAX_SPACE: int = 200
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
 
 var option_checkboxes: Array = []
+var guide_panel: PanelContainer
+var guide_label: Label
+var info_button: Button
 
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	_setup_ui_styles()
+	_setup_guide_ui()
+	_setup_guide_text()
 	create_options()
 	
 	# Add Go to Layout button at the top
@@ -111,6 +116,97 @@ func _setup_ui_styles() -> void:
 	side_style.border_width_bottom = 1
 	side_style.border_color = Color(0.3, 0.4, 0.5)
 	$MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel.add_theme_stylebox_override("panel", side_style)
+	
+	var expl_label = Label.new()
+	expl_label.text = "\nEngagement Level: Represents the enthusiasm and energy volunteers bring to the festival. Higher engagement increases the overall Event Quality and brings life to your festival."
+	expl_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	expl_label.add_theme_font_size_override("font_size", 16)
+	expl_label.modulate = Color(0.7, 0.9, 1.0)
+	
+	var container = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer
+	container.add_child(expl_label)
+	container.move_child(expl_label, container.get_child_count() - 2)
+
+func _setup_guide_ui() -> void:
+	var header = $MarginContainer/VBoxContainer/Header
+	
+	info_button = Button.new()
+	info_button.text = "?"
+	info_button.custom_minimum_size = Vector2(40, 40)
+	header.add_child(info_button)
+	
+	guide_panel = PanelContainer.new()
+	guide_panel.visible = false
+	guide_panel.set_anchors_preset(Control.PRESET_CENTER)
+	guide_panel.custom_minimum_size = Vector2(800, 600)
+	
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.08, 0.10, 0.14, 1.0)
+	style.set_corner_radius_all(12)
+	style.border_width_left = 3
+	style.border_width_top = 3
+	style.border_width_right = 3
+	style.border_width_bottom = 3
+	style.border_color = Color(0.15, 0.55, 0.9, 0.8)
+	style.shadow_color = Color(0, 0, 0, 0.6)
+	style.shadow_size = 20
+	guide_panel.add_theme_stylebox_override("panel", style)
+	
+	var g_margin = MarginContainer.new()
+	g_margin.add_theme_constant_override("margin_left", 20)
+	g_margin.add_theme_constant_override("margin_right", 20)
+	g_margin.add_theme_constant_override("margin_top", 20)
+	g_margin.add_theme_constant_override("margin_bottom", 20)
+	guide_panel.add_child(g_margin)
+	
+	var g_vbox = VBoxContainer.new()
+	g_margin.add_child(g_vbox)
+	
+	var g_header = HBoxContainer.new()
+	g_vbox.add_child(g_header)
+	
+	var g_title = Label.new()
+	g_title.text = "ACTIVITY GUIDE"
+	g_title.add_theme_font_size_override("font_size", 24)
+	g_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	g_header.add_child(g_title)
+	
+	var close_btn = Button.new()
+	close_btn.text = "X"
+	close_btn.custom_minimum_size = Vector2(40, 40)
+	g_header.add_child(close_btn)
+	
+	var g_sep = HSeparator.new()
+	g_vbox.add_child(g_sep)
+	
+	var g_scroll = ScrollContainer.new()
+	g_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	g_vbox.add_child(g_scroll)
+	
+	guide_label = Label.new()
+	guide_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	guide_label.custom_minimum_size = Vector2(740, 0)
+	g_scroll.add_child(guide_label)
+	
+	add_child(guide_panel)
+	
+	guide_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	
+	info_button.pressed.connect(func():
+		guide_panel.show()
+		guide_panel.position = (size - guide_panel.size) / 2
+	)
+	close_btn.pressed.connect(func(): guide_panel.hide())
+
+func _setup_guide_text() -> void:
+	guide_label.text = "ACTIVITY GUIDE: VOLUNTEER & CLUB RECRUITMENT\n\n" + \
+		"What You Need to Pay Attention To:\n" + \
+		"• Capacity Constraints: Selected participants must fit within the available 200 sqm area limit. If you exceed this capacity, your festival will become overcrowded and you will face severe penalties to Event Quality.\n" + \
+		"• Diversity: Try to pick clubs with different Activity Types (e.g., Artistic, Interactive, Competitive). Selecting only one type limits the festival's appeal.\n\n" + \
+		"How You Gather Points & Impact Success:\n" + \
+		"• Engagement Contribution: Each selected participant adds an 'Engagement Level' score. The more total Engagement you have, the higher your Event Quality and Participant Satisfaction will be.\n" + \
+		"• Diversity Bonus: Mixing different types of clubs provides a multiplier to your Event Quality score. A diverse festival is a successful festival.\n" + \
+		"• Strategic Rule: Maximize Engagement and Diversity WITHOUT exceeding the 200 sqm limit."
 
 func create_options() -> void:
 	for c in club_list.get_children():

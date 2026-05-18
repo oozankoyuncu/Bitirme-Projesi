@@ -18,7 +18,11 @@ const MAX_SPACE: int = 100
 var option_checkboxes: Array = []
 var space_sliders: Dictionary = {}
 
+var info_button: Button
+var guide_panel: PanelContainer
+
 func _ready() -> void:
+	_setup_guide_ui()
 	_load_vendors()
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	_setup_ui_styles()
@@ -63,6 +67,110 @@ func _setup_ui_styles() -> void:
 	side_style.border_width_bottom = 1
 	side_style.border_color = Color(0.4, 0.3, 0.2)
 	$MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel.add_theme_stylebox_override("panel", side_style)
+	
+	var expl_label = Label.new()
+	expl_label.text = "\nSatisfaction Impact: Determines how much the food variety, hygiene, and capacity fulfill the attendees' expectations. Poor choices (low hygiene, insufficient capacity) will heavily penalize the Participant Satisfaction score, while diverse and high-quality vendors will boost it."
+	expl_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	expl_label.add_theme_font_size_override("font_size", 16)
+	expl_label.modulate = Color(0.7, 0.9, 1.0)
+	
+	var container = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer
+	container.add_child(expl_label)
+	container.move_child(expl_label, container.get_child_count() - 2)
+
+func _setup_guide_ui() -> void:
+	var header = $MarginContainer/VBoxContainer/Header
+	
+	var spacer = Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(spacer)
+	
+	info_button = Button.new()
+	info_button.text = "?"
+	info_button.custom_minimum_size = Vector2(45, 45)
+	info_button.add_theme_font_size_override("font_size", 24)
+	header.add_child(info_button)
+	
+	guide_panel = PanelContainer.new()
+	guide_panel.visible = false
+	guide_panel.custom_minimum_size = Vector2(800, 600)
+	guide_panel.z_index = 100
+	
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.1, 0.12, 0.15, 0.95)
+	style.border_width_left = 2
+	style.border_width_top = 2
+	style.border_width_right = 2
+	style.border_width_bottom = 2
+	style.border_color = Color(0.3, 0.6, 0.9)
+	style.corner_radius_top_left = 12
+	style.corner_radius_top_right = 12
+	style.corner_radius_bottom_right = 12
+	style.corner_radius_bottom_left = 12
+	guide_panel.add_theme_stylebox_override("panel", style)
+	
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 30)
+	margin.add_theme_constant_override("margin_right", 30)
+	margin.add_theme_constant_override("margin_top", 30)
+	margin.add_theme_constant_override("margin_bottom", 30)
+	guide_panel.add_child(margin)
+	
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 20)
+	margin.add_child(vbox)
+	
+	var title_hbox = HBoxContainer.new()
+	var title_lbl = Label.new()
+	title_lbl.text = "FOOD VENDOR ACTIVITY GUIDE"
+	title_lbl.add_theme_font_size_override("font_size", 28)
+	title_lbl.add_theme_color_override("font_color", Color(0.3, 0.7, 1.0))
+	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	
+	var close_btn = Button.new()
+	close_btn.text = "X"
+	close_btn.custom_minimum_size = Vector2(40, 40)
+	
+	title_hbox.add_child(title_lbl)
+	title_hbox.add_child(close_btn)
+	vbox.add_child(title_hbox)
+	
+	var scroll = ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(scroll)
+	
+	var rich_text = RichTextLabel.new()
+	rich_text.bbcode_enabled = true
+	rich_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rich_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	rich_text.add_theme_font_size_override("normal_font_size", 18)
+	rich_text.add_theme_font_size_override("bold_font_size", 20)
+	
+	rich_text.text = """[b]YOUR OBJECTIVE[/b]
+Build a balanced food service system that meets participant demand, maintains high hygiene and speed standards, and stays within your budget.
+
+[b]HOW TO SCORE & WIN[/b]
+
+• [color=#66ff66]Meet Capacity Demand:[/color] Your total vendor capacity [b]MUST[/b] be sufficient to serve the expected festival attendance. If capacity is lower, your Satisfaction score will drop significantly due to food shortages!
+• [color=#ff6666]Maintain Hygiene Standards:[/color] The average Hygiene Rating [b]MUST[/b] be above 2.5. Falling below this level will severely penalize your Event Quality score.
+• [color=#66ff66]Maximize Speed:[/color] Faster vendors reduce waiting lines and directly improve participant satisfaction.
+• [color=#66ff66]Cuisine Diversity:[/color] Select at least one vendor from different cuisine types to earn a valuable Diversity Bonus!
+
+[b]CONSTRAINTS TO MONITOR[/b]
+1. [b]Budget:[/b] Total costs must not exceed your available funds.
+2. [b]Physical Space:[/b] The vendors must fit within the total available square meters (sqm) on the festival map.
+3. [b]Electricity:[/b] High-power vendors require more electricity infrastructure."""
+	
+	scroll.add_child(rich_text)
+	
+	add_child(guide_panel)
+	
+	info_button.pressed.connect(func():
+		guide_panel.show()
+		guide_panel.position = (size - guide_panel.size) / 2
+	)
+	close_btn.pressed.connect(func(): guide_panel.hide())
+
 
 func create_options() -> void:
 	for c in vendor_list.get_children():

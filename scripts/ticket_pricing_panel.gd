@@ -39,7 +39,7 @@ var pricing_options = {
 		"desc": "Maximum margin. Targets a niche audience. Massive quality boost, limited crowd.",
 		"price": 1600,
 		"impact": -0.45,
-		"quality": 6,
+		"quality": 5,
 		"color": Color(0.8, 0.3, 0.9)
 	}
 }
@@ -93,8 +93,8 @@ func _start_popup_timer() -> void:
 func _show_intelligence_popup() -> void:
 	var dialog = ConfirmationDialog.new()
 	dialog.title = "Consulting Intelligence Service"
-	dialog.dialog_text = "Would you like to purchase intelligence data to see Event Quality stars and exact Attendance impacts?\nCost: 5000 TL"
-	dialog.ok_button_text = "Yes (Pay 5000 TL)"
+	dialog.dialog_text = "Would you like to purchase intelligence data to see Event Quality stars and exact Attendance impacts?\nCost: 10000 TL"
+	dialog.ok_button_text = "Yes (Pay 10000 TL)"
 	dialog.cancel_button_text = "No"
 	
 	dialog.min_size = Vector2(650, 200)
@@ -109,8 +109,8 @@ func _show_intelligence_popup() -> void:
 	dialog.get_cancel_button().custom_minimum_size = Vector2(100, 50)
 	
 	dialog.confirmed.connect(func():
-		if GameState.money >= 5000:
-			GameState.money -= 5000
+		if GameState.money >= 10000:
+			GameState.money -= 10000
 			GameState.ticket_consulting_purchased = true
 			refresh_ui()
 			create_options()

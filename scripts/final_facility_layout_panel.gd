@@ -8,15 +8,16 @@ var placed_items = {}
 var unified_items = {}
 
 var areas = {
-	"AreaA": {"electricity": true, "truck_access": true, "capacity": 100, "size_m2": 500, "elec_kw": 50, "assigned": []},
+	"AreaA": {"electricity": true, "truck_access": true, "capacity": 70, "size_m2": 500, "elec_kw": 50, "assigned": []},
 	"AreaB": {"electricity": false, "truck_access": true, "capacity": 60, "size_m2": 300, "elec_kw": 0, "assigned": []},
-	"AreaC": {"electricity": true, "truck_access": false, "capacity": 80, "size_m2": 400, "elec_kw": 30, "assigned": []},
-	"AreaD": {"electricity": false, "truck_access": false, "capacity": 40, "size_m2": 200, "elec_kw": 0, "assigned": []},
-	"AreaE": {"electricity": true, "truck_access": true, "capacity": 120, "size_m2": 600, "elec_kw": 60, "assigned": []},
-	"AreaF": {"electricity": false, "truck_access": false, "capacity": 50, "size_m2": 250, "elec_kw": 0, "assigned": []}
+	"AreaC": {"electricity": true, "truck_access": false, "capacity": 40, "size_m2": 400, "elec_kw": 30, "assigned": []},
+	"AreaD": {"electricity": false, "truck_access": true, "capacity": 30, "size_m2": 200, "elec_kw": 0, "assigned": []},
+	"AreaE": {"electricity": true, "truck_access": false, "capacity": 40, "size_m2": 600, "elec_kw": 60, "assigned": []},
+	"AreaF": {"electricity": true, "truck_access": true, "capacity": 50, "size_m2": 250, "elec_kw": 20, "assigned": []}
 }
 
-@onready var area_list: GridContainer = $MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea
+@onready var center_map: CenterContainer = $MarginContainer/VBoxContainer/MainContent/CenterMap
+@onready var area_list: Control = $MarginContainer/VBoxContainer/MainContent/CenterMap/MapArea
 @onready var area_info_label: Label = $MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer/AreaInfoLabel
 @onready var warning_label: Label = $MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer/WarningLabel
 @onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
@@ -31,6 +32,7 @@ var areas = {
 @onready var clear_area_btn: Button = $MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer/ClearAreaButton
 
 func _ready() -> void:
+	_setup_map()
 	visibility_changed.connect(_on_visibility_changed)
 	
 	# Map Connections
@@ -42,10 +44,10 @@ func _ready() -> void:
 		# Add icons
 		var icon_label = Label.new()
 		icon_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-		icon_label.offset_left = -70
-		icon_label.offset_top = -40
-		icon_label.offset_right = -10
-		icon_label.offset_bottom = -10
+		icon_label.offset_left = -55
+		icon_label.offset_top = -30
+		icon_label.offset_right = -5
+		icon_label.offset_bottom = -5
 		
 		var icons = ""
 		if areas[area_name]["electricity"]: icons += "⚡"
@@ -55,6 +57,10 @@ func _ready() -> void:
 		icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		icon_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 		btn.add_child(icon_label)
+		
+		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		btn.clip_text = true
+		btn.add_theme_font_size_override("font_size", 12)
 
 	back_button.pressed.connect(_on_back_pressed)
 	confirm_button.pressed.connect(_on_confirm_pressed)
@@ -65,6 +71,57 @@ func _ready() -> void:
 	close_guide_btn.pressed.connect(func(): guide_panel.hide())
 	_setup_guide_text()
 	_setup_ui_styles()
+
+func _setup_map() -> void:
+	var tex = load("res://assets/images/sabanci_map_bg.png")
+	
+	var aspect = AspectRatioContainer.new()
+	aspect.ratio = 1024.0 / 688.0
+	aspect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	aspect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	
+	var tex_rect = TextureRect.new()
+	tex_rect.texture = tex
+	tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex_rect.stretch_mode = TextureRect.STRETCH_SCALE
+	tex_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tex_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	
+	aspect.add_child(tex_rect)
+	
+	var main_content = center_map.get_parent()
+	main_content.add_child(aspect)
+	main_content.move_child(aspect, 1)
+	
+	# Move buttons to TextureRect
+	var children = area_list.get_children()
+	for child in children:
+		area_list.remove_child(child)
+		tex_rect.add_child(child)
+		child.size_flags_horizontal = 0
+		child.size_flags_vertical = 0
+		child.custom_minimum_size = Vector2(0, 0)
+	
+	# Assign relative anchors
+	_set_anchors(tex_rect.get_node("AreaA"), 0.28, 0.25, 0.58, 0.38)
+	_set_anchors(tex_rect.get_node("AreaB"), 0.24, 0.44, 0.38, 0.64)
+	_set_anchors(tex_rect.get_node("AreaC"), 0.40, 0.44, 0.52, 0.64)
+	_set_anchors(tex_rect.get_node("AreaD"), 0.54, 0.40, 0.66, 0.62)
+	_set_anchors(tex_rect.get_node("AreaE"), 0.70, 0.30, 0.85, 0.50)
+	_set_anchors(tex_rect.get_node("AreaF"), 0.33, 0.76, 0.67, 0.88)
+	
+	center_map.queue_free()
+	area_list = tex_rect
+
+func _set_anchors(btn: Control, left: float, top: float, right: float, bottom: float) -> void:
+	btn.anchor_left = left
+	btn.anchor_top = top
+	btn.anchor_right = right
+	btn.anchor_bottom = bottom
+	btn.offset_left = 0
+	btn.offset_top = 0
+	btn.offset_right = 0
+	btn.offset_bottom = 0
 
 func _on_visibility_changed() -> void:
 	if visible:
@@ -282,23 +339,25 @@ func update_area_button_style(area_name: String) -> void:
 		var first_item = unified_items[assigned[0]]
 		
 		style.bg_color = get_item_color(first_item["type"]).darkened(0.5)
+		style.bg_color.a = 0.85
 		style.border_width_left = 3
 		style.border_width_top = 3
 		style.border_width_right = 3
 		style.border_width_bottom = 3
 		style.border_color = get_item_color(first_item["type"])
 		
-		btn.text = area_name + " (" + str(remaining_size) + " m² left)\n" + \
-				   "━━━━━━━━━━\n" + \
+		btn.text = area_name + "\n" + str(remaining_size) + "m² left\n" + \
 				   assigned_text.strip_edges()
+		btn.add_theme_font_size_override("font_size", 12)
 	else:
-		style.bg_color = Color(0.15, 0.18, 0.2, 0.6)
-		style.border_width_left = 1
-		style.border_width_top = 1
-		style.border_width_right = 1
-		style.border_width_bottom = 1
-		style.border_color = Color(0.4, 0.5, 0.6)
+		style.bg_color = Color(0.15, 0.18, 0.2, 0.4) # Semi-transparent
+		style.border_width_left = 2
+		style.border_width_top = 2
+		style.border_width_right = 2
+		style.border_width_bottom = 2
+		style.border_color = Color(0.8, 0.3, 0.3, 0.8) # Reddish highlight
 		btn.text = area_name + "\n(EMPTY)\n" + str(area_data["size_m2"]) + " m²"
+		btn.add_theme_font_size_override("font_size", 12)
 		
 	btn.add_theme_stylebox_override("normal", style)
 

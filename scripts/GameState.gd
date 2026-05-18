@@ -73,7 +73,7 @@ var event_quality_score: float = 0.0
 
 # Ticket Pricing Strategy
 var ticket_consulting_purchased: bool = false
-const TICKET_CONSULTING_COST: int = 5000
+const TICKET_CONSULTING_COST: int = 10000
 
 # Volunteer / Club Recruitment
 var volunteer_club_completed: bool = false
