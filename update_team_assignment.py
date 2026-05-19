@@ -1,4 +1,8 @@
-extends Panel
+import os
+
+GD_FILE = "/Users/zeynepgokmen/Desktop/Bitirme-Projesi/scripts/team_assignment_panel.gd"
+
+new_content = """extends Panel
 
 @onready var member_list: GridContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/MemberList
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
@@ -464,10 +468,7 @@ func _setup_work_assignment_right_panel() -> void:
 	style.corner_radius_top_right = 10
 	style.corner_radius_bottom_right = 10
 	style.corner_radius_bottom_left = 10
-	style.border_width_left = 1
-	style.border_width_top = 1
-	style.border_width_right = 1
-	style.border_width_bottom = 1
+	style.border_width_all = 1
 	style.border_color = Color(0.2, 0.3, 0.4)
 	stats_panel.add_theme_stylebox_override("panel", style)
 	
@@ -578,40 +579,6 @@ func _count_assigned(member_id: String) -> int:
 
 func _on_activity_assigned(index: int, act_id: String, dropdown: OptionButton) -> void:
 	var selected_id = dropdown.get_item_metadata(index)
-	
-	if selected_id != null and selected_id != "" and selected_id != "outsourced":
-		var count = 0
-		for a_id in current_assignments:
-			if a_id != act_id and current_assignments[a_id] == selected_id:
-				count += 1
-				
-		var m_dict = null
-		for m in GameState.all_team_members:
-			if m["id"] == selected_id:
-				m_dict = m
-				break
-				
-		var total_cap = 1
-		if m_dict != null:
-			total_cap = m_dict.get("workload_capacity", 1) + member_boosts.get(selected_id, 0)
-			
-		if count + 1 > total_cap:
-			var dialog = AcceptDialog.new()
-			dialog.dialog_text = "This person's workload capacity is full, please try someone else."
-			dialog.title = "Capacity Exceeded"
-			add_child(dialog)
-			dialog.popup_centered()
-			
-			var prev_selected = current_assignments.get(act_id)
-			if prev_selected == null:
-				dropdown.select(0)
-			else:
-				for i in range(dropdown.item_count):
-					if dropdown.get_item_metadata(i) == prev_selected:
-						dropdown.select(i)
-						break
-			return
-
 	if selected_id == null or selected_id == "":
 		current_assignments.erase(act_id)
 	else:
@@ -727,3 +694,10 @@ func finalize_work_assignation() -> void:
 		var activity_board = parent_node.get_node("ActivityBoard")
 		activity_board.show()
 		activity_board.refresh_board()
+
+"""
+
+with open(GD_FILE, "w", encoding="utf-8") as f:
+    f.write(new_content)
+    
+print("Successfully replaced team_assignment_panel.gd")
