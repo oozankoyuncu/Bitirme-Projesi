@@ -19,6 +19,8 @@ var selected_team: Array = []
 var all_team_members: Array = []
 var team_motivation: float = 80.0
 var skip_onboarding: bool = false
+var player_notes: String = ""
+var notepad_popup_shown: bool = false
 
 # Work Assignment
 var work_assignment_completed: bool = false
@@ -33,6 +35,8 @@ const CAPACITY_BOOST_COST: int = 8000
 const SCOPE_PENALTY_PER_EXTRA: float = 5.0
 
 var layout_plan: Dictionary = {}
+var layout_plans: Array = []
+var layout_active_plan_index: int = 0
 
 var final_layout_plan: Dictionary = {}
 var final_layout_completed: bool = false
@@ -68,6 +72,7 @@ var selected_supporting_artists: Array = []
 
 var entertainment_lineup_phase_active: bool = false
 var entertainment_lineup_completed: bool = false
+var entertainment_total_cost: int = 0
 
 var university_debt_limit: int = -300000
 
@@ -75,6 +80,7 @@ var university_debt_limit: int = -300000
 var promotion_phase_completed: bool = false
 var promotion_intelligence_bought: bool = false
 var promotion_total_actual_reach: float = 0.0
+var promotion_total_cost: int = 0
 
 # Ticket Pricing
 var ticket_pricing_completed: bool = false
@@ -128,6 +134,7 @@ var selected_cleaning_teams: Array = []
 var selected_security_teams: Array = []
 var max_site_space: int = 100 # Increased limit for larger teams
 var used_site_space: int = 0
+var cleaning_security_total_cost: int = 0
 
 # Hız: 1.0 = gerçek zaman, 60.0 = 1 saniyede 1 dakika gibi
 @export var time_scale: float = 1.0
@@ -139,6 +146,11 @@ func reset() -> void:
 	week = START_WEEK
 	game_seconds = START_TIME_SECONDS
 	is_running = false
+	player_notes = ""
+	notepad_popup_shown = false
+	layout_plans = []
+	layout_active_plan_index = 0
+	layout_plan = {}
 	
 
 	last_week_tick = -1
@@ -414,6 +426,7 @@ func can_afford_artist(artist_cost: int) -> bool:
 
 func finalize_promotion_strategy(selected: Array, total_cost: int, total_reach: float) -> void:
 	money -= total_cost
+	promotion_total_cost = total_cost
 	promotion_total_actual_reach = total_reach
 	promotion_phase_completed = true
 	complete_activity("promotion_strategy")
@@ -543,9 +556,6 @@ func calculate_decoration_theme_impact(theme: Dictionary) -> float:
 
 func choose_decoration_theme(theme: Dictionary) -> bool:
 	var cost: int = theme["cost"]
-
-	if money < cost:
-		return false
 
 	money -= cost
 	selected_decoration_theme = theme.duplicate(true)

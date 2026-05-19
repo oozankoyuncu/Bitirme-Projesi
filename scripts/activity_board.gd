@@ -5,7 +5,7 @@ extends Control
 func _ready() -> void:
 	refresh_board()
 	_setup_dashboard_styles()
-	_add_budget_warning()
+	_setup_dashboard_notifications()
 
 func _process(_delta: float) -> void:
 	if GameState.money <= -300000 and not has_node("GameOverOverlay"):
@@ -16,31 +16,100 @@ func _setup_dashboard_styles() -> void:
 	bg_style.bg_color = Color(0.08, 0.1, 0.13, 0.95)
 	$Background.add_theme_stylebox_override("panel", bg_style)
 
-func _add_budget_warning() -> void:
+func _setup_dashboard_notifications() -> void:
+	var vbox = $MarginContainer/VBox
+	
+	# Create a unified notifications panel
+	var panel = PanelContainer.new()
+	
+	var panel_style = StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.12, 0.15, 0.2, 0.5)
+	panel_style.border_width_left = 1
+	panel_style.border_width_top = 1
+	panel_style.border_width_right = 1
+	panel_style.border_width_bottom = 1
+	panel_style.border_color = Color(0.2, 0.3, 0.4, 0.4)
+	panel_style.set_corner_radius_all(10)
+	panel_style.content_margin_left = 15
+	panel_style.content_margin_right = 15
+	panel_style.content_margin_top = 8
+	panel_style.content_margin_bottom = 8
+	panel.add_theme_stylebox_override("panel", panel_style)
+	
+	var content_vbox = VBoxContainer.new()
+	content_vbox.add_theme_constant_override("separation", 6)
+	panel.add_child(content_vbox)
+	
+	# Row 1: Budget Warning
 	var warning_hbox = HBoxContainer.new()
 	warning_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	warning_hbox.add_theme_constant_override("separation", 10)
-	
-	# Add some margin
-	var warning_margin = MarginContainer.new()
-	warning_margin.add_theme_constant_override("margin_bottom", 10)
-	warning_margin.add_child(warning_hbox)
+	content_vbox.add_child(warning_hbox)
 	
 	var warning_icon = Label.new()
-	warning_icon.text = "ℹ️"
+	warning_icon.text = "⚠️"
 	warning_icon.add_theme_font_size_override("font_size", 20)
 	warning_hbox.add_child(warning_icon)
 	
 	var warning_text = Label.new()
 	warning_text.text = "Financial Policy: If the budget drops to -300,000 TL or below, the project will be terminated immediately."
-	warning_text.add_theme_font_size_override("font_size", 22)
-	warning_text.modulate = Color(1.0, 0.8, 0.2, 1.0) # More noticeable color (amber)
+	warning_text.add_theme_font_size_override("font_size", 20)
+	warning_text.modulate = Color(1.0, 0.75, 0.2, 1.0) # Amber
 	warning_hbox.add_child(warning_text)
 	
-	# Insert at the top of the VBox
-	var vbox = $MarginContainer/VBox
-	vbox.add_child(warning_margin)
-	vbox.move_child(warning_margin, 0)
+	# Row 2: Notepad Instruction
+	var info_hbox = HBoxContainer.new()
+	info_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	info_hbox.add_theme_constant_override("separation", 10)
+	content_vbox.add_child(info_hbox)
+	
+	var info_icon = Label.new()
+	info_icon.text = "🗒️"
+	info_icon.add_theme_font_size_override("font_size", 20)
+	info_hbox.add_child(info_icon)
+	
+	var info_text = Label.new()
+	info_text.text = "Planning Tip: Press 'N' to access your strategic planning notes at any time."
+	info_text.add_theme_font_size_override("font_size", 20)
+	info_text.modulate = Color(0.3, 0.7, 1.0, 1.0) # Light blue / Cyan
+	info_hbox.add_child(info_text)
+	
+	# Insert below Header (index 1)
+	vbox.add_child(panel)
+	vbox.move_child(panel, 1)
+	
+	# ── "Finish Game" debug / test button ──
+	var finish_container = CenterContainer.new()
+	finish_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_child(finish_container)
+	vbox.move_child(finish_container, 2)
+	
+	var finish_btn = Button.new()
+	finish_btn.name = "FinishGameButton"
+	finish_btn.text = "🏁 FINISH GAME"
+	finish_btn.custom_minimum_size = Vector2(280, 55)
+	finish_btn.add_theme_font_size_override("font_size", 22)
+	
+	var finish_style = StyleBoxFlat.new()
+	finish_style.bg_color = Color(0.6, 0.15, 0.15, 0.9)
+	finish_style.set_corner_radius_all(10)
+	finish_style.border_width_left = 2
+	finish_style.border_width_top = 2
+	finish_style.border_width_right = 2
+	finish_style.border_width_bottom = 2
+	finish_style.border_color = Color(0.9, 0.3, 0.3, 0.8)
+	finish_btn.add_theme_stylebox_override("normal", finish_style)
+	
+	var finish_hover = finish_style.duplicate()
+	finish_hover.bg_color = Color(0.75, 0.2, 0.2, 1.0)
+	finish_btn.add_theme_stylebox_override("hover", finish_hover)
+	
+	var finish_pressed = finish_style.duplicate()
+	finish_pressed.bg_color = Color(0.5, 0.1, 0.1, 1.0)
+	finish_btn.add_theme_stylebox_override("pressed", finish_pressed)
+	
+	finish_btn.pressed.connect(_on_finish_game_pressed)
+	finish_container.add_child(finish_btn)
 
 func refresh_board() -> void:
 	# Clean old cards
@@ -71,20 +140,157 @@ func refresh_board() -> void:
 		
 	# Check for game completion
 	_check_game_completion()
+	
+	# Show notepad intro popup once per playthrough
+	if not GameState.notepad_popup_shown:
+		show_notepad_info_popup()
 
 func _check_game_completion() -> void:
 	if GameState.completed_activities.size() >= GameState.activities.size():
-		var charter = get_parent().get_node("CharterPanel")
-		if charter:
-			charter.show()
-			# Switch to Success tab
-			var tab_container = charter.get_node("MarginContainer/TabContainer")
-			for i in range(tab_container.get_tab_count()):
-				if tab_container.get_tab_title(i) == "Success":
-					tab_container.current_tab = i
-					break
-			# Hide activity board
-			hide()
+		var notepad = get_parent().get_node_or_null("NotepadPanel")
+		if notepad:
+			notepad.clear_ui_notes()
+		else:
+			GameState.player_notes = ""
+		
+		# Show scoring feedback panel
+		_trigger_scoring()
+
+func _on_finish_game_pressed() -> void:
+	_trigger_scoring()
+
+func _trigger_scoring() -> void:
+	# Calculate all scores using the ScoringEngine
+	var engine = load("res://scripts/ScoringEngine.gd")
+	var results = engine.calculate_all()
+	
+	# Get or create the FeedbackPanel
+	var game_root = get_parent()
+	var feedback_panel = game_root.get_node_or_null("FeedbackPanel")
+	if not feedback_panel:
+		var FeedbackPanelScript = load("res://scripts/FeedbackPanel.gd")
+		feedback_panel = Control.new()
+		feedback_panel.name = "FeedbackPanel"
+		feedback_panel.set_script(FeedbackPanelScript)
+		feedback_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		game_root.add_child(feedback_panel)
+	
+	# Show results
+	feedback_panel.show_results(results)
+	
+	# Hide activity board
+	hide()
+
+func show_notepad_info_popup() -> void:
+	if has_node("NotepadInfoPopup"):
+		return
+		
+	GameState.notepad_popup_shown = true
+	
+	# Dark backdrop overlay for the popup
+	var overlay = ColorRect.new()
+	overlay.name = "NotepadInfoPopup"
+	overlay.color = Color(0, 0, 0, 0.6)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+	
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(650, 420)
+	panel.pivot_offset = Vector2(325, 210)
+	center.add_child(panel)
+	
+	# Style the panel
+	var panel_style = StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.08, 0.1, 0.15, 0.98)
+	panel_style.border_width_left = 2
+	panel_style.border_width_top = 2
+	panel_style.border_width_right = 2
+	panel_style.border_width_bottom = 2
+	panel_style.border_color = Color(0.15, 0.55, 0.9, 0.8) # Electric blue
+	panel_style.set_corner_radius_all(12)
+	panel_style.shadow_size = 40
+	panel_style.shadow_color = Color(0, 0, 0, 0.8)
+	panel.add_theme_stylebox_override("panel", panel_style)
+	
+	# Margin Container
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 30)
+	margin.add_theme_constant_override("margin_right", 30)
+	margin.add_theme_constant_override("margin_top", 30)
+	margin.add_theme_constant_override("margin_bottom", 30)
+	panel.add_child(margin)
+	
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 20)
+	margin.add_child(vbox)
+	
+	# Header
+	var title = Label.new()
+	title.text = "🗒️ STRATEGIC PLANNING NOTES"
+	title.add_theme_font_size_override("font_size", 24)
+	title.add_theme_color_override("font_color", Color(0.15, 0.55, 0.9)) # Electric blue
+	vbox.add_child(title)
+	
+	# Separator
+	var sep = HSeparator.new()
+	vbox.add_child(sep)
+	
+	# Body
+	var body = Label.new()
+	body.text = "Welcome to Spring Festival Manager!\n\nWe have added a planning notepad to help you organize your budget, team motivation, and activity strategy.\n\n⌨️ Press 'N' on your keyboard at any time to open/close your notes.\n\n⚠️ Note: Plans are auto-saved as you type, but they will be deleted when the game ends (either on project completion or budget failure)."
+	body.add_theme_font_size_override("font_size", 18)
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+	vbox.add_child(body)
+	
+	# Spacer
+	var spacer = Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(spacer)
+	
+	# Button Row
+	var btn_hbox = HBoxContainer.new()
+	btn_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(btn_hbox)
+	
+	var close_btn = Button.new()
+	close_btn.text = " Got It! "
+	close_btn.custom_minimum_size = Vector2(180, 45)
+	close_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn_hbox.add_child(close_btn)
+	
+	# Button style
+	var btn_style_normal = StyleBoxFlat.new()
+	btn_style_normal.bg_color = Color(0.15, 0.55, 0.9)
+	btn_style_normal.set_corner_radius_all(8)
+	
+	var btn_style_hover = StyleBoxFlat.new()
+	btn_style_hover.bg_color = Color(0.2, 0.65, 1.0)
+	btn_style_hover.set_corner_radius_all(8)
+	
+	close_btn.add_theme_stylebox_override("normal", btn_style_normal)
+	close_btn.add_theme_stylebox_override("hover", btn_style_hover)
+	close_btn.add_theme_font_size_override("font_size", 18)
+	
+	# Close action with animation
+	close_btn.pressed.connect(func():
+		var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+		tween.tween_property(overlay, "modulate:a", 0.0, 0.2)
+		tween.tween_property(panel, "scale", Vector2(0.9, 0.9), 0.2)
+		tween.chain().tween_callback(func():
+			overlay.queue_free()
+		)
+	)
+	
+	add_child(overlay)
+	overlay.modulate.a = 0.0
+	panel.scale = Vector2(0.9, 0.9)
+	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	tween.tween_property(overlay, "modulate:a", 1.0, 0.25)
+	tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.25)
 
 func create_activity_card(activity: Dictionary) -> PanelContainer:
 	var card = PanelContainer.new()
@@ -287,6 +493,12 @@ func start_activity(activity: Dictionary) -> void:
 func show_game_over() -> void:
 	# Stop the game timer
 	GameState.is_running = false
+	
+	var notepad = get_parent().get_node_or_null("NotepadPanel")
+	if notepad:
+		notepad.clear_ui_notes()
+	else:
+		GameState.player_notes = ""
 	
 	# Create overlay
 	var overlay = ColorRect.new()

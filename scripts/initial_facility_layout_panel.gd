@@ -6,6 +6,11 @@ var selected_area_name: String = ""
 var came_from_volunteer: bool = false
 var return_to_volunteer_btn: Button
 
+# Plan Management
+var plans: Array = []
+var active_plan_index: int = 0
+var plan_buttons: Array = []
+
 # Area Data with quantitative metrics
 var areas = {
 	"AreaA": {
@@ -83,6 +88,12 @@ var requirements = {
 @onready var clear_area_btn: Button = $MarginContainer/VBoxContainer/MainContent/RightDetails/DetailsPanel/MarginContainer/VBoxContainer/ClearAreaButton
 
 func _ready() -> void:
+	# Initialize the plans and load active plan state
+	initialize_plans()
+	var target_plan = plans[active_plan_index]
+	for area_name in areas.keys():
+		areas[area_name]["assigned"] = target_plan[area_name]["assigned"].duplicate()
+
 	_setup_map()
 	
 	# Palette Connections (Drag Sources)
@@ -116,7 +127,7 @@ func _ready() -> void:
 		
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		btn.clip_text = true
-		btn.add_theme_font_size_override("font_size", 12)
+		btn.add_theme_font_size_override("font_size", 18)
 
 	back_button.pressed.connect(_on_back_pressed)
 	clear_area_btn.pressed.connect(_on_clear_area_pressed)
@@ -127,6 +138,9 @@ func _ready() -> void:
 	_setup_guide_text()
 
 	_setup_ui_styles()
+	
+	# Setup Plan Switcher Tabs
+	_setup_plan_navigation()
 	
 	# Special return button for Volunteer Club transition
 	return_to_volunteer_btn = Button.new()
@@ -345,7 +359,7 @@ func update_area_button_style(area_name: String) -> void:
 		style.border_color = get_facility_color(first_item)
 		btn.text = area_name + "\n" + str(remaining_size) + "m² left\n" + \
 				   assigned_text.strip_edges()
-		btn.add_theme_font_size_override("font_size", 12)
+		btn.add_theme_font_size_override("font_size", 15)
 	else:
 		style.bg_color = Color(0.15, 0.18, 0.2, 0.4) # Semi-transparent empty
 		style.border_width_left = 2
@@ -354,7 +368,7 @@ func update_area_button_style(area_name: String) -> void:
 		style.border_width_bottom = 2
 		style.border_color = Color(0.8, 0.3, 0.3, 0.8) # Reddish border to highlight empty drop zones
 		btn.text = area_name + "\n" + str(area_data["size_m2"]) + "m²"
-		btn.add_theme_font_size_override("font_size", 12)
+		btn.add_theme_font_size_override("font_size", 18)
 		
 	btn.add_theme_stylebox_override("normal", style)
 
@@ -462,7 +476,22 @@ func _on_back_pressed() -> void:
 		return_to_volunteer_btn.get_parent().hide() # Hide the entire container
 	back_button.show()
 	
+	# Save current active plan
+	plans[active_plan_index] = {}
+	for area_name in areas.keys():
+		var area_data = areas[area_name]
+		plans[active_plan_index][area_name] = {
+			"electricity": area_data["electricity"],
+			"truck_access": area_data["truck_access"],
+			"capacity": area_data["capacity"],
+			"size_m2": area_data["size_m2"],
+			"elec_kw": area_data["elec_kw"],
+			"assigned": area_data["assigned"].duplicate()
+		}
+	GameState.layout_plans = plans
+	GameState.layout_active_plan_index = active_plan_index
 	GameState.layout_plan = areas
+	
 	if not GameState.completed_activities.has("initial_festival_layout_mapping"):
 		GameState.completed_activities.append("initial_festival_layout_mapping")
 	hide()
@@ -479,7 +508,22 @@ func open_from_volunteer() -> void:
 	show()
 
 func _on_return_to_volunteer_pressed() -> void:
+	# Save current active plan
+	plans[active_plan_index] = {}
+	for area_name in areas.keys():
+		var area_data = areas[area_name]
+		plans[active_plan_index][area_name] = {
+			"electricity": area_data["electricity"],
+			"truck_access": area_data["truck_access"],
+			"capacity": area_data["capacity"],
+			"size_m2": area_data["size_m2"],
+			"elec_kw": area_data["elec_kw"],
+			"assigned": area_data["assigned"].duplicate()
+		}
+	GameState.layout_plans = plans
+	GameState.layout_active_plan_index = active_plan_index
 	GameState.layout_plan = areas
+	
 	came_from_volunteer = false
 	if return_to_volunteer_btn:
 		return_to_volunteer_btn.get_parent().hide()
@@ -488,3 +532,147 @@ func _on_return_to_volunteer_pressed() -> void:
 	var volunteer_panel = get_parent().get_node("VolunteerClubPanel")
 	if volunteer_panel:
 		volunteer_panel.show()
+
+func initialize_plans() -> void:
+	if GameState.layout_plans.size() > 0:
+		plans = GameState.layout_plans
+		active_plan_index = GameState.layout_active_plan_index
+	else:
+		plans.clear()
+		for i in range(3):
+			var plan_copy = {}
+			for area_name in areas.keys():
+				var area_def = areas[area_name]
+				plan_copy[area_name] = {
+					"electricity": area_def["electricity"],
+					"truck_access": area_def["truck_access"],
+					"capacity": area_def["capacity"],
+					"size_m2": area_def["size_m2"],
+					"elec_kw": area_def["elec_kw"],
+					"assigned": []
+				}
+			plans.append(plan_copy)
+		
+		# If there's an existing plan in GameState, load it into Plan 1
+		if GameState.layout_plan.size() > 0:
+			for area_name in GameState.layout_plan.keys():
+				if plans[0].has(area_name):
+					plans[0][area_name]["assigned"] = GameState.layout_plan[area_name]["assigned"].duplicate()
+		
+		GameState.layout_plans = plans
+		GameState.layout_active_plan_index = 0
+
+func _setup_plan_navigation() -> void:
+	var palette = $MarginContainer/VBoxContainer/MainContent/Palette
+	
+	# Container for the plan switcher
+	var switcher_vbox = VBoxContainer.new()
+	switcher_vbox.name = "PlanNavigation"
+	switcher_vbox.add_theme_constant_override("separation", 10)
+	
+	# Title label for switcher
+	var title = Label.new()
+	title.text = "SELECT ACTIVE PLAN"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 14)
+	title.add_theme_color_override("font_color", Color(0.2, 0.9, 0.5, 0.8)) # Vibrant light emerald glow
+	switcher_vbox.add_child(title)
+	
+	# Buttons container
+	var btn_vbox = VBoxContainer.new()
+	btn_vbox.add_theme_constant_override("separation", 8)
+	switcher_vbox.add_child(btn_vbox)
+	
+	plan_buttons.clear()
+	for i in range(3):
+		var btn = Button.new()
+		btn.text = "📋 Plan " + str(i + 1)
+		btn.custom_minimum_size = Vector2(200, 42)
+		btn.toggle_mode = true
+		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		btn.add_theme_font_size_override("font_size", 16)
+		
+		# Styles
+		var style_normal = StyleBoxFlat.new()
+		style_normal.bg_color = Color(0.1, 0.12, 0.15, 0.9)
+		style_normal.border_width_left = 1
+		style_normal.border_width_top = 1
+		style_normal.border_width_right = 1
+		style_normal.border_width_bottom = 1
+		style_normal.border_color = Color(0.2, 0.3, 0.4, 0.5)
+		style_normal.set_corner_radius_all(8)
+		
+		var style_selected = StyleBoxFlat.new()
+		style_selected.bg_color = Color(0.1, 0.45, 0.3, 0.9) # Green theme for layouts
+		style_selected.border_width_left = 3
+		style_selected.border_width_top = 1
+		style_selected.border_width_right = 1
+		style_selected.border_width_bottom = 1
+		style_selected.border_color = Color(0.2, 0.9, 0.5, 1.0)
+		style_selected.set_corner_radius_all(8)
+		
+		var style_hover = style_selected.duplicate()
+		style_hover.bg_color = Color(0.12, 0.5, 0.35, 1.0)
+		
+		btn.add_theme_stylebox_override("normal", style_normal)
+		btn.add_theme_stylebox_override("pressed", style_selected)
+		btn.add_theme_stylebox_override("hover", style_hover)
+		
+		btn.pressed.connect(_on_plan_tab_pressed.bind(i))
+		btn_vbox.add_child(btn)
+		plan_buttons.append(btn)
+		
+	# A small separator between the switcher and construction palette
+	var sep = HSeparator.new()
+	switcher_vbox.add_child(sep)
+	
+	# Insert at the very top of the Palette (Index 0)
+	palette.add_child(switcher_vbox)
+	palette.move_child(switcher_vbox, 0)
+	
+	_select_plan_tab(active_plan_index)
+
+func _on_plan_tab_pressed(index: int) -> void:
+	if index == active_plan_index:
+		plan_buttons[index].button_pressed = true
+		return
+		
+	# Save current active plan's assigned items
+	plans[active_plan_index] = {}
+	for area_name in areas.keys():
+		var area_data = areas[area_name]
+		plans[active_plan_index][area_name] = {
+			"electricity": area_data["electricity"],
+			"truck_access": area_data["truck_access"],
+			"capacity": area_data["capacity"],
+			"size_m2": area_data["size_m2"],
+			"elec_kw": area_data["elec_kw"],
+			"assigned": area_data["assigned"].duplicate()
+		}
+		
+	# Switch index
+	active_plan_index = index
+	GameState.layout_active_plan_index = index
+	
+	# Load new plan's state
+	var target_plan = plans[active_plan_index]
+	for area_name in areas.keys():
+		areas[area_name]["assigned"] = target_plan[area_name]["assigned"].duplicate()
+		
+	# Refresh UI display
+	for area_name in areas.keys():
+		update_area_button_style(area_name)
+		
+	if selected_area_name != "":
+		update_area_info(selected_area_name)
+	else:
+		area_info_label.text = "Select a zone to inspect details."
+		clear_area_btn.hide()
+		warning_label.text = ""
+		
+	_select_plan_tab(index)
+
+func _select_plan_tab(index: int) -> void:
+	for i in range(plan_buttons.size()):
+		var btn = plan_buttons[i]
+		btn.button_pressed = (i == index)

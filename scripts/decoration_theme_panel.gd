@@ -175,11 +175,6 @@ func _on_confirm_pressed() -> void:
 			theme_data = t
 			break
 
-	if GameState.money < theme_data["cost"]:
-		result_label.text = "CRITICAL: Insufficient funds for this deployment."
-		result_label.add_theme_color_override("font_color", Color.RED)
-		return
-
 	GameState.choose_decoration_theme(theme_data)
 	GameState.complete_activity("decoration_theme_decision")
 	

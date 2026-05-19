@@ -475,6 +475,7 @@ func _on_confirm_pressed() -> void:
 		return
 
 	GameState.money -= total_cost
+	GameState.entertainment_total_cost = total_cost
 	GameState.complete_activity("entertainment_lineup")
 
 	result_label.text = "Lineup confirmed successfully."

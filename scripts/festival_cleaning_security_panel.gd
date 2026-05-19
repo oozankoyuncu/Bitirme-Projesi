@@ -270,6 +270,16 @@ func _validate_requirements() -> void:
 func _on_confirm_pressed() -> void:
 	GameState.selected_cleaning_teams = selected_cleaning_ids.duplicate()
 	GameState.selected_security_teams = selected_security_ids.duplicate()
+	
+	# Calculate and track total cost
+	var total_cost = 0
+	for id in selected_cleaning_ids:
+		total_cost += int(cleaning_crews[id]["cost"])
+	for id in selected_security_ids:
+		total_cost += int(security_teams[id]["cost"])
+	GameState.money -= total_cost
+	GameState.cleaning_security_total_cost = total_cost
+	GameState.cleaning_security_completed = true
 	GameState.complete_activity("festival_cleaning_security")
 	_on_back_pressed()
 

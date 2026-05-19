@@ -15,11 +15,18 @@ extends Control
 @onready var email_panel: Panel = $EmailPanel
 @onready var charter_panel: Panel = $CharterPanel
 
+var notepad_panel: CanvasLayer
+
 @onready var week_label: Label = $TopBar/Margin/HBox/Stats/WeekBox/Label
 @onready var budget_label: Label = $TopBar/Margin/HBox/Stats/BudgetBox/Label
 @onready var time_label_hud: Label = $TopBar/Margin/HBox/Stats/TimeBox/Label
 
 func _ready() -> void:
+	var notepad_script = load("res://scripts/NotepadPanel.gd")
+	notepad_panel = notepad_script.new()
+	notepad_panel.name = "NotepadPanel"
+	add_child(notepad_panel)
+
 	GameState.load_team_members()
 	GameState.time_changed.connect(_on_time_changed)
 	

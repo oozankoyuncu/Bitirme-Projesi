@@ -1,0 +1,1154 @@
+Final Feedback Evaluation: 
+ 
+Overall Festival Success 
+Overall Score: 78 / 100​
+ Result: Successful Festival 
+Your festival was generally successful. Participants were mostly satisfied with the entertainment, 
+food vendors, and decoration choices. However, your Event Quality score was reduced because 
+some operational and safety-related decisions were not strong enough. Your final success score 
+was mainly driven by high Participant Satisfaction, while Event Quality remained at a moderate 
+level. 
+ 
+Main Outcome Scores 
+Outcome Indicator 
+Score 
+Result 
+Participant Satisfaction 
+84 / 100 Strong 
+Event Quality 
+72 / 100 Moderate 
+Overall Festival 
+Success 
+78 / 100 Successfu
+l 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1.​Detailed KPI Feedback 
+Participant Satisfaction Feedback 
+Participant Satisfaction Score: 75 / 100 
+Status: Good but Can Be Improved 
+Participant Satisfaction shows how satisfied the festival participants were with the overall 
+festival experience. This score is based on four main festival elements: entertainment 
+quality, volunteer/club engagement, sound system performance, and decoration theme 
+attractiveness. 
+In this playthrough, your Participant Satisfaction score was calculated based on the 
+following requirements: 
+Activity 
+Requirement 
+Your Result 
+Status 
+Entertainment 
+Line-up 
+Average popularity level should be higher 
+than 4 
+4.6 
+Met 
+Volunteer / Club 
+Recruitment 
+Average engagement level should be 
+higher than 6 
+5.8 
+Not met 
+Sound System 
+Choice 
+Sound system score should be higher 
+than 5 
+5.4 
+Met 
+Decoration Theme 
+Decision 
+Theme score should be at least 0.5 
+0.62 
+Met 
+Met Count’a Göre Genel Yorum 
+In this playthrough, you satisfied 3 out of 4 satisfaction requirements.  
+KOD SONCUA GORE OTAMATIK SECİCEK HER BİRİ İCİN TEXT ORNEKLERİ: 
+Met Condition 
+Number 
+General Feedback 
+4/4 
+Your participant satisfaction performance was excellent. All main 
+satisfaction requirements were met. 
+3/4 
+Your participant satisfaction performance was good, but one area 
+reduced the final score. 
+2/4 
+Your participant satisfaction performance was moderate. Some elements 
+of the festival experience were successful, but several requirements 
+were not met. 
+1/4 
+Your participant satisfaction performance was weak because most 
+satisfaction requirements were not met. 
+0/4 
+Participant satisfaction was very low because none of the main 
+satisfaction requirements were satisfied. 
+3. Her Activity İçin Met / Not Met Textleri 
+A) Entertainment Line-up 
+●​ Eğer met ise: 
+○​ Entertainment Line-up: The expected requirement was to have an average 
+popularity level higher than 4. Your selected entertainment line-up had an 
+average popularity level of {avg_popularity}, so this requirement was met. 
+This choice positively affected Participant Satisfaction by increasing 
+interest among participants and making the festival more attractive. 
+●​ Eğer not met ise: 
+○​ Entertainment Line-up: The expected requirement was to have an average 
+popularity level higher than 4. Your selected entertainment line-up had an 
+average popularity level of {avg_popularity}, which was below the required 
+level. Therefore, this requirement was not met. This reduced Participant 
+Satisfaction because the selected performers were not sufficiently 
+attractive to significantly increase participant interest. 
+●​ Suggestion: 
+○​ To improve this score, choose entertainment options with higher popularity 
+and better audience fit. 
+ 
+B) Volunteer / Club Recruitment 
+●​ Eğer met ise: 
+○​ Volunteer / Club Recruitment: The expected requirement was to have an 
+average engagement level higher than 6. Your selected volunteer/club 
+groups had an average engagement level of {avg_engagement}, which 
+met this requirement. This improved Participant Satisfaction because the 
+selected clubs and volunteers created more interactive and engaging 
+festival activities. 
+●​ Eğer not met ise: 
+○​ Volunteer / Club Recruitment: The expected requirement was to have an 
+average engagement level higher than 6. Your selected volunteer/club 
+groups had an average engagement level of {avg_engagement}, which 
+was below the required level. Therefore, this requirement was not met. 
+This reduced Participant Satisfaction because the selected clubs and 
+volunteers did not provide enough interaction or variety of activities for 
+participants. 
+●​ Suggestion: 
+○​ To improve this score, select volunteer or club groups with higher 
+engagement potential. 
+ 
+C) Sound System Choice 
+●​ Eğer met ise: 
+○​ Sound System Choice: The expected requirement was to have a sound 
+system score higher than 5. Your selected sound system had a score of 
+{sound_score}, so this requirement was met. This positively affected 
+Participant Satisfaction because the sound quality was strong enough to 
+support the festival experience. 
+●​ Eğer not met ise: 
+○​ Sound System Choice: The expected requirement was to have a sound 
+system score higher than 5. Your selected sound system had a score of 
+{sound_score}, which was below the required level. Therefore, this 
+requirement was not met. This reduced Participant Satisfaction because 
+weak sound performance can make concerts, announcements, and stage 
+activities less enjoyable for participants. 
+●​ Suggestion: 
+○​ To improve this score, choose a sound system with better sound quality 
+and a stronger overall sound system score. 
+ 
+D) Decoration Theme Decision 
+●​ Eğer met ise: 
+○​ Decoration Theme Decision: The expected requirement was to have a 
+theme score of at least 0.5. Your selected decoration theme had a score of 
+{theme_score}, so this requirement was met. This improved Participant 
+Satisfaction by creating a more attractive and enjoyable festival 
+atmosphere. 
+●​ Eğer not met ise: 
+○​ Decoration Theme Decision: The expected requirement was to have a 
+theme score of at least 0.5. Your selected decoration theme had a score of 
+{theme_score}, which was below the required level. Therefore, this 
+requirement was not met. This reduced Participant Satisfaction because 
+the decoration theme did not contribute enough to the festival's visual 
+atmosphere. 
+●​ Suggestion: 
+○​ To improve this score, select a decoration theme with a higher satisfaction 
+impact and manageable complexity. 
+ 
+Dinamik Final Summary Mantığı 
+Eğer 4/4 met ise 
+Participants were highly satisfied with the festival experience because all 
+four satisfaction requirements were met. Entertainment quality, 
+volunteer/club engagement, sound system performance, and decoration 
+theme attractiveness all supported the participant experience. As a result, 
+the Participant Satisfaction score reached the maximum level. 
+Eğer 3/4 met ise 
+Participants were generally satisfied with the festival experience because 
+{met_items} met the expected levels. However, {not_met_items} did not 
+meet the required threshold, which reduced the final Participant Satisfaction 
+score. 
+Örnek: 
+Participants were generally satisfied with the festival experience because 
+entertainment line-up, sound system performance, and decoration theme 
+attractiveness met the expected levels. However, volunteer/club 
+engagement did not meet the required threshold, which reduced the final 
+Participant Satisfaction score. 
+ 
+ 
+ 
+Eğer 2/4 met ise 
+Participant Satisfaction was moderate because only half of the satisfaction 
+requirements were met. {met_items} supported the festival experience, but 
+{not_met_items} did not meet the required thresholds. Therefore, 
+participants had a mixed experience, with some successful elements and 
+some weak areas. 
+Örnek: 
+Participant Satisfaction was moderate because only half of the satisfaction 
+requirements were met. Entertainment line-up and decoration theme 
+attractiveness supported the festival experience, but volunteer/club 
+engagement and sound system performance did not meet the required 
+thresholds. 
+Eğer 1/4 met ise 
+Participant Satisfaction was weak because only one satisfaction 
+requirement was met. {met_items} supported the festival experience, but 
+{not_met_items} were below the expected levels. As a result, most 
+participant-facing elements were not strong enough to create a satisfying 
+festival experience. 
+Örnek: 
+Participant Satisfaction was weak because only one satisfaction 
+requirement was met. Entertainment line-up supported the festival 
+experience, but volunteer/club engagement, sound system performance, 
+and decoration theme attractiveness were below the expected levels. 
+Eğer 0/4 met ise 
+Participant Satisfaction was very low because none of the four satisfaction 
+requirements were met. Entertainment quality, volunteer/club engagement, 
+sound system performance, and decoration theme attractiveness all 
+remained below the expected levels. As a result, the festival did not provide 
+a strong participant experience. 
+ 
+ 
+ 
+ 
+C/C++‎
+2. Event Quality 
+ 
+Total 
+Attendance 
+Status 
+Event Quality 
+Score 
+5000+ 
+Excellent — Target 
+Exceeded 
+100 
+4000–4999 
+Good but Below Target 
+80–99 
+2500–3999 
+Moderate 
+50–79 
+1000–2499 
+Weak 
+20–49 
+0–999 
+Very Low 
+0–19 
+ 
+Ticket Attendance = Base Attendance + (Base Attendance × Attendance Impact) 
+ 
+Promotion Attendance = Expected Reach × Reliability 
+ 
+Entertainment Attendance = Expected Crowd Appeal Effect 
+ 
+Volunteer / Club Attendance = Attendance contribution from selected volunteer/club 
+activities 
+ 
+Total Estimated Attendance = 
+Ticket Attendance 
++ Promotion Attendance 
++ Entertainment Attendance 
++ Volunteer / Club Attendance 
+ 
+Event Quality Score = 
+min((Total Estimated Attendance / 5000) × 100, 100) 
+Event Quality Score: [event_quality_score] / 100 
+Estimated Attendance: [total_attendance] / 5000​
+Status: [status] 
+Event Quality shows how successfully the festival attracted participants compared to the target 
+attendance level. In this simulation, the target attendance is 5000 participants. This score is 
+calculated based on the attendance outcomes generated by Ticket Pricing Strategy, Promotion 
+Strategy, Entertainment Line-up, and Volunteer / Club Recruitment. 
+Your decisions attracted an estimated [total_attendance] participants. Therefore, the festival 
+reached [attendance_percentage]% of the target attendance level. 
+Attendance Range’e Göre Overall Text 
+Eğer total attendance 5000 veya üstündeyse 
+Status: Excellent — Target Exceeded 
+Event Quality was excellent because the festival reached and exceeded the target 
+attendance level. The target was 5000 participants, and your decisions attracted an 
+estimated [total_attendance] participants. This means that your Ticket Pricing Strategy, 
+Promotion Strategy, Entertainment Line-up, and Volunteer / Club Recruitment decisions 
+were strong enough to create higher-than-expected participation. Since the target was 
+exceeded, the Event Quality score reached the maximum value of 100/100. Additional 
+attendance above 5000 is reported as target overachievement, but it does not increase 
+the score beyond 100 because all KPI scores are normalized on a 0–100 scale. For the 
+next playthrough, try to maintain this high attendance level while also checking whether 
+very high participation creates pressure on layout, security, cleaning, and crowd 
+management.  
+Eğer total attendance 4000–4999 arasındaysa 
+Status: Good but Below Target 
+Event Quality was good, but the festival did not fully reach the target attendance 
+level. The target was 5000 participants, while your decisions attracted an 
+estimated [total_attendance] participants. This means that the festival reached 
+[attendance_percentage]% of the target. The event attracted a strong audience, 
+but some attendance-related decisions did not contribute enough to reach the full 
+target. Your score was high because the festival created significant visibility and 
+participant interest, but it remained below the excellent level because the 
+5000-participant target was not fully achieved. For the next playthrough, focus on 
+strengthening the weakest attendance driver, especially [weakest_activity], so that 
+the festival can reach or exceed the target attendance.  
+Eğer total attendance 2500–3999 arasındaysa 
+Status: Moderate 
+Event Quality was moderate because the festival attracted only part of the target audience. The 
+target was 5000 participants, but your decisions attracted an estimated [total_attendance] 
+participants. This means that the festival reached [attendance_percentage]% of the target. 
+Some decisions helped increase attendance, but the overall attraction level was not strong 
+enough to create a high-quality festival outcome. The festival had some visibility and participant 
+interest, but several attendance-related decisions had limited impact. For the next playthrough, 
+you should improve more than one attendance driver, such as promotion reliability, 
+entertainment crowd appeal, ticket attractiveness, or volunteer/club activity engagement. 
+Eğer total attendance 1000–2499 arasındaysa 
+Status: Weak 
+Event Quality was weak because the festival attracted far fewer participants than 
+the target level. The target was 5000 participants, but your decisions attracted 
+only [total_attendance] participants. This means that the festival reached only 
+[attendance_percentage]% of the expected attendance. Most attendance-related 
+decisions had limited impact, so the festival could not generate enough visibility, 
+interest, or engagement. This reduced the perceived quality of the event because 
+a successful festival requires enough participants to create an active and lively 
+atmosphere. For the next playthrough, revise the main attendance-related 
+decisions by choosing a more attractive ticket price, a stronger promotion 
+strategy, a higher crowd-appeal entertainment line-up, and more engaging 
+volunteer/club activities.  
+Eğer total attendance 0–999 arasındaysa 
+Status: Very Low 
+Event Quality was very low because the festival failed to attract a sufficient number of 
+participants. The target was 5000 participants, but your decisions attracted only 
+[total_attendance] participants. This means that the festival reached only 
+[attendance_percentage]% of the expected target. Ticket Pricing Strategy, Promotion 
+Strategy, Entertainment Line-up, and Volunteer / Club Recruitment did not create enough 
+attendance impact. As a result, the festival did not reach the expected participation level, 
+and the perceived quality of the event remained very low. For the next playthrough, 
+almost all attendance-related decisions should be improved, especially promotion reach, 
+entertainment crowd appeal, ticket attractiveness, and volunteer/club engagement. 
+ 
+ 
+Activity 
+What It Represents 
+Attendance Contribution 
+Ticket Pricing 
+Strategy 
+Attendance generated from the base 
+audience after the ticket price effect 
+[ticket_attendance] participants 
+Promotion Strategy 
+Attendance generated from 
+expected reach and reliability 
+[promotion_attendance] 
+participants 
+Entertainment 
+Line-up 
+Attendance generated from 
+expected crowd appeal 
+[entertainment_attendance] 
+participants 
+Volunteer / Club 
+Recruitment 
+Attendance generated from selected 
+club and volunteer activities 
+[volunteer_attendance] 
+participants 
+Total Estimated 
+Attendance 
+Sum of all attendance contributions 
+[total_attendance] participants 
+ 
+ 
+ 
+3. Scope Adherence 
+Activity 
+Scope Requirement 
+Player Result 
+Status 
+Team 
+Assignment 
+Overall average team performance 
+should be higher than 2.5 
+[team_avg] 
+[Met / Not Met] 
+Sponsor 
+Management 
+At least 2 sponsors should be selected 
+[sponsor_count] 
+[Met / Not Met] 
+Sponsor 
+Management 
+Average sponsor score should be 
+higher than 2.5 
+[avg_sponsor_score] 
+[Met / Not Met] 
+Sponsor 
+Management 
+Sponsor budget contribution should 
+satisfy the required level 
+[sponsor_contribution] 
+[Met / Not Met] 
+Ticket Pricing 
+Strategy 
+Attendance should be at least 3000 
+participants 
+[attendance_number] 
+[Met / Not Met] 
+Entertainment 
+Line-up 
+Average popularity level should be 
+higher than 3 
+[avg_popularity] 
+[Met / Not Met] 
+Entertainment 
+Line-up 
+At least 1 main headliner and 2 
+supporting artists should be selected 
+[artist_structure] 
+[Met / Not Met] 
+Volunteer / Club 
+Recruitment 
+Required activity types should be 
+covered: competitive, artistic, 
+informational, and interactive 
+[activity_type_coverag
+e] 
+[Met / Not Met] 
+Volunteer / Club 
+Recruitment 
+At least 2 volunteers and 3 clubs 
+should be selected 
+[volunteer_count] 
+volunteers, 
+[club_count] clubs 
+[Met / Not Met] 
+Food Vendor 
+Selection 
+Required cuisine types should be 
+covered 
+[cuisine_coverage] 
+[Met / Not Met] 
+Food Vendor 
+Selection 
+Average hygiene rating should be 
+higher than 2.5 
+[avg_hygiene] 
+[Met / Not Met] 
+Festival 
+Cleaning & 
+Security 
+At least 1 cleaning crew and 1 security 
+team should be selected 
+[cleaning_count] 
+cleaning crew, 
+[security_count] 
+security team 
+[Met / Not Met] 
+ 
+Score Range’e Göre Overall Scope Text 
+Eğer 12 / 12 requirement sağlandıysa 
+Status: Excellent — Full Scope Completed 
+Scope Adherence was excellent because all required festival scope conditions were 
+satisfied. You selected a balanced team, secured enough sponsors, reached the 
+minimum attendance requirement, created the required entertainment structure, covered 
+volunteer and club needs, selected suitable food vendors, and provided the required 
+cleaning and security support. Since all scope requirements were met, your Scope 
+Adherence score reached the maximum value of 100/100. 
+For the next playthrough, try to maintain this complete scope coverage while also 
+balancing budget, time, participant satisfaction, and event quality. 
+ 
+Eğer 10–11 / 12 requirement sağlandıysa 
+Status: Good — Minor Scope Gaps 
+Scope Adherence was good because most of the required festival scope conditions were 
+satisfied. You completed the majority of the essential project requirements, which means 
+the festival stayed mostly within the planned scope. However, a small number of scope 
+requirements were missed, so the score did not reach the maximum level. 
+The missed requirements were: [not_met_items]. 
+For the next playthrough, focus on completing these missing scope elements to achieve 
+a full scope score. 
+ 
+Eğer 6–9 / 12 requirement sağlandıysa 
+Status: Moderate — Partial Scope Completion 
+Scope Adherence was moderate because only part of the required festival scope was 
+completed. Some important requirements were satisfied, but several scope conditions 
+were missed. This means that the festival included some necessary components, but it 
+did not fully meet the expected project scope. 
+The satisfied requirements were: [met_items].​
+ The missed requirements were: [not_met_items]. 
+For the next playthrough, you should focus on completing more basic scope 
+requirements, especially sponsor sufficiency, activity coverage, food vendor coverage, 
+and cleaning/security needs. 
+ 
+Eğer 3–5 / 12 requirement sağlandıysa 
+Status: Weak — Major Scope Gaps 
+Scope Adherence was weak because many required festival scope conditions were not 
+satisfied. The festival missed several essential planning requirements, which means the 
+project did not fully stay within the expected scope. Even if some decisions were 
+successful, the overall scope coverage was not strong enough. 
+The main missed requirements were: [not_met_items]. 
+For the next playthrough, focus first on the minimum project requirements before 
+optimizing satisfaction or event quality. A stronger team, enough sponsors, required 
+activity coverage, suitable vendors, and basic cleaning/security support should be 
+prioritized. 
+ 
+Eğer 0–2 / 12 requirement sağlandıysa 
+Status: Very Low — Scope Not Completed 
+Scope Adherence was very low because almost none of the required festival scope 
+conditions were satisfied. The project did not meet the basic requirements needed to 
+organize a complete festival. This means that the selected decisions were not enough to 
+cover the expected project scope. 
+Most scope requirements were missed, including: [not_met_items]. 
+For the next playthrough, focus on completing the basic festival structure first. The 
+player should select a balanced team, enough sponsors, required entertainment options, 
+volunteer and club activities, suitable food vendors, and at least one cleaning crew and 
+one security team. 
+Activity-Based Met / Not Met Feedback 
+Texts 
+1. Team Assignment 
+Eğer met ise 
+Team Assignment:​
+ The expected requirement was to create a balanced team with an overall average team 
+performance higher than 2.5. Your selected team had an average performance of 
+[team_avg], so this requirement was met. This supported Scope Adherence because the 
+selected team had enough capability to manage the festival planning process. 
+Eğer not met ise 
+Team Assignment:​
+ The expected requirement was to create a balanced team with an overall average team 
+performance higher than 2.5. Your selected team had an average performance of 
+[team_avg], which was below the required level. Therefore, this requirement was not met. 
+This reduced Scope Adherence because the selected team was not strong enough to 
+fully support the festival planning process. 
+Suggestion:​
+ Choose team members with stronger overall performance to create a more balanced 
+project team. 
+ 
+2. Sponsor Management 
+Sponsor Number — Eğer met ise 
+Sponsor Management — Number of Sponsors:​
+ The expected requirement was to select at least 2 sponsors. You selected 
+[sponsor_count] sponsors, so this requirement was met. This supported Scope 
+Adherence because the festival had enough sponsor coverage. 
+Sponsor Number — Eğer not met ise 
+Sponsor Management — Number of Sponsors:​
+ The expected requirement was to select at least 2 sponsors. You selected only 
+[sponsor_count] sponsor(s), so this requirement was not met. This reduced Scope 
+Adherence because the festival did not secure enough sponsor support. 
+Suggestion:​
+ Select at least two suitable sponsors to satisfy the sponsor coverage requirement. 
+ 
+Sponsor Score — Eğer met ise 
+Sponsor Management — Sponsor Score:​
+ The expected requirement was to have an average sponsor score higher than 2.5. Your 
+average sponsor score was [avg_sponsor_score], so this requirement was met. This 
+means that the selected sponsors were suitable in terms of contribution, audience fit, 
+and overall sponsor quality. 
+Sponsor Score — Eğer not met ise 
+Sponsor Management — Sponsor Score:​
+ The expected requirement was to have an average sponsor score higher than 2.5. Your 
+average sponsor score was [avg_sponsor_score], which was below the required level. 
+Therefore, this requirement was not met. This reduced Scope Adherence because the 
+selected sponsors were not strong enough in terms of overall sponsor quality. 
+Suggestion:​
+ Choose sponsors with better contribution and target audience fit. 
+ 
+Budget Contribution — Eğer met ise 
+Sponsor Management — Budget Contribution:​
+ The expected requirement was to receive enough budget contribution from sponsors. 
+Your sponsor contribution was [sponsor_contribution] TL, so this requirement was met. 
+This supported the festival scope because the sponsor income helped finance planned 
+festival components. 
+Budget Contribution — Eğer not met ise 
+Sponsor Management — Budget Contribution:​
+ The expected requirement was to receive enough budget contribution from sponsors. 
+Your sponsor contribution was [sponsor_contribution] TL, which was below the required 
+level. Therefore, this requirement was not met. This reduced Scope Adherence because 
+the festival did not receive enough sponsor support to cover planned activities. 
+Suggestion:​
+ Select sponsors with higher financial contribution or improve the number of accepted 
+sponsors. 
+ 
+3. Ticket Pricing Strategy 
+Eğer met ise 
+Ticket Pricing Strategy:​
+ The expected scope requirement was to attract at least 3000 participants. Your ticket 
+pricing decision contributed to an estimated attendance of [attendance_number] 
+participants, so this requirement was met. This supported Scope Adherence because the 
+festival reached the minimum participation level expected within the project scope. 
+Eğer not met ise 
+Ticket Pricing Strategy:​
+ The expected scope requirement was to attract at least 3000 participants. Your estimated 
+attendance was [attendance_number] participants, which was below the required level. 
+Therefore, this requirement was not met. This reduced Scope Adherence because the 
+festival did not reach the minimum attendance level expected for the event scope. 
+Suggestion:​
+ Choose a ticket pricing strategy that improves attendance while still supporting the 
+budget. 
+ 
+4. Entertainment Line-up 
+Popularity Level — Eğer met ise 
+Entertainment Line-up — Popularity Level:​
+ The expected requirement was to have an average popularity level higher than 3. Your 
+selected entertainment line-up had an average popularity level of [avg_popularity], so 
+this requirement was met. This supported Scope Adherence because the festival 
+included entertainment options with enough audience appeal. 
+Popularity Level — Eğer not met ise 
+Entertainment Line-up — Popularity Level:​
+ The expected requirement was to have an average popularity level higher than 3. Your 
+selected entertainment line-up had an average popularity level of [avg_popularity], which 
+was below the required level. Therefore, this requirement was not met. This reduced 
+Scope Adherence because the entertainment line-up was not attractive enough to satisfy 
+the planned festival scope. 
+Suggestion:​
+ Select artists with higher popularity scores to improve the entertainment scope. 
+ 
+Artist Type — Eğer met ise 
+Entertainment Line-up — Artist Type:​
+ The expected requirement was to select at least 1 main headliner and at least 2 
+supporting artists. Your selected line-up satisfied this structure, so this requirement was 
+met. This supported Scope Adherence because the festival had the required 
+entertainment structure. 
+Artist Type — Eğer not met ise 
+Entertainment Line-up — Artist Type:​
+ The expected requirement was to select at least 1 main headliner and at least 2 
+supporting artists. Your selected line-up did not satisfy this structure, so this 
+requirement was not met. This reduced Scope Adherence because the festival did not 
+include the required entertainment composition. 
+Suggestion:​
+ Select at least one main headliner and two supporting artists. 
+ 
+5. Volunteer / Club Recruitment 
+Activity Type — Eğer met ise 
+Volunteer / Club Recruitment — Activity Type:​
+ The expected requirement was to include the required activity types: competitive, 
+artistic, informational, and interactive. Your selected volunteer and club activities 
+covered the required activity types, so this requirement was met. This supported Scope 
+Adherence because the festival offered a complete activity variety. 
+Activity Type — Eğer not met ise 
+Volunteer / Club Recruitment — Activity Type:​
+ The expected requirement was to include the required activity types: competitive, 
+artistic, informational, and interactive. Your selected volunteer and club activities did not 
+cover all required activity types, so this requirement was not met. This reduced Scope 
+Adherence because the festival activity variety was incomplete. 
+Suggestion:​
+ Select volunteer and club activities that cover all required activity types: competitive, 
+artistic, informational, and interactive. 
+ 
+Number of Selection — Eğer met ise 
+Volunteer / Club Recruitment — Number of Selection:​
+ The expected requirement was to select at least 2 volunteers and 3 clubs. You selected 
+[volunteer_count] volunteers and [club_count] clubs, so this requirement was met. This 
+supported Scope Adherence because the festival had enough volunteer and club 
+participation. 
+Number of Selection — Eğer not met ise 
+Volunteer / Club Recruitment — Number of Selection:​
+ The expected requirement was to select at least 2 volunteers and 3 clubs. You selected 
+[volunteer_count] volunteers and [club_count] clubs, which was below the required level. 
+Therefore, this requirement was not met. This reduced Scope Adherence because the 
+festival did not have enough volunteer and club support. 
+Suggestion:​
+ Select at least two volunteer groups and three clubs to satisfy the required participation 
+structure. 
+ 
+6. Food Vendor Selection 
+Cuisine Type — Eğer met ise 
+Food Vendor Selection — Cuisine Type:​
+ The expected requirement was to cover the required cuisine types. Your selected food 
+vendors covered the necessary cuisine variety, so this requirement was met. This 
+supported Scope Adherence because the festival provided enough food variety for 
+participants. 
+Cuisine Type — Eğer not met ise 
+Food Vendor Selection — Cuisine Type:​
+ The expected requirement was to cover the required cuisine types. Your selected food 
+vendors did not cover all required cuisine types, so this requirement was not met. This 
+reduced Scope Adherence because the food vendor selection did not fully satisfy the 
+planned festival variety. 
+Suggestion:​
+ Select food vendors from different cuisine types to cover all required food categories. 
+ 
+Hygiene Requirements — Eğer met ise 
+Food Vendor Selection — Hygiene Requirements:​
+ The expected requirement was to have an average hygiene rating higher than 2.5. Your 
+selected food vendors had an average hygiene rating of [avg_hygiene], so this 
+requirement was met. This supported Scope Adherence because the vendor selection 
+satisfied the minimum food safety and hygiene requirement. 
+Hygiene Requirements — Eğer not met ise 
+Food Vendor Selection — Hygiene Requirements:​
+ The expected requirement was to have an average hygiene rating higher than 2.5. Your 
+selected food vendors had an average hygiene rating of [avg_hygiene], which was below 
+the required level. Therefore, this requirement was not met. This reduced Scope 
+Adherence because the selected vendors did not satisfy the minimum hygiene 
+requirement. 
+Suggestion:​
+ Choose vendors with higher hygiene ratings to satisfy food safety expectations. 
+ 
+7. Festival Cleaning & Security 
+Eğer met ise 
+Festival Cleaning & Security:​
+ The expected requirement was to select at least 1 cleaning crew and 1 security team. 
+You selected [cleaning_count] cleaning crew and [security_count] security team, so this 
+requirement was met. This supported Scope Adherence because the festival had the 
+minimum cleaning and safety coverage required for the event. 
+Eğer not met ise 
+Festival Cleaning & Security:​
+ The expected requirement was to select at least 1 cleaning crew and 1 security team. 
+You selected [cleaning_count] cleaning crew and [security_count] security team, so this 
+requirement was not met. This reduced Scope Adherence because the festival did not 
+have the minimum cleaning and safety coverage required for the event. 
+Suggestion:​
+ Select at least one cleaning crew and one security team to satisfy the basic operational 
+requirement. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+4. Budget Control 
+If final budget is between -300,000 TL and 400,000 TL: 
+Budget Control Score =​
+ (Final Budget + 300,000) / 700,000 × 100 
+If final budget is 400,000 TL or higher: 
+Budget Control Score = 100 / 100 
+If final budget is -300,000 TL or lower: 
+Budget Control Score = 0 / 100-FAİLURE 
+ 
+ 
+Budget Range’e Göre Dynamic Overall Text 
+1. Final Budget ≥ 400,000 TL 
+Status: Excellent — Budget Surplus 
+Budget Control was excellent because the festival finished at or above the initial budget 
+level. The game started with 400,000 TL, and your final budget was [final_budget] TL. 
+This means that your income-generating decisions were strong enough to cover festival 
+costs and create a positive financial result. 
+Since the final budget reached or exceeded the initial budget, the Budget Control score 
+reached the maximum value of 100/100. This is a non-profit festival simulation, so the 
+remaining surplus is not treated as private profit. Instead, the additional amount can be 
+interpreted as money transferred to the student bursary fund. 
+For the next playthrough, try to maintain this strong financial performance while also 
+checking whether some budget could be used to improve weaker areas such as 
+Participant Satisfaction, Event Quality, safety, or emergency preparation. 
+ 
+2. Final Budget 200,000–399,999 TL 
+Status: Strong Budget Control 
+Budget Control was strong because the project kept a large part of the initial budget. The 
+game started with 400,000 TL, and your final budget was [final_budget] TL. Your income 
+decisions helped balance the festival costs, and the project remained financially safe. 
+Since your final budget was still positive, the remaining money is considered a non-profit 
+festival surplus. This surplus can be transferred to the student bursary fund, which 
+supports the educational and social purpose of the festival. 
+For the next playthrough, you can try to maintain this financial safety while using part of 
+the available budget to improve weaker festival areas if needed. 
+ 
+3. Final Budget 0–199,999 TL 
+Status: Acceptable but Limited Budget 
+Budget Control was acceptable because the festival finished with a positive budget, but 
+the remaining amount was limited. The game started with 400,000 TL, and your final 
+budget was [final_budget] TL. This means that the festival was financially feasible, but 
+your spending decisions used most of the available budget. 
+Since your final budget was still above zero, the remaining amount can be interpreted as 
+a small non-profit surplus. This surplus would be transferred to the student bursary fund. 
+However, the limited remaining budget shows that the project had low flexibility for 
+unexpected problems or additional improvements. 
+For the next playthrough, try to balance high-cost choices with stronger revenue 
+decisions from sponsors, tickets, and food vendors. 
+ 
+4. Final Budget -1 to -149,999 TL 
+Status: Risky Budget Performance 
+Budget Control was risky because the festival finished with a negative budget. The game 
+started with 400,000 TL, but your final budget became [final_budget] TL. This means 
+that the total cost of your decisions was higher than the income generated by Sponsor 
+Management, Ticket Pricing Strategy, and Food Vendor Selection. 
+The project did not reach the failure threshold, but the negative budget shows weak 
+financial control. Since there was no positive remaining budget, no surplus could be 
+transferred to the student bursary fund. 
+For the next playthrough, reduce unnecessary high-cost choices or improve 
+revenue-generating activities. 
+ 
+5. Final Budget -150,000 to -299,999 TL 
+Status: Critical Budget Performance 
+Budget Control was critical because the final budget was very close to the failure 
+threshold. The game started with 400,000 TL, but your final budget decreased to 
+[final_budget] TL. This means that spending decisions created serious financial 
+pressure, and revenue-generating activities were not strong enough to compensate for 
+the costs. 
+Although the project did not fully fail, the budget result was very risky. The festival had no 
+remaining surplus, so no money could be transferred to the student bursary fund. 
+For the next playthrough, strongly reduce expensive choices and prioritize stronger 
+sponsor contribution, ticket revenue, and food vendor income. 
+ 
+6. Final Budget ≤ -300,000 TL 
+Status: Budget Failure 
+Budget Control failed because the final budget passed the allowed negative budget limit. 
+The game started with 400,000 TL, but your final budget became [final_budget] TL, 
+which is below the failure threshold of -300,000 TL. 
+This means that the project became financially unsustainable. The selected costs were 
+too high compared with the income generated by Sponsor Management, Ticket Pricing 
+Strategy, and Food Vendor Selection. Since the project ended below the failure 
+threshold, there was no surplus for the student bursary fund. 
+For the next playthrough, focus first on financial feasibility before selecting expensive 
+quality or satisfaction options. 
+ 
+Money-In Activities 
+Bu aktiviteler budget’ı artırıyor: 
+1.​ Sponsor Management 
+2.​ Ticket Pricing Strategy 
+3.​ Food Vendor Selection 
+ 
+1. Sponsor Management — Income Feedback 
+Sponsor contribution aralığı: 100,000 TL – 400,000 TL​
+ Random variation: -20,000 TL ile +20,000 TL 
+Weak Sponsor Income 
+Interval: below 200,000 TL 
+Your Sponsor Management decision generated [sponsor_income] TL. This was a weak 
+income contribution for Budget Control. Although the sponsors provided some financial support, 
+the contribution was not strong enough to significantly protect the festival budget. Selecting 
+more sponsors or sponsors with higher contribution would improve the budget result. 
+Moderate Sponsor Income 
+Interval: 200,000 TL – 299,999 TL 
+Your Sponsor Management decision generated [sponsor_income] TL. This was a moderate 
+income contribution. The sponsor support helped the budget, but it did not create a very strong 
+financial buffer. This decision partially supported Budget Control, but stronger sponsor 
+contribution would make the festival financially safer. 
+Strong Sponsor Income 
+Interval: 300,000 TL and above 
+Your Sponsor Management decision generated [sponsor_income] TL. This was a strong 
+income contribution. Sponsor support significantly increased the available budget and helped 
+cover the costs of other festival decisions. This had a strong positive effect on Budget Control. 
+ 
+2. Ticket Pricing Strategy — Revenue Feedback 
+Burada ticket revenue oyuncunun ticket price ve attendance sonucuna bağlı olduğu için 
+interval’ı elde edilen toplam ticket revenue üzerinden kurmak daha doğru. 
+Önerilen interval: 
+Ticket Revenue 
+Feedback Level 
+below 75,000 TL 
+Weak ticket revenue 
+75,000–149,999 TL 
+Moderate ticket revenue 
+150,000 TL and above 
+Strong ticket revenue 
+Weak Ticket Revenue 
+Interval: below 75,000 TL 
+Your Ticket Pricing Strategy generated [ticket_revenue] TL in ticket revenue. This was a weak 
+revenue contribution. The selected ticket price and attendance combination did not create 
+enough income to support the festival budget. A better balance between ticket price and 
+expected attendance could improve Budget Control. 
+Moderate Ticket Revenue 
+Interval: 75,000 TL – 149,999 TL 
+Your Ticket Pricing Strategy generated [ticket_revenue] TL. This was a moderate revenue 
+contribution. Ticket income helped the budget, but it was not strong enough to fully balance the 
+cost of expensive festival decisions. 
+Strong Ticket Revenue 
+Interval: 150,000 TL and above 
+Your Ticket Pricing Strategy generated [ticket_revenue] TL. This was a strong revenue 
+contribution. The selected ticket price and attendance level created meaningful income and 
+helped protect the festival budget. 
+ 
+3. Food Vendor Selection — Income Feedback 
+Food vendor price aralığı: 40,000 TL – 100,000 TL​
+ Random variation: -10,000 TL ile +10,000 TL 
+Eğer oyuncu birden fazla vendor seçiyorsa, feedback’i total vendor income üzerinden kur. 
+Önerilen interval: 
+Vendor Income 
+Feedback Level 
+below 160,000 TL 
+Weak vendor income 
+160,000–299,999 TL 
+Moderate vendor income 
+300,000 TL and above 
+Strong vendor income 
+Bu interval 4 vendor seçildiği varsayımıyla mantıklı:​
+ 4 × 40,000 = 160,000 minimum civarı​
+ 4 × 100,000 = 400,000 maksimum civarı 
+Burda sayı ornek icin kondu burda n x 40,000 ve nx 100,000 mantıgı ile kurulacak 
+Weak Vendor Income 
+Interval: below 160,000 TL 
+Your Food Vendor Selection generated [vendor_income] TL. This was a weak income 
+contribution. The selected vendors did not provide enough financial support to the festival 
+budget. Choosing vendors with higher participation fees or stronger efficiency-based value could 
+improve Budget Control. 
+Moderate Vendor Income 
+Interval: 160,000 TL – 299,999 TL 
+Your Food Vendor Selection generated [vendor_income] TL. This was a moderate income 
+contribution. Vendor income supported the budget, but it did not create a strong financial 
+surplus. 
+Strong Vendor Income 
+Interval: 300,000 TL and above 
+Your Food Vendor Selection generated [vendor_income] TL. This was a strong income 
+contribution. Vendor payments significantly increased the available budget and had a strong 
+positive effect on Budget Control. 
+Money-Out Activities 
+Bu aktiviteler budget’ı azaltıyor: 
+1.​ Emergency Plan Training 
+2.​ Promotion Strategy 
+3.​ Entertainment Line-up 
+4.​ Stage Setup Choice 
+5.​ Sound System Choice 
+6.​ Decoration Theme Decision 
+7.​ Festival Cleaning & Security 
+ 
+Burda oyuncu cost aralığını ve variation gormeyecek 
+ 
+4. Promotion Strategy — Cost Feedback 
+Promotion cost aralığı: 20,000 TL – 50,000 TL​
+ Random variation: -10,000 TL ile +10,000 TL 
+Low Promotion Cost 
+Interval: below 25,000 TL 
+Your Promotion Strategy cost [promotion_cost] TL. This had a low cost impact on Budget 
+Control. The decision helped protect the budget, but its promotion reach and reliability should 
+still be checked to make sure it created enough attendance impact. 
+Moderate Promotion Cost 
+Interval: 25,000 TL – 39,999 TL 
+Your Promotion Strategy cost [promotion_cost] TL. This had a moderate cost impact. The 
+spending was financially manageable, especially if the promotion strategy also created good 
+reach and reliability. 
+High Promotion Cost 
+Interval: 40,000 TL and above 
+Your Promotion Strategy cost [promotion_cost] TL. This had a high cost impact on Budget 
+Control. The selected campaign may have improved visibility, but it also created budget 
+pressure. 
+ 
+5. Entertainment Line-up — Cost Feedback 
+Senin tabloda entertainment için toplam kombinasyonun 400,000 TL’yi aşmaması garanti 
+edilmiş. Supporting artistler için de minimum toplam maliyet dengesi verilmiş. 
+Entertainment Cost 
+Feedback Level 
+below 180,000 TL 
+Low cost 
+180,000–299,999 TL 
+Moderate cost 
+300,000 TL and above 
+High cost 
+Low Entertainment Cost 
+Interval: below 180,000 TL 
+Your Entertainment Line-up cost [entertainment_cost] TL. This had a low cost impact on 
+Budget Control. The decision helped protect the budget, but the selected artists should still be 
+checked in terms of popularity and crowd appeal. 
+Moderate Entertainment Cost 
+Interval: 180,000 TL – 299,999 TL 
+Your Entertainment Line-up cost [entertainment_cost] TL. This had a moderate cost impact. 
+The decision created a balance between entertainment value and financial control. 
+High Entertainment Cost 
+Interval: 300,000 TL and above 
+Your Entertainment Line-up cost [entertainment_cost] TL. This was a major cost driver. The 
+selected artists may have improved satisfaction or attendance, but the high cost strongly 
+reduced Budget Control.
+ 
+6. Stage Setup Choice — Cost Feedback 
+Stage cost aralığı: 100,000 TL – 250,000 TL​
+ Random variation: -40,000 TL ile +40,000 TL 
+Low Stage Cost 
+Interval: below 140,000 TL 
+Your Stage Setup decision cost [stage_cost] TL. This had a low cost impact on Budget Control. 
+The decision helped protect the budget, but the stage impact should still be checked against 
+event quality needs. 
+Moderate Stage Cost 
+Interval: 140,000 TL – 199,999 TL 
+Your Stage Setup decision cost [stage_cost] TL. This had a moderate cost impact. The stage 
+choice was financially manageable while still supporting the festival setup. 
+High Stage Cost 
+Interval: 200,000 TL and above 
+Your Stage Setup decision cost [stage_cost] TL. This had a high cost impact on Budget 
+Control. The selected stage option used a large part of the available budget and created 
+financial pressure.
+ 
+7. Sound System Choice — Cost Feedback 
+Sound system cost aralığı: 80,000 TL – 150,000 TL​
+ Random variation: -10,000 TL ile +10,000 TL 
+Low Sound Cost 
+Interval: below 100,000 TL 
+Your Sound System Choice cost [sound_cost] TL. This had a low cost impact on Budget 
+Control. The decision helped protect the budget, but the sound system score should still be 
+checked for Participant Satisfaction. 
+Moderate Sound Cost 
+Interval: 100,000 TL – 129,999 TL 
+Your Sound System Choice cost [sound_cost] TL. This had a moderate cost impact. The 
+decision was financially manageable and did not create severe budget pressure. 
+High Sound Cost 
+Interval: 130,000 TL and above 
+Your Sound System Choice cost [sound_cost] TL. This had a high cost impact on Budget 
+Control. The selected sound system reduced the budget significantly and should be justified by 
+a strong sound system score. 
+ 
+8. Decoration Theme Decision — Cost Feedback 
+Decoration cost aralığı: 80,000 TL – 150,000 TL​
+ Random variation: -10,000 TL ile +10,000 TL 
+Low Decoration Cost 
+Interval: below 100,000 TL 
+Your Decoration Theme Decision cost [decoration_cost] TL. This had a low cost impact on 
+Budget Control. The decision helped protect the budget, but the theme score should still be 
+checked for Participant Satisfaction. 
+Moderate Decoration Cost 
+Interval: 100,000 TL – 129,999 TL 
+Your Decoration Theme Decision cost [decoration_cost] TL. This had a moderate cost impact. 
+The decision created a manageable balance between atmosphere and cost. 
+High Decoration Cost 
+Interval: 130,000 TL and above 
+Your Decoration Theme Decision cost [decoration_cost] TL. This had a high cost impact on 
+Budget Control. The selected theme improved the festival atmosphere only if its theme score 
+was strong enough to justify the cost.
+ 
+9. Festival Cleaning & Security — Cost Feedback 
+Cleaning/security cost aralığı: 40,000 TL – 80,000 TL​
+ Random variation: -10,000 TL ile +10,000 TL 
+Low Cleaning/Security Cost 
+Interval: below 50,000 TL 
+Your Festival Cleaning & Security decision cost [cleaning_security_cost] TL. This had a low 
+cost impact on Budget Control. The decision helped protect the budget, but the selected option 
+should still satisfy minimum cleaning and security requirements. 
+Moderate Cleaning/Security Cost 
+Interval: 50,000 TL – 69,999 TL 
+Your Festival Cleaning & Security decision cost [cleaning_security_cost] TL. This had a 
+moderate cost impact. The selected option was financially manageable and supported basic 
+operational needs. 
+High Cleaning/Security Cost 
+Interval: 70,000 TL and above 
+Your Festival Cleaning & Security decision cost [cleaning_security_cost] TL. This had a high 
+cost impact on Budget Control. The selected cleaning/security option created budget pressure, 
+but it may be justified if it strongly improves safety and operational reliability.
+ 
+10. Emergency Plan Training — Cost Feedback 
+Senin tabloda emergency training için net price interval görünmüyor. O yüzden burada kendi 
+decision table’ına göre interval koymalısın. Eğer örnek bir aralık kullanacaksan şöyle 
+yapabilirsin: 
+Emergency Training Cost 
+Feedback Level 
+below 30,000 TL 
+Low cost 
+30,000–59,999 TL 
+Moderate cost 
+60,000 TL and above 
+High cost 
+Low Emergency Training Cost 
+Your Emergency Plan Training cost [training_cost] TL. This had a low cost impact on Budget 
+Control. It helped protect the budget, but low training investment may increase risk during 
+festival-day scenarios. 
+Moderate Emergency Training Cost 
+Your Emergency Plan Training cost [training_cost] TL. This had a moderate cost impact. The 
+decision created a reasonable balance between budget control and emergency preparedness. 
+High Emergency Training Cost 
+Your Emergency Plan Training cost [training_cost] TL. This had a high cost impact on Budget 
+Control. Although it reduced the remaining budget, it may be justified if it improves emergency 
+preparedness and reduces scenario penalties. 
+Activity 
+Type 
+Weak / 
+Low 
+Moderate 
+Strong / High 
+Sponsor Management 
+Income 
+<200k 
+200k–299k 
+≥300k 
+Ticket Pricing 
+Income 
+<75k 
+75k–149k 
+≥150k 
+Food Vendor 
+Income 
+<160k 
+160k–299k 
+≥300k 
+Promotion 
+Cost 
+<25k 
+25k–39k 
+≥40k 
+Entertainment 
+Cost 
+<180k 
+180k–299k 
+≥300k 
+Stage Setup 
+Cost 
+<140k 
+140k–199k 
+≥200k 
+Sound System 
+Cost 
+<100k 
+100k–129k 
+≥130k 
+Decoration 
+Cost 
+<100k 
+100k–129k 
+≥130k 
+Cleaning & Security 
+Cost 
+<50k 
+50k–69k 
+≥70k 
+Emergency Training 
+Cost 
+<30k 
+30k–59k 
+≥60k 
+Final Budget Driver Summary 
+If income is stronger than cost 
+Your strongest financial support came from [strongest_income_activity], which added 
+[strongest_income_value] TL to the budget. The largest cost driver was 
+[largest_cost_activity], which reduced the budget by [largest_cost_value] TL. Overall, your 
+income decisions were strong enough to keep the festival financially stable. 
+ 
+If cost is stronger than income 
+Your strongest financial support came from [strongest_income_activity], which added 
+[strongest_income_value] TL to the budget. However, the largest cost driver was 
+[largest_cost_activity], which reduced the budget by [largest_cost_value] TL. Overall, your 
+spending decisions were stronger than your income decisions, which reduced Budget Control. 
+ 
+ 
+5. Time Management 
+Score: 81 / 100​
+ Status: Good 
+Time Management measures whether the player completed activities on time and avoided 
+delays in critical activities. 
+In this playthrough, most critical activities were completed close to their expected durations. 
+Sponsor Management, Promotion Strategy, Entertainment Line-Up, and Ticket Pricing Strategy 
+were completed without major delay. This helped the project stay close to the planned schedule. 
+However, resource conflicts occurred during Sound System Choices and Festival 
+Cleaning/Security decisions. These conflicts created small delays, but they did not cause a 
+major project failure. 
+Result Explanation:​
+ Your Time Management score is good because the main critical path was mostly protected. The 
+score was slightly reduced because some resource-related delays occurred in operational 
+activities. 
+Effect on Final Outcome:​
+ Good time management helped stabilize the project and prevented serious schedule penalties. 
+ 
+6. Scenario Preparedness 
+Score: 64 / 100​
+ Status: Moderate 
+Scenario Preparedness measures how well the player was prepared for unexpected festival-day 
+events. 
+During the festival day, two scenarios occurred: a power outage and a medical emergency. The 
+power outage was handled partially because your stage setup was acceptable, but the sound 
+system had high technical complexity. The medical emergency had a stronger negative effect 
+because Emergency Plan Training was not sufficient. 
+Scenario Results: 
+Scenario 
+Preparednes
+s 
+Outcome 
+Impact 
+Power Outage 
+68 / 100 
+Partially handled Event Quality decreased 
+Medical Emergency 55 / 100 
+Weak response 
+Satisfaction and Quality 
+decreased 
+Result Explanation:​
+ Your Scenario Preparedness score is moderate because you had some operational capacity, 
+but emergency-related decisions were not strong enough. Better emergency training would 
+have reduced the negative impact of festival-day risks. 
+Effect on Final Outcome:​
+ Scenario performance reduced Event Quality and slightly decreased Participant Satisfaction. 
+ 
