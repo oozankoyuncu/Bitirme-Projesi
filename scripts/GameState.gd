@@ -22,6 +22,15 @@ var skip_onboarding: bool = false
 var player_notes: String = ""
 var notepad_popup_shown: bool = false
 
+# ---- Resource Constraint System Phase 1 ----
+var total_phones: int = 3
+var available_phones: int = 3
+var total_computers: int = 4
+var available_computers: int = 4
+var resource_leveling_heuristic: String = "minimum_slack_first"
+var active_allocations: Dictionary = {}
+var crashed_activities: Dictionary = {}
+
 # ---- Scenarios ----
 var active_scenarios: Array = []
 var possible_scenarios = [
@@ -173,6 +182,10 @@ func reset() -> void:
 	vetoed_decoration_theme_id = ""
 	_initialize_scenarios()
 	
+	available_phones = total_phones
+	available_computers = total_computers
+	active_allocations.clear()
+	crashed_activities.clear()
 
 	last_week_tick = -1
 	
@@ -247,6 +260,13 @@ func load_activities():
 
 	activities = data["activities"]
 	
+	# Validation check
+	var required_keys = ["required_members", "required_phones", "required_computers", "can_crash"]
+	for act in activities:
+		for key in required_keys:
+			if not act.has(key):
+				print("WARNING: Activity '", act.get("id", "unknown"), "' is missing key '", key, "'")
+	
 func load_team_members():
 	var file = FileAccess.open("res://data/team_members.json", FileAccess.READ)
 	var json_text = file.get_as_text()
@@ -256,6 +276,143 @@ func load_team_members():
 func complete_activity(activity_id: String):
 	if not completed_activities.has(activity_id):
 		completed_activities.append(activity_id)
+	
+	var activity_data = get_activity_data(activity_id)
+	if not activity_data.is_empty():
+		release_resources(activity_data)
+
+func has_enough_resources(activity_data: Dictionary) -> bool:
+	var req_phones = int(activity_data.get("required_phones", 0))
+	var req_computers = int(activity_data.get("required_computers", 0))
+	return available_phones >= req_phones and available_computers >= req_computers
+
+func allocate_resources(activity_data: Dictionary) -> void:
+	var activity_id = activity_data.get("id", "")
+	if active_allocations.has(activity_id):
+		return
+	
+	var req_phones = int(activity_data.get("required_phones", 0))
+	var req_computers = int(activity_data.get("required_computers", 0))
+	available_phones -= req_phones
+	available_computers -= req_computers
+	active_allocations[activity_id] = activity_data
+	print("Allocated resources for ", activity_data.get("name", ""), ": ", req_phones, " phones, ", req_computers, " computers.")
+	print_resource_status()
+
+func release_resources(activity_data: Dictionary) -> void:
+	var activity_id = activity_data.get("id", "")
+	if not active_allocations.has(activity_id):
+		return
+	
+	var req_phones = int(activity_data.get("required_phones", 0))
+	var req_computers = int(activity_data.get("required_computers", 0))
+	available_phones = min(total_phones, available_phones + req_phones)
+	available_computers = min(total_computers, available_computers + req_computers)
+	active_allocations.erase(activity_id)
+	print("Released resources for ", activity_data.get("name", ""), ": ", req_phones, " phones, ", req_computers, " computers.")
+	print_resource_status()
+
+func get_activity_data(activity_id: String) -> Dictionary:
+	for act in activities:
+		if act.get("id", "") == activity_id:
+			return act
+	return {}
+
+func crash_activity(activity_id: String) -> bool:
+	var act = get_activity_data(activity_id)
+	if act.is_empty():
+		print("Activity does not exist: ", activity_id)
+		return false
+	
+	if not act.get("can_crash", false):
+		print("Activity cannot be crashed: ", activity_id)
+		return false
+	
+	if crashed_activities.has(activity_id):
+		print("Activity already crashed: ", activity_id)
+		return false
+		
+	var crash_cost = int(act.get("crash_cost", 0))
+	if money - crash_cost <= -300000:
+		print("Crashing blocked: budget safety threshold reached.")
+		return false
+		
+	money -= crash_cost
+	crashed_activities[activity_id] = true
+	print("Activity ", activity_id, " crashed successfully.")
+	emit_signal("time_changed")
+	return true
+
+func get_activity_duration(activity_data: Dictionary) -> float:
+	var activity_id = activity_data.get("id", "")
+	if crashed_activities.has(activity_id):
+		return float(activity_data.get("crash_duration", activity_data.get("duration", 0.0)))
+	else:
+		return float(activity_data.get("normal_duration", activity_data.get("duration", 0.0)))
+
+func print_resource_status() -> void:
+	print("Phones: ", available_phones, "/", total_phones)
+	print("Computers: ", available_computers, "/", total_computers)
+
+func purchase_phone() -> bool:
+	var cost = 5000
+	if money - cost <= -300000:
+		print("Purchase blocked: budget safety threshold reached.")
+		return false
+	if money < cost:
+		print("Purchase blocked: insufficient budget.")
+		return false
+	money -= cost
+	total_phones += 1
+	available_phones += 1
+	print("Purchased 1 Phone. Total phones: ", total_phones)
+	emit_signal("time_changed")
+	return true
+
+func purchase_computer() -> bool:
+	var cost = 10000
+	if money - cost <= -300000:
+		print("Purchase blocked: budget safety threshold reached.")
+		return false
+	if money < cost:
+		print("Purchase blocked: insufficient budget.")
+		return false
+	money -= cost
+	total_computers += 1
+	available_computers += 1
+	print("Purchased 1 Computer. Total computers: ", total_computers)
+	emit_signal("time_changed")
+	return true
+
+func increase_member_capacity(member_id: String) -> bool:
+	var cost = 7000
+	if money - cost <= -300000:
+		print("Purchase blocked: budget safety threshold reached.")
+		return false
+	if money < cost:
+		print("Purchase blocked: insufficient budget.")
+		return false
+	
+	var found_member = null
+	for m in selected_team:
+		if m.get("id", "") == member_id:
+			found_member = m
+			break
+	if found_member == null:
+		for m in all_team_members:
+			if m.get("id", "") == member_id:
+				found_member = m
+				break
+	
+	if found_member != null:
+		found_member["workload_capacity"] = found_member.get("workload_capacity", 1) + 1
+		money -= cost
+		print("Increased capacity for member ID: ", member_id, ". New capacity: ", found_member["workload_capacity"])
+		emit_signal("time_changed")
+		return true
+	
+	print("Member ID ", member_id, " not found.")
+	return false
 
 func finalize_work_assignment(assignments: Dictionary, extra_hires: Array, outsourced: Array, boosts: Dictionary, total_extra_cost: int) -> void:
 	work_assignments = assignments.duplicate(true)

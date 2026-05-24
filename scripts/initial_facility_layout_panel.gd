@@ -501,8 +501,7 @@ func _on_back_pressed() -> void:
 	GameState.layout_active_plan_index = active_plan_index
 	GameState.layout_plan = areas
 	
-	if not GameState.completed_activities.has("initial_festival_layout_mapping"):
-		GameState.completed_activities.append("initial_festival_layout_mapping")
+	GameState.complete_activity("initial_festival_layout_mapping")
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	if get_parent().get_node("ActivityBoard").has_method("refresh_board"):

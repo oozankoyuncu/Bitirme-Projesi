@@ -227,4 +227,3 @@ func _enlarge_fonts_recursive(node: Node) -> void:
 		
 	for child in node.get_children():
 		_enlarge_fonts_recursive(child)
-

@@ -17,6 +17,7 @@ var activity_list: VBoxContainer
 var workload_stats_container: VBoxContainer
 var capacity_labels: Dictionary = {}
 var activity_dropdowns: Dictionary = {}
+var workload_warning_lbl: Label
 
 var extra_hires_count: int = 0
 var outsourced_activities: Array = []
@@ -358,8 +359,7 @@ func _on_confirm_pressed() -> void:
 			return
 		
 		GameState.selected_team = selected
-		if not GameState.completed_activities.has("team_assignment"):
-			GameState.completed_activities.append("team_assignment")
+		GameState.complete_activity("team_assignment")
 			
 		transition_to_work_assignation()
 	else:
@@ -502,6 +502,13 @@ func _setup_work_assignment_right_panel() -> void:
 	warning_lbl.add_theme_font_size_override("font_size", 14)
 	vbox.add_child(warning_lbl)
 	
+	workload_warning_lbl = Label.new()
+	workload_warning_lbl.text = ""
+	workload_warning_lbl.add_theme_color_override("font_color", Color(1, 0.3, 0.3)) # Red
+	workload_warning_lbl.add_theme_font_size_override("font_size", 14)
+	workload_warning_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	vbox.add_child(workload_warning_lbl)
+	
 	workload_stats_container = VBoxContainer.new()
 	workload_stats_container.add_theme_constant_override("separation", 8)
 	vbox.add_child(workload_stats_container)
@@ -544,6 +551,7 @@ func _update_capacity_display() -> void:
 				all_members.append(member)
 				break
 				
+	var overloaded_names = []
 	for member in all_members:
 		var hbox = HBoxContainer.new()
 		var name_lbl = Label.new()
@@ -558,6 +566,7 @@ func _update_capacity_display() -> void:
 		
 		if assigned > total_cap:
 			cap_lbl.add_theme_color_override("font_color", Color(1, 0.3, 0.3)) # Red
+			overloaded_names.append(member["name"])
 		elif assigned == total_cap:
 			cap_lbl.add_theme_color_override("font_color", Color(0.3, 1, 0.3)) # Green
 		else:
@@ -567,13 +576,22 @@ func _update_capacity_display() -> void:
 		
 		# Boost button
 		var boost_btn = Button.new()
-		boost_btn.text = "+ ($8k)"
+		boost_btn.text = "+ ($7k)"
 		boost_btn.add_theme_font_size_override("font_size", 12)
 		boost_btn.pressed.connect(_on_boost_pressed.bind(member["id"]))
 		hbox.add_child(boost_btn)
 		
 		workload_stats_container.add_child(hbox)
 		capacity_labels[member["id"]] = cap_lbl
+		
+	if workload_warning_lbl:
+		if overloaded_names.size() > 0:
+			var warnings = []
+			for o_name in overloaded_names:
+				warnings.append("⚠️ " + o_name + " exceeds workload capacity.")
+			workload_warning_lbl.text = "\n".join(warnings)
+		else:
+			workload_warning_lbl.text = ""
 
 func _count_assigned(member_id: String) -> int:
 	var count = 0
@@ -608,12 +626,11 @@ func _on_activity_assigned(index: int, act_id: String, dropdown: OptionButton) -
 			total_cap = m_dict.get("workload_capacity", 1) + member_boosts.get(selected_id, 0)
 			
 		if count + 1 > total_cap:
-			var dialog = AcceptDialog.new()
-			dialog.dialog_text = "This person's workload capacity is full, please try someone else."
-			dialog.title = "Capacity Exceeded"
-			add_child(dialog)
-			dialog.popup_centered()
-			
+			var msg = "⚠️ " + m_dict["name"] + " exceeds workload capacity."
+			print(msg)
+			if workload_warning_lbl:
+				workload_warning_lbl.text = msg
+				
 			var prev_selected = current_assignments.get(act_id)
 			if prev_selected == null:
 				dropdown.select(0)
@@ -694,12 +711,12 @@ func _refresh_dropdowns() -> void:
 					break
 
 func _on_boost_pressed(member_id: String) -> void:
-	if GameState.money >= GameState.CAPACITY_BOOST_COST:
-		var cur = member_boosts.get(member_id, 0)
-		member_boosts[member_id] = cur + 1
+	if GameState.increase_member_capacity(member_id):
 		_update_capacity_display()
 	else:
-		print("Not enough budget!")
+		print("Boost blocked: insufficient budget or threshold reached.")
+		if workload_warning_lbl:
+			workload_warning_lbl.text = "⚠️ Cannot boost capacity: insufficient budget or safety threshold reached."
 
 func finalize_work_assignation() -> void:
 	# Validation: ensure all activities assigned
@@ -709,7 +726,10 @@ func finalize_work_assignation() -> void:
 			valid_activities += 1
 			
 	if current_assignments.size() < valid_activities:
-		print("You must assign all activities!")
+		var msg = "You must assign all activities!"
+		print(msg)
+		if workload_warning_lbl:
+			workload_warning_lbl.text = "⚠️ " + msg
 		return
 		
 	# Validation: check capacity
@@ -721,15 +741,17 @@ func finalize_work_assignation() -> void:
 			
 		var total_cap = m_dict.get("workload_capacity", 1) + member_boosts.get(member_id, 0)
 		if assigned > total_cap:
-			print("Capacity exceeded for " + m_dict["name"] + "! Adjust assignments or boost capacity.")
+			var msg = "⚠️ " + m_dict["name"] + " exceeds workload capacity."
+			print(msg)
+			if workload_warning_lbl:
+				workload_warning_lbl.text = msg
 			return
 			
 	# Calculate total cost
 	var extra_cost = 0
 	extra_cost += GameState.hired_extra_members.size() * GameState.HIRE_EXTRA_COST
 	extra_cost += outsourced_activities.size() * GameState.OUTSOURCE_COST
-	for boost in member_boosts.values():
-		extra_cost += boost * GameState.CAPACITY_BOOST_COST
+	# Instantly paid boosts are not added to extra_cost
 		
 	GameState.finalize_work_assignment(current_assignments, GameState.hired_extra_members, outsourced_activities, member_boosts, extra_cost)
 	

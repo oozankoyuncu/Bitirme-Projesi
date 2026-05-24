@@ -2,6 +2,9 @@ extends Control
 
 @onready var activity_list: GridContainer = $MarginContainer/VBox/ScrollContainer/ActivityList
 
+var resource_status_label: Label
+var resource_warning_label: Label
+
 func _ready() -> void:
 	refresh_board()
 	_setup_dashboard_styles()
@@ -74,6 +77,44 @@ func _setup_dashboard_notifications() -> void:
 	info_text.modulate = Color(0.3, 0.7, 1.0, 1.0) # Light blue / Cyan
 	info_hbox.add_child(info_text)
 	
+	# Row 3: Resource Status Row
+	var resource_hbox = HBoxContainer.new()
+	resource_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	resource_hbox.add_theme_constant_override("separation", 15)
+	content_vbox.add_child(resource_hbox)
+	
+	var resource_icon = Label.new()
+	resource_icon.text = "🔌"
+	resource_icon.add_theme_font_size_override("font_size", 20)
+	resource_hbox.add_child(resource_icon)
+	
+	resource_status_label = Label.new()
+	resource_status_label.add_theme_font_size_override("font_size", 20)
+	resource_status_label.modulate = Color(0.2, 0.9, 0.5, 1.0) # Emerald / green
+	resource_hbox.add_child(resource_status_label)
+	
+	# Add Purchase Buttons
+	var buy_phone_btn = Button.new()
+	buy_phone_btn.text = "Buy Phone ($5k)"
+	buy_phone_btn.add_theme_font_size_override("font_size", 14)
+	buy_phone_btn.pressed.connect(_on_buy_phone_pressed)
+	resource_hbox.add_child(buy_phone_btn)
+	
+	var buy_comp_btn = Button.new()
+	buy_comp_btn.text = "Buy Computer ($10k)"
+	buy_comp_btn.add_theme_font_size_override("font_size", 14)
+	buy_comp_btn.pressed.connect(_on_buy_computer_pressed)
+	resource_hbox.add_child(buy_comp_btn)
+	
+	# Row 4: Resource Warning Label
+	resource_warning_label = Label.new()
+	resource_warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	resource_warning_label.add_theme_font_size_override("font_size", 18)
+	resource_warning_label.modulate = Color(1.0, 0.3, 0.3, 1.0) # Red
+	resource_warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content_vbox.add_child(resource_warning_label)
+	resource_warning_label.text = ""
+	
 	# Insert below Header (index 1)
 	vbox.add_child(panel)
 	vbox.move_child(panel, 1)
@@ -115,6 +156,11 @@ func refresh_board() -> void:
 	# Clean old cards
 	for child in activity_list.get_children():
 		child.queue_free()
+		
+	# Update resource display and clear warning
+	update_resource_display()
+	if resource_warning_label:
+		resource_warning_label.text = ""
 		
 	# Clean old top-right container
 	var old_rc = get_node_or_null("FestivalRightContainer")
@@ -298,7 +344,7 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	if activity["id"] == "festival_day":
 		card.custom_minimum_size = Vector2(480, 320)
 	else:
-		card.custom_minimum_size = Vector2(380, 260)
+		card.custom_minimum_size = Vector2(380, 310)
 		
 	card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	
@@ -359,10 +405,80 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	stats_row.add_child(cost_label)
 	
 	var dur_label = Label.new()
-	dur_label.text = "⏱ " + str(activity["duration"]) + "w"
+	var actual_dur = GameState.get_activity_duration(activity)
+	dur_label.text = "⏱ " + str(actual_dur) + "w"
 	dur_label.modulate = Color(0.7, 0.7, 0.7)
 	stats_row.add_child(dur_label)
-	
+
+	var activity_id = activity["id"]
+	if GameState.crashed_activities.has(activity_id):
+		var crashed_lbl = Label.new()
+		crashed_lbl.text = "CRASHED"
+		crashed_lbl.modulate = Color(1.0, 0.5, 0.0) # Orange
+		crashed_lbl.add_theme_font_size_override("font_size", 14)
+		stats_row.add_child(crashed_lbl)
+
+	# Resource Info Rows (display-only)
+	var req_members  = int(activity.get("required_members",  0))
+	var req_phones   = int(activity.get("required_phones",   0))
+	var req_comps    = int(activity.get("required_computers", 0))
+
+	var avail_lbl = Label.new()
+	avail_lbl.text = "Available:  Phones %d/%d  |  Computers %d/%d" % [
+		GameState.available_phones, GameState.total_phones,
+		GameState.available_computers, GameState.total_computers
+	]
+	avail_lbl.add_theme_font_size_override("font_size", 14)
+	avail_lbl.modulate = Color(0.55, 0.85, 1.0, 1.0)  # light cyan
+	vbox.add_child(avail_lbl)
+
+	var req_lbl = Label.new()
+	req_lbl.text = "Requires:  Members %d  |  Phones %d  |  Computers %d" % [
+		req_members, req_phones, req_comps
+	]
+	req_lbl.add_theme_font_size_override("font_size", 14)
+	req_lbl.modulate = Color(0.9, 0.75, 0.3, 1.0)   # warm amber
+	vbox.add_child(req_lbl)
+
+	# Crash / Speed Up Button
+	if activity.get("can_crash", false):
+		var is_crashed = GameState.crashed_activities.has(activity_id)
+		var crash_btn = Button.new()
+		crash_btn.text = "Crash / Speed Up"
+		crash_btn.custom_minimum_size = Vector2(120, 30)
+		crash_btn.add_theme_font_size_override("font_size", 14)
+		crash_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		
+		var btn_style = StyleBoxFlat.new()
+		btn_style.bg_color = Color(0.8, 0.4, 0.1) # Orange/amber
+		btn_style.set_corner_radius_all(6)
+		crash_btn.add_theme_stylebox_override("normal", btn_style)
+		
+		var btn_hover = btn_style.duplicate()
+		btn_hover.bg_color = Color(0.9, 0.5, 0.15)
+		crash_btn.add_theme_stylebox_override("hover", btn_hover)
+		
+		if is_crashed:
+			crash_btn.disabled = true
+			crash_btn.text = "Crashed"
+			var btn_disabled = btn_style.duplicate()
+			btn_disabled.bg_color = Color(0.3, 0.3, 0.3)
+			crash_btn.add_theme_stylebox_override("disabled", btn_disabled)
+		elif status != "Available":
+			crash_btn.disabled = true
+			var btn_disabled = btn_style.duplicate()
+			btn_disabled.bg_color = Color(0.3, 0.3, 0.3)
+			crash_btn.add_theme_stylebox_override("disabled", btn_disabled)
+		else:
+			crash_btn.pressed.connect(func():
+				if GameState.crash_activity(activity_id):
+					refresh_board()
+				else:
+					if resource_warning_label:
+						resource_warning_label.text = "⚠️ Cannot crash activity: budget limit reached (-300,000 TL)."
+			)
+		vbox.add_child(crash_btn)
+
 	# Interaction
 	if status == "Available" or (status == "Completed" and activity["id"] in ["initial_festival_layout_mapping", "final_festival_layout_mapping"]):
 		card.gui_input.connect(func(event): 
@@ -400,6 +516,9 @@ func _style_card(card: PanelContainer, status: String, activity_id: String = "")
 			if activity_id == "festival_day":
 				style.bg_color = Color(0.1, 0.2, 0.1, 0.6) # Darker green when locked
 			
+	if GameState.crashed_activities.has(activity_id):
+		style.border_color = Color(1.0, 0.5, 0.0) # Orange border for crashed activities
+
 	card.add_theme_stylebox_override("panel", style)
 
 func _animate_hover(card: PanelContainer, entering: bool) -> void:
@@ -450,6 +569,26 @@ func _dependencies_completed(activity: Dictionary) -> bool:
 	return true
 
 func start_activity(activity: Dictionary) -> void:
+	if not GameState.has_enough_resources(activity):
+		var req_phones = int(activity.get("required_phones", 0))
+		var req_computers = int(activity.get("required_computers", 0))
+		var missing_resource = ""
+		if GameState.available_phones < req_phones and GameState.available_computers < req_computers:
+			missing_resource = "phones and computers"
+		elif GameState.available_phones < req_phones:
+			missing_resource = "phones"
+		else:
+			missing_resource = "computers"
+		print("Not enough ", missing_resource, " available for ", activity["name"])
+		if resource_warning_label:
+			resource_warning_label.text = "⚠️ Not enough resources to start " + activity["name"] + "."
+		return
+
+	GameState.allocate_resources(activity)
+	update_resource_display()
+	if resource_warning_label:
+		resource_warning_label.text = ""
+
 	var activity_id = activity["id"]
 	var panels = {
 		"team_assignment": "TeamAssignmentPanel",
@@ -469,15 +608,22 @@ func start_activity(activity: Dictionary) -> void:
 		"final_festival_layout_mapping": "FinalFacilityLayoutPanel",
 		"festival_day": "FestivalDayPanel"
 	}
-	
+
 	if activity_id in panels:
 		var panel_name = panels[activity_id]
 		_check_scenarios_and_start(activity, panel_name)
 		return
 
 	print("Started: ", activity["name"])
-	GameState.completed_activities.append(activity_id)
+	GameState.complete_activity(activity_id)
 	refresh_board()
+
+func update_resource_display() -> void:
+	if resource_status_label:
+		resource_status_label.text = "Phones: %d/%d | Computers: %d/%d" % [
+			GameState.available_phones, GameState.total_phones,
+			GameState.available_computers, GameState.total_computers
+		]
 
 func _check_scenarios_and_start(activity: Dictionary, panel_name: String) -> void:
 	var activity_id = activity["id"]
@@ -695,3 +841,21 @@ func show_game_over() -> void:
 	
 	# Visual effects for the card board to show it's disabled
 	activity_list.modulate = Color(0.3, 0.3, 0.3)
+
+func _on_buy_phone_pressed() -> void:
+	if GameState.purchase_phone():
+		update_resource_display()
+		if resource_warning_label:
+			resource_warning_label.text = ""
+	else:
+		if resource_warning_label:
+			resource_warning_label.text = "⚠️ Cannot buy phone: insufficient budget or safety threshold reached."
+
+func _on_buy_computer_pressed() -> void:
+	if GameState.purchase_computer():
+		update_resource_display()
+		if resource_warning_label:
+			resource_warning_label.text = ""
+	else:
+		if resource_warning_label:
+			resource_warning_label.text = "⚠️ Cannot buy computer: insufficient budget or safety threshold reached."
