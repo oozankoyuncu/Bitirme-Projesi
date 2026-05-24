@@ -105,6 +105,40 @@ func _setup_dashboard_notifications() -> void:
 	buy_comp_btn.add_theme_font_size_override("font_size", 14)
 	buy_comp_btn.pressed.connect(_on_buy_computer_pressed)
 	resource_hbox.add_child(buy_comp_btn)
+
+	# Add Heuristic Dropdown
+	var heuristic_lbl = Label.new()
+	heuristic_lbl.text = " |   Resource Heuristic:"
+	heuristic_lbl.add_theme_font_size_override("font_size", 14)
+	resource_hbox.add_child(heuristic_lbl)
+	
+	var heuristic_option = OptionButton.new()
+	heuristic_option.add_item("Minimum Duration First")
+	heuristic_option.add_item("Maximum Duration First")
+	heuristic_option.add_item("Minimum Slack First")
+	heuristic_option.add_item("Highest Resource Demand First")
+	heuristic_option.add_item("Critical Activity First")
+	
+	var current_heuristic = GameState.resource_leveling_heuristic
+	var default_idx = 2
+	match current_heuristic:
+		"minimum_duration_first": default_idx = 0
+		"maximum_duration_first": default_idx = 1
+		"minimum_slack_first": default_idx = 2
+		"highest_resource_demand_first": default_idx = 3
+		"critical_activity_first": default_idx = 4
+	heuristic_option.select(default_idx)
+	
+	heuristic_option.item_selected.connect(func(index):
+		match index:
+			0: GameState.resource_leveling_heuristic = "minimum_duration_first"
+			1: GameState.resource_leveling_heuristic = "maximum_duration_first"
+			2: GameState.resource_leveling_heuristic = "minimum_slack_first"
+			3: GameState.resource_leveling_heuristic = "highest_resource_demand_first"
+			4: GameState.resource_leveling_heuristic = "critical_activity_first"
+		refresh_board()
+	)
+	resource_hbox.add_child(heuristic_option)
 	
 	# Row 4: Resource Warning Label
 	resource_warning_label = Label.new()
@@ -152,6 +186,40 @@ func _setup_dashboard_notifications() -> void:
 	finish_btn.pressed.connect(_on_finish_game_pressed)
 	finish_container.add_child(finish_btn)
 
+func get_heuristic_value(act: Dictionary) -> float:
+	var h = GameState.resource_leveling_heuristic
+	match h:
+		"minimum_duration_first":
+			return GameState.get_activity_duration(act)
+		"maximum_duration_first":
+			return -GameState.get_activity_duration(act)
+		"highest_resource_demand_first":
+			var demand = int(act.get("required_members", 0)) + int(act.get("required_phones", 0)) + int(act.get("required_computers", 0))
+			return -float(demand)
+		"critical_activity_first":
+			var is_crit = act.get("id", "") in ["team_assignment", "emergency_training", "sponsor_management", "entertainment_lineup", "ticket_pricing", "food_vendor_selection", "stage_setup_choices", "festival_cleaning_security", "final_festival_layout_mapping"]
+			return 0.0 if is_crit else 1.0
+		"minimum_slack_first", _:
+			var slack_map = {
+				"team_assignment": 0.0,
+				"initial_festival_layout_mapping": 2.0,
+				"emergency_training": 0.0,
+				"sponsor_management": 0.0,
+				"entertainment_lineup": 0.0,
+				"promotion_strategy": 4.0,
+				"ticket_pricing": 0.0,
+				"volunteer_club_recruitment": 4.0,
+				"food_vendor_selection": 0.0,
+				"stage_setup_choices": 0.0,
+				"sound_system_choices": 2.0,
+				"transport_coordination": 2.0,
+				"decoration_theme_decision": 2.0,
+				"festival_cleaning_security": 0.0,
+				"final_festival_layout_mapping": 0.0,
+				"festival_day": 0.0
+			}
+			return slack_map.get(act.get("id", ""), 4.0)
+
 func refresh_board() -> void:
 	# Clean old cards
 	for child in activity_list.get_children():
@@ -176,7 +244,16 @@ func refresh_board() -> void:
 	add_child(rc)
 
 	# Populate with new cards
-	for activity in GameState.activities:
+	var sorted_activities = GameState.activities.duplicate()
+	sorted_activities.sort_custom(func(a, b):
+		var val_a = get_heuristic_value(a)
+		var val_b = get_heuristic_value(b)
+		if abs(val_a - val_b) < 0.001:
+			return a.get("id", "") < b.get("id", "")
+		return val_a < val_b
+	)
+
+	for activity in sorted_activities:
 		var card = create_activity_card(activity)
 		
 		if activity["id"] == "festival_day":
@@ -581,7 +658,14 @@ func start_activity(activity: Dictionary) -> void:
 			missing_resource = "computers"
 		print("Not enough ", missing_resource, " available for ", activity["name"])
 		if resource_warning_label:
-			resource_warning_label.text = "⚠️ Not enough resources to start " + activity["name"] + "."
+			var h_name = "Minimum Slack First"
+			match GameState.resource_leveling_heuristic:
+				"minimum_duration_first": h_name = "Minimum Duration First"
+				"maximum_duration_first": h_name = "Maximum Duration First"
+				"minimum_slack_first": h_name = "Minimum Slack First"
+				"highest_resource_demand_first": h_name = "Highest Resource Demand First"
+				"critical_activity_first": h_name = "Critical Activity First"
+			resource_warning_label.text = "⚠️ " + activity["name"] + " could not start. Blocked by resource constraints. Conflict evaluated using: " + h_name + "."
 		return
 
 	GameState.allocate_resources(activity)
