@@ -56,6 +56,7 @@ var info_button: Button
 
 func _ready() -> void:
 	confirm_button.pressed.connect(_on_confirm_pressed)
+	visibility_changed.connect(_on_visibility_changed)
 	_setup_ui_styles()
 	_setup_guide_ui()
 	_setup_guide_text()
@@ -207,6 +208,139 @@ func _setup_guide_text() -> void:
 		"• Engagement Contribution: Each selected participant adds an 'Engagement Level' score. The more total Engagement you have, the higher your Event Quality and Participant Satisfaction will be.\n" + \
 		"• Diversity Bonus: Mixing different types of clubs provides a multiplier to your Event Quality score. A diverse festival is a successful festival.\n" + \
 		"• Strategic Rule: Maximize Engagement and Diversity WITHOUT exceeding the 200 sqm limit."
+
+var scenario_timer_active = false
+func _on_visibility_changed() -> void:
+	if visible:
+		if not GameState.triggered_scenarios.has("volunteer_club_event") and not GameState.volunteer_club_completed and not scenario_timer_active:
+			scenario_timer_active = true
+			_start_scenario_timer()
+
+func _start_scenario_timer() -> void:
+	await get_tree().create_timer(1.0).timeout
+	if not is_inside_tree() or not is_visible_in_tree() or GameState.triggered_scenarios.has("volunteer_club_event"):
+		scenario_timer_active = false
+		return
+		
+	GameState.triggered_scenarios.append("volunteer_club_event")
+	var is_increase = randf() > 0.5
+	
+	if is_increase:
+		club_options["photo_club"] = {
+			"display_name": "Photography Society",
+			"activity_type": "Artistic",
+			"engagement_level": 12,
+			"space_requirement": 40,
+			"operational_needs": "Display Boards"
+		}
+		club_options["robotics_club"] = {
+			"display_name": "Robotics Club",
+			"activity_type": "Informational",
+			"engagement_level": 18,
+			"space_requirement": 50,
+			"operational_needs": "Electricity, Tables"
+		}
+	else:
+		var keys = club_options.keys()
+		keys.shuffle()
+		club_options.erase(keys[0])
+		club_options.erase(keys[1])
+		
+	create_options()
+	refresh_ui()
+
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.85)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 100
+	
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+	
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(700, 400)
+	var p_style = StyleBoxFlat.new()
+	p_style.bg_color = Color(0.1, 0.12, 0.18, 1.0)
+	p_style.set_corner_radius_all(15)
+	p_style.border_width_left = 6
+	p_style.border_width_right = 6
+	p_style.border_width_top = 6
+	p_style.border_width_bottom = 6
+	p_style.border_color = Color(0.2, 0.9, 0.4, 1.0) if is_increase else Color(1.0, 0.4, 0.3, 1.0)
+	p_style.shadow_size = 30
+	p_style.shadow_color = Color(0, 0, 0, 0.7)
+	panel.add_theme_stylebox_override("panel", p_style)
+	center.add_child(panel)
+	
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 40)
+	margin.add_theme_constant_override("margin_right", 40)
+	margin.add_theme_constant_override("margin_top", 40)
+	margin.add_theme_constant_override("margin_bottom", 40)
+	panel.add_child(margin)
+	
+	var vbox = VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 25)
+	margin.add_child(vbox)
+	
+	var title = Label.new()
+	title.text = "🎉 GREAT NEWS 🎉" if is_increase else "⚠️ BAD NEWS ⚠️"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 38)
+	title.add_theme_color_override("font_color", Color(0.2, 1.0, 0.4) if is_increase else Color(1.0, 0.4, 0.3))
+	vbox.add_child(title)
+	
+	var sep = HSeparator.new()
+	vbox.add_child(sep)
+	
+	var body = Label.new()
+	if is_increase:
+		body.text = "Because your festival is becoming very popular on campus, two additional clubs (Photography Society & Robotics Club) have requested to participate!\n\nYou can now include them in your festival."
+	else:
+		body.text = "Due to the upcoming mid-term exam week, two clubs have withdrawn their participation to focus on studying.\n\nThey have been removed from your selection pool."
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_theme_font_size_override("font_size", 24)
+	vbox.add_child(body)
+	
+	var spacer = Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(spacer)
+	
+	var btn = Button.new()
+	btn.text = "ACKNOWLEDGE"
+	btn.custom_minimum_size = Vector2(300, 65)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	
+	var b_style = StyleBoxFlat.new()
+	b_style.bg_color = Color(0.15, 0.6, 0.25) if is_increase else Color(0.8, 0.3, 0.2)
+	b_style.set_corner_radius_all(10)
+	btn.add_theme_stylebox_override("normal", b_style)
+	var b_hover = b_style.duplicate()
+	b_hover.bg_color = Color(0.2, 0.75, 0.35) if is_increase else Color(0.9, 0.4, 0.3)
+	btn.add_theme_stylebox_override("hover", b_hover)
+	btn.add_theme_font_size_override("font_size", 22)
+	
+	btn.pressed.connect(func():
+		var out_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+		out_tween.tween_property(overlay, "modulate:a", 0.0, 0.2)
+		out_tween.tween_property(panel, "scale", Vector2(0.8, 0.8), 0.2)
+		out_tween.chain().tween_callback(func():
+			overlay.queue_free()
+		)
+	)
+	vbox.add_child(btn)
+	
+	overlay.modulate.a = 0.0
+	panel.scale = Vector2(0.8, 0.8)
+	var in_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	in_tween.tween_property(overlay, "modulate:a", 1.0, 0.4)
+	in_tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.4)
+	
+	add_child(overlay)
 
 func create_options() -> void:
 	for c in club_list.get_children():

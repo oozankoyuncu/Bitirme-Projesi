@@ -33,6 +33,12 @@ func _ready() -> void:
 	_setup_ui_styles()
 	create_member_cards()
 	update_stats_display()
+	visibility_changed.connect(_on_visibility_changed)
+
+func _on_visibility_changed() -> void:
+	if visible and current_phase == 1:
+		create_member_cards()
+		update_stats_display()
 
 
 func _setup_ui_styles() -> void:
@@ -377,7 +383,7 @@ func transition_to_work_assignation() -> void:
 	# Populate activities (excluding team_assignment, final mapping, festival day)
 	var valid_activities = []
 	for act in GameState.activities:
-		if act["id"] not in ["team_assignment", "work_assignment", "initial_festival_layout_mapping", "final_festival_layout_mapping", "festival_day"]:
+		if act["id"] not in ["team_assignment", "work_assignment", "initial_festival_layout_mapping", "final_festival_layout_mapping", "festival_day", "emergency_training"]:
 			valid_activities.append(act)
 	
 	for act in valid_activities:
@@ -586,10 +592,16 @@ func _on_activity_assigned(index: int, act_id: String, dropdown: OptionButton) -
 				count += 1
 				
 		var m_dict = null
-		for m in GameState.all_team_members:
+		for m in GameState.selected_team:
 			if m["id"] == selected_id:
 				m_dict = m
 				break
+				
+		if m_dict == null:
+			for m in GameState.all_team_members:
+				if m["id"] == selected_id:
+					m_dict = m
+					break
 				
 		var total_cap = 1
 		if m_dict != null:
@@ -693,7 +705,7 @@ func finalize_work_assignation() -> void:
 	# Validation: ensure all activities assigned
 	var valid_activities = 0
 	for act in GameState.activities:
-		if act["id"] not in ["team_assignment", "work_assignment", "initial_festival_layout_mapping", "final_festival_layout_mapping", "festival_day"]:
+		if act["id"] not in ["team_assignment", "work_assignment", "initial_festival_layout_mapping", "final_festival_layout_mapping", "festival_day", "emergency_training"]:
 			valid_activities += 1
 			
 	if current_assignments.size() < valid_activities:

@@ -304,6 +304,15 @@ func _can_drop_data_on_area(at_position: Vector2, data: Variant, area_name: Stri
 
 func _drop_data_on_area(at_position: Vector2, data: Variant, area_name: String) -> void:
 	var facility_name = data["name"]
+	
+	if facility_name == "Stage":
+		for a_name in areas.keys():
+			if areas[a_name]["assigned"].has("Stage"):
+				areas[a_name]["assigned"].erase("Stage")
+				update_area_button_style(a_name)
+				if selected_area_name == a_name:
+					update_area_info(a_name)
+					
 	areas[area_name]["assigned"].append(facility_name)
 	update_area_button_style(area_name)
 	if selected_area_name == area_name:

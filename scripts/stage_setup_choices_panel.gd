@@ -173,9 +173,128 @@ func _on_back_pressed() -> void:
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()
 
+var scenario_timer_active = false
+
 func _on_visibility_changed() -> void:
 	if visible:
 		_refresh_ui()
+		if GameState.active_scenarios.has("stage_setup_event") and not GameState.triggered_scenarios.has("stage_setup_event") and not scenario_timer_active:
+			scenario_timer_active = true
+			_start_scenario_timer()
+
+func _start_scenario_timer() -> void:
+	await get_tree().create_timer(3.0).timeout
+	if not is_inside_tree() or not is_visible_in_tree() or GameState.triggered_scenarios.has("stage_setup_event"):
+		scenario_timer_active = false
+		return
+		
+	GameState.triggered_scenarios.append("stage_setup_event")
+	var is_increase = randf() > 0.5
+	
+	for s in GameState.stage_setup_defs:
+		if is_increase:
+			s["cost"] = int(s["cost"] * 1.15)
+		else:
+			s["cost"] = int(s["cost"] * 0.85)
+			
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.85)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 100
+	
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+	
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(700, 400)
+	var p_style = StyleBoxFlat.new()
+	p_style.bg_color = Color(0.1, 0.12, 0.18, 1.0)
+	p_style.set_corner_radius_all(15)
+	p_style.border_width_left = 6
+	p_style.border_width_right = 6
+	p_style.border_width_top = 6
+	p_style.border_width_bottom = 6
+	p_style.border_color = Color(0.9, 0.3, 0.3, 1.0) if is_increase else Color(0.3, 0.9, 0.3, 1.0)
+	p_style.shadow_size = 30
+	p_style.shadow_color = Color(0, 0, 0, 0.7)
+	panel.add_theme_stylebox_override("panel", p_style)
+	center.add_child(panel)
+	
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 40)
+	margin.add_theme_constant_override("margin_right", 40)
+	margin.add_theme_constant_override("margin_top", 40)
+	margin.add_theme_constant_override("margin_bottom", 40)
+	panel.add_child(margin)
+	
+	var vbox = VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 25)
+	margin.add_child(vbox)
+	
+	var title = Label.new()
+	title.text = "📈 MARKET SHIFT 📈" if is_increase else "🎉 GOOD NEWS 🎉"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 38)
+	title.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3) if is_increase else Color(0.3, 1.0, 0.3))
+	vbox.add_child(title)
+	
+	var sep = HSeparator.new()
+	vbox.add_child(sep)
+	
+	var body = Label.new()
+	if is_increase:
+		body.text = "Market Notification: Due to recent currency fluctuations and supply chain issues,\nthe cost of all stage setup options has increased by 15%!"
+	else:
+		body.text = "School Board Notification: Good news! The school administration has decided to partially\nsponsor the festival's infrastructure. All stage setup costs have been reduced by 15%!"
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_theme_font_size_override("font_size", 24)
+	vbox.add_child(body)
+	
+	var spacer = Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(spacer)
+	
+	var btn = Button.new()
+	btn.text = "ACKNOWLEDGE"
+	btn.custom_minimum_size = Vector2(300, 65)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	
+	var b_style = StyleBoxFlat.new()
+	b_style.bg_color = Color(0.8, 0.2, 0.2) if is_increase else Color(0.2, 0.8, 0.2)
+	b_style.set_corner_radius_all(10)
+	btn.add_theme_stylebox_override("normal", b_style)
+	var b_hover = b_style.duplicate()
+	b_hover.bg_color = Color(0.9, 0.3, 0.3) if is_increase else Color(0.3, 0.9, 0.3)
+	btn.add_theme_stylebox_override("hover", b_hover)
+	btn.add_theme_font_size_override("font_size", 22)
+	
+	btn.pressed.connect(func():
+		var out_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+		out_tween.tween_property(overlay, "modulate:a", 0.0, 0.2)
+		out_tween.tween_property(panel, "scale", Vector2(0.8, 0.8), 0.2)
+		out_tween.chain().tween_callback(func():
+			overlay.queue_free()
+			_create_stage_cards()
+			selected_stage_id = ""
+			duration_label.text = "Estimated Setup: --"
+			size_bar.value = 0
+			lighting_bar.value = 0
+			operation_bar.value = 0
+		)
+	)
+	vbox.add_child(btn)
+	
+	overlay.modulate.a = 0.0
+	panel.scale = Vector2(0.8, 0.8)
+	var in_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	in_tween.tween_property(overlay, "modulate:a", 1.0, 0.4)
+	in_tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.4)
+	
+	add_child(overlay)
 
 func _refresh_ui() -> void:
 	money_label.text = "Budget: " + str(GameState.money) + " TL"

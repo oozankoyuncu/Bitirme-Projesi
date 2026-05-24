@@ -8,7 +8,7 @@
       "speed": 4,
       "hygiene_rating": 3,
       "electricity_requirement": 2,
-      "space_requirement": 18,
+      "space_requirement": 13,
       "efficiency_score": 360
     },
     "street_grill_hub": {
@@ -19,7 +19,7 @@
       "speed": 3,
       "hygiene_rating": 4,
       "electricity_requirement": 3,
-      "space_requirement": 22,
+      "space_requirement": 17,
       "efficiency_score": 264
     },
     "quickcrave_kitchen": {
@@ -30,7 +30,7 @@
       "speed": 2,
       "hygiene_rating": 3,
       "electricity_requirement": 4,
-      "space_requirement": 15,
+      "space_requirement": 10,
       "efficiency_score": 147.37
     },
     "sweet_haven_desserts": {
@@ -41,7 +41,7 @@
       "speed": 2,
       "hygiene_rating": 2,
       "electricity_requirement": 2,
-      "space_requirement": 20,
+      "space_requirement": 15,
       "efficiency_score": 236.36
     },
     "velvet_sugar_bar": {
@@ -52,7 +52,7 @@
       "speed": 5,
       "hygiene_rating": 3,
       "electricity_requirement": 4,
-      "space_requirement": 25,
+      "space_requirement": 20,
       "efficiency_score": 517.24
     },
     "frost_and_flame": {
@@ -63,7 +63,7 @@
       "speed": 2,
       "hygiene_rating": 1,
       "electricity_requirement": 4,
-      "space_requirement": 14,
+      "space_requirement": 9,
       "efficiency_score": 133.33
     },
     "global_plate_express": {
@@ -74,7 +74,7 @@
       "speed": 4,
       "hygiene_rating": 5,
       "electricity_requirement": 4,
-      "space_requirement": 27,
+      "space_requirement": 22,
       "efficiency_score": 309.68
     },
     "world_spice_corner": {
@@ -85,7 +85,7 @@
       "speed": 2,
       "hygiene_rating": 1,
       "electricity_requirement": 4,
-      "space_requirement": 12,
+      "space_requirement": 7,
       "efficiency_score": 162.5
     },
     "fusion_feast_lab": {
@@ -96,7 +96,7 @@
       "speed": 3,
       "hygiene_rating": 4,
       "electricity_requirement": 2,
-      "space_requirement": 19,
+      "space_requirement": 14,
       "efficiency_score": 242.86
     },
     "green_bowl_kitchen": {
@@ -107,7 +107,7 @@
       "speed": 4,
       "hygiene_rating": 2,
       "electricity_requirement": 5,
-      "space_requirement": 24,
+      "space_requirement": 19,
       "efficiency_score": 289.66
     },
     "freshroots_market": {
@@ -118,7 +118,7 @@
       "speed": 3,
       "hygiene_rating": 3,
       "electricity_requirement": 2,
-      "space_requirement": 16,
+      "space_requirement": 11,
       "efficiency_score": 266.67
     },
     "purefuel_station": {
@@ -129,7 +129,7 @@
       "speed": 3,
       "hygiene_rating": 2,
       "electricity_requirement": 4,
-      "space_requirement": 18,
+      "space_requirement": 13,
       "efficiency_score": 204.55
     }
   }

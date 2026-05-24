@@ -4,7 +4,7 @@
 			"id": "team_assignment",
 			"name": "Team Assignment",
 			"type": "team_setup",
-			"duration": 0,
+			"duration": 4,
 			"cost": 0,
 			"dependencies": []
 		},
@@ -12,20 +12,19 @@
 			"id": "initial_festival_layout_mapping",
 			"name": "Initial Festival Layout Mapping",
 			"type": "layout_mapping",
-			"duration": 0,
+			"duration": 4,
 			"cost": 0,
-			"dependencies": [
-                "team_assignment"
-			]
+			"dependencies": []
 		},
 		{
 			"id": "emergency_training",
-			"name": "Emergency Training",
+			"name": "Emergency Plan Training",
 			"type": "emergency_train",
-			"duration": 0,
+			"duration": 4,
 			"cost": 0,
 			"dependencies": [
-                "initial_festival_layout_mapping"
+				"team_assignment",
+				"initial_festival_layout_mapping"
 			]
 		},
 		{
@@ -34,7 +33,8 @@
 			"cost": 0,
 			"duration": 8,
 			"dependencies": [
-                "emergency_training"
+				"team_assignment",
+				"initial_festival_layout_mapping"
 			]
 		},
 		{
@@ -44,7 +44,7 @@
 			"duration": 4,
 			"cost": 0,
 			"dependencies": [
-                "sponsor_management"
+				"sponsor_management"
 			]
 		},
 		{
@@ -54,27 +54,29 @@
 			"duration": 8,
 			"cost": 0,
 			"dependencies": [
-                "sponsor_management"
+				"emergency_training"
 			]
 		},
 		{
 			"id": "ticket_pricing",
-			"name": "Ticket Pricing",
+			"name": "Ticket Pricing Strategy",
 			"type": "ticket_pricing",
 			"duration": 4,
 			"cost": 0,
 			"dependencies": [
-                "entertainment_lineup"
+				"entertainment_lineup",
+				"promotion_strategy"
 			]
 		},
 		{
 			"id": "volunteer_club_recruitment",
-			"name": "Volunteer / Club Recruitment",
+			"name": "Volunteer/Club Recruitment",
 			"type": "volunteer_club",
 			"duration": 4,
 			"cost": 0,
 			"dependencies": [
-                "entertainment_lineup"
+				"entertainment_lineup",
+				"promotion_strategy"
 			]
 		},
 		{
@@ -85,7 +87,7 @@
 			"cost": 0,
 			"dependencies": [
 				"ticket_pricing",
-                "volunteer_club_recruitment"
+				"volunteer_club_recruitment"
 			]
 		},
 		{
@@ -94,7 +96,9 @@
 			"type": "stage_setup",
 			"cost": 0,
 			"duration": 4,
-			"dependencies": []
+			"dependencies": [
+				"food_vendor_selection"
+			]
 		},
 		{
 			"id": "sound_system_choices",
@@ -102,7 +106,9 @@
 			"type": "sound_system",
 			"cost": 0,
 			"duration": 4,
-			"dependencies": []
+			"dependencies": [
+				"food_vendor_selection"
+			]
 		},
 		{
 			"id": "transport_coordination",
@@ -110,7 +116,9 @@
 			"type": "transport",
 			"cost": 0,
 			"duration": 4,
-			"dependencies": []
+			"dependencies": [
+				"food_vendor_selection"
+			]
 		},
 		{
 			"id": "decoration_theme_decision",
@@ -118,7 +126,11 @@
 			"type": "decoration_theme",
 			"cost": 0,
 			"duration": 2,
-			"dependencies": []
+			"dependencies": [
+				"stage_setup_choices",
+				"sound_system_choices",
+				"transport_coordination"
+			]
 		},
 		{
 			"id": "festival_cleaning_security",
@@ -127,19 +139,21 @@
 			"cost": 0,
 			"duration": 4,
 			"dependencies": [
-                "decoration_theme_decision"
+				"stage_setup_choices",
+				"sound_system_choices",
+				"transport_coordination"
 			]
 		},
 		{
 			"id": "final_festival_layout_mapping",
-			"name": "Final Festival Layout Mapping",
+			"name": "Facility Layout Mapping",
 			"type": "final_layout_mapping",
 			"cost": 0,
-			"duration": 0,
+			"duration": 4,
 			"dependencies": [
-				"food_vendor_selection",
-				"volunteer_club_recruitment",
-                "stage_setup_choices"
+				"stage_setup_choices",
+				"sound_system_choices",
+				"transport_coordination"
 			]
 		},
 		{
@@ -149,7 +163,9 @@
 			"cost": 0,
 			"duration": 0,
 			"dependencies": [
-                "final_festival_layout_mapping"
+				"decoration_theme_decision",
+				"festival_cleaning_security",
+				"final_festival_layout_mapping"
 			]
 		}
 	]

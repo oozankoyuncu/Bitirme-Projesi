@@ -3,7 +3,7 @@ extends Control
 var vendor_options = {}
 
 # PLACEHOLDERS: Limits for resources
-const MAX_SPACE: int = 100
+var current_max_space: int = 100
 
 @onready var vendor_list: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/VendorList
 @onready var budget_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/BudgetLabel
@@ -22,6 +22,7 @@ var info_button: Button
 var guide_panel: PanelContainer
 
 func _ready() -> void:
+	visibility_changed.connect(_on_visibility_changed)
 	_setup_guide_ui()
 	_load_vendors()
 	confirm_button.pressed.connect(_on_confirm_pressed)
@@ -247,7 +248,7 @@ func create_options() -> void:
 		slider_hbox.alignment = BoxContainer.ALIGNMENT_END
 		
 		var min_space = int(v_data["space_requirement"])
-		var max_space = min_space * 2
+		var max_space = 100
 		
 		var slider_label = Label.new()
 		slider_label.text = "Allocated: " + str(min_space) + " sqm"
@@ -363,11 +364,11 @@ func get_totals() -> Dictionary:
 	if avg_speed > 0 and avg_speed < 2.5:
 		satisfaction_impact -= 2.0 # Penalty for slow speed
 		
-	if total_space > MAX_SPACE:
+	if total_space > current_max_space:
 		quality_impact -= 3.0 # System overload / crowding penalty
 		satisfaction_impact -= 2.0
 		
-	var space_exceeded = total_space > MAX_SPACE
+	var space_exceeded = total_space > current_max_space
 	var budget_exceeded = total_price > GameState.money
 		
 	return {
@@ -396,7 +397,7 @@ func refresh_ui() -> void:
 	capacity_label.text = "Capacity: " + str(data["capacity"]) + " / " + attendance_str
 	hygiene_label.text = "Avg Hygiene: " + str(snapped(data["avg_hygiene"], 0.1)) + " / 5"
 	electricity_label.text = "Avg Speed: " + str(snapped(data["avg_speed"], 0.1)) + " / 5"
-	space_label.text = "Space Used: " + str(data["space"]) + " / " + str(MAX_SPACE) + " sqm"
+	space_label.text = "Space Used: " + str(data["space"]) + " / " + str(current_max_space) + " sqm"
 	diversity_label.text = "Diversity: " + str(data["diversity_count"]) + " types"
 	
 	if GameState.food_vendor_completed:
@@ -450,3 +451,113 @@ func go_back() -> void:
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()
+
+var scenario_timer_active: bool = false
+func _on_visibility_changed() -> void:
+	if visible:
+		if not GameState.triggered_scenarios.has("food_vendor_space_scenario") and not GameState.food_vendor_completed and not scenario_timer_active:
+			scenario_timer_active = true
+			_start_scenario_timer()
+
+func _start_scenario_timer() -> void:
+	await get_tree().create_timer(1.0).timeout
+	if not is_inside_tree() or not is_visible_in_tree() or GameState.triggered_scenarios.has("food_vendor_space_scenario"):
+		scenario_timer_active = false
+		return
+		
+	GameState.triggered_scenarios.append("food_vendor_space_scenario")
+	
+	var reduction = randi() % 31 + 40 # 40 to 70
+	current_max_space -= reduction
+	
+	refresh_ui()
+
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.85)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 100
+	
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+	
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(700, 400)
+	var p_style = StyleBoxFlat.new()
+	p_style.bg_color = Color(0.1, 0.12, 0.18, 1.0)
+	p_style.set_corner_radius_all(15)
+	p_style.border_width_left = 6
+	p_style.border_width_right = 6
+	p_style.border_width_top = 6
+	p_style.border_width_bottom = 6
+	p_style.border_color = Color(1.0, 0.4, 0.2, 1.0)
+	p_style.shadow_size = 30
+	p_style.shadow_color = Color(0, 0, 0, 0.7)
+	panel.add_theme_stylebox_override("panel", p_style)
+	center.add_child(panel)
+	
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 40)
+	margin.add_theme_constant_override("margin_right", 40)
+	margin.add_theme_constant_override("margin_top", 40)
+	margin.add_theme_constant_override("margin_bottom", 40)
+	panel.add_child(margin)
+	
+	var vbox = VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 25)
+	margin.add_child(vbox)
+	
+	var title = Label.new()
+	title.text = "🚨 HEALTH & SAFETY ALERT 🚨"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 36)
+	title.add_theme_color_override("font_color", Color(1.0, 0.4, 0.2))
+	vbox.add_child(title)
+	
+	var sep = HSeparator.new()
+	vbox.add_child(sep)
+	
+	var body = Label.new()
+	body.text = "School Administration Notification:\n\nDue to sudden Health & Safety (İSG) regulation changes, the designated area for food vendors has been restricted.\n\nYour maximum allowed space is reduced by %d sqm!" % reduction
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_theme_font_size_override("font_size", 24)
+	vbox.add_child(body)
+	
+	var spacer = Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(spacer)
+	
+	var btn = Button.new()
+	btn.text = "ACKNOWLEDGE"
+	btn.custom_minimum_size = Vector2(300, 65)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	
+	var b_style = StyleBoxFlat.new()
+	b_style.bg_color = Color(0.8, 0.3, 0.1)
+	b_style.set_corner_radius_all(10)
+	btn.add_theme_stylebox_override("normal", b_style)
+	var b_hover = b_style.duplicate()
+	b_hover.bg_color = Color(0.9, 0.4, 0.2)
+	btn.add_theme_stylebox_override("hover", b_hover)
+	btn.add_theme_font_size_override("font_size", 22)
+	
+	btn.pressed.connect(func():
+		var out_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+		out_tween.tween_property(overlay, "modulate:a", 0.0, 0.2)
+		out_tween.tween_property(panel, "scale", Vector2(0.8, 0.8), 0.2)
+		out_tween.chain().tween_callback(func():
+			overlay.queue_free()
+		)
+	)
+	vbox.add_child(btn)
+	
+	overlay.modulate.a = 0.0
+	panel.scale = Vector2(0.8, 0.8)
+	var in_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	in_tween.tween_property(overlay, "modulate:a", 1.0, 0.4)
+	in_tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.4)
+	
+	add_child(overlay)

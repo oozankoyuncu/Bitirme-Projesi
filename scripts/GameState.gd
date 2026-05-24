@@ -22,6 +22,21 @@ var skip_onboarding: bool = false
 var player_notes: String = ""
 var notepad_popup_shown: bool = false
 
+# ---- Scenarios ----
+var active_scenarios: Array = []
+var possible_scenarios = [
+	"missing_team_members",
+	"extra_workload_capacity",
+	"mandatory_emergency_training",
+	"rival_free_festival",
+	"artist_dropout",
+	"stage_setup_event",
+	"headliner_decoration_veto",
+	"cleaning_security_space_event"
+]
+var triggered_scenarios: Array = []
+var vetoed_decoration_theme_id: String = ""
+
 # Work Assignment
 var work_assignment_completed: bool = false
 var work_assignments: Dictionary = {}  # activity_id -> member_id
@@ -37,6 +52,7 @@ const SCOPE_PENALTY_PER_EXTRA: float = 5.0
 var layout_plan: Dictionary = {}
 var layout_plans: Array = []
 var layout_active_plan_index: int = 0
+var final_layout_picky_facilities: Dictionary = {}
 
 var final_layout_plan: Dictionary = {}
 var final_layout_completed: bool = false
@@ -151,6 +167,11 @@ func reset() -> void:
 	layout_plans = []
 	layout_active_plan_index = 0
 	layout_plan = {}
+	max_site_space = 100
+	final_layout_picky_facilities = {}
+	
+	vetoed_decoration_theme_id = ""
+	_initialize_scenarios()
 	
 
 	last_week_tick = -1
@@ -188,6 +209,16 @@ func _ready() -> void:
 	load_sound_systems()
 	load_transport_deliveries()
 	load_decoration_themes()
+	
+	_initialize_scenarios()
+
+func _initialize_scenarios() -> void:
+	active_scenarios.clear()
+	triggered_scenarios.clear()
+	
+	# Tüm senaryolar her oyunda aktif olacak
+	for sc in possible_scenarios:
+		active_scenarios.append(sc)
 	
 #func to print the HUD text
 func get_hud_text() -> String:

@@ -278,6 +278,102 @@ func _on_card_toggled(toggled_on: bool, id: String) -> void:
 				card_visuals[other_id].add_theme_stylebox_override("panel", normal_style)
 		
 		card_visuals[id].add_theme_stylebox_override("panel", selected_style)
+		
+		if GameState.active_scenarios.has("rival_free_festival") and not GameState.triggered_scenarios.has("rival_free_festival"):
+			GameState.triggered_scenarios.append("rival_free_festival")
+			for m in GameState.selected_team:
+				m["reliability"] = max(1.0, m.get("reliability", 3.0) - 1.0)
+			
+			var overlay = ColorRect.new()
+			overlay.color = Color(0, 0, 0, 0.85)
+			overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			overlay.z_index = 100
+			
+			var center = CenterContainer.new()
+			center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			overlay.add_child(center)
+			
+			var panel = PanelContainer.new()
+			panel.custom_minimum_size = Vector2(700, 400)
+			var p_style = StyleBoxFlat.new()
+			p_style.bg_color = Color(0.1, 0.12, 0.18, 1.0)
+			p_style.set_corner_radius_all(15)
+			p_style.border_width_left = 6
+			p_style.border_width_right = 6
+			p_style.border_width_top = 6
+			p_style.border_width_bottom = 6
+			p_style.border_color = Color(0.9, 0.4, 0.3, 1.0)
+			p_style.shadow_size = 30
+			p_style.shadow_color = Color(0, 0, 0, 0.7)
+			panel.add_theme_stylebox_override("panel", p_style)
+			center.add_child(panel)
+			
+			var margin = MarginContainer.new()
+			margin.add_theme_constant_override("margin_left", 40)
+			margin.add_theme_constant_override("margin_right", 40)
+			margin.add_theme_constant_override("margin_top", 40)
+			margin.add_theme_constant_override("margin_bottom", 40)
+			panel.add_child(margin)
+			
+			var vbox = VBoxContainer.new()
+			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+			vbox.add_theme_constant_override("separation", 25)
+			margin.add_child(vbox)
+			
+			var title = Label.new()
+			title.text = "🚨 RIVAL FESTIVAL DETECTED 🚨"
+			title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			title.add_theme_font_size_override("font_size", 38)
+			title.add_theme_color_override("font_color", Color(1.0, 0.4, 0.3))
+			vbox.add_child(title)
+			
+			var sep = HSeparator.new()
+			vbox.add_child(sep)
+			
+			var body = Label.new()
+			body.text = "Team Member: A rival university is hosting a free festival on the exact same day!\nOur team's reliability has dropped due to stress, which decreases our expected ticket demand.\n\nYou might want to rethink your pricing strategy."
+			body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			body.add_theme_font_size_override("font_size", 24)
+			vbox.add_child(body)
+			
+			var spacer = Control.new()
+			spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			vbox.add_child(spacer)
+			
+			var btn = Button.new()
+			btn.text = "ACKNOWLEDGE"
+			btn.custom_minimum_size = Vector2(300, 65)
+			btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			
+			var b_style = StyleBoxFlat.new()
+			b_style.bg_color = Color(0.8, 0.3, 0.2)
+			b_style.set_corner_radius_all(10)
+			btn.add_theme_stylebox_override("normal", b_style)
+			var b_hover = b_style.duplicate()
+			b_hover.bg_color = Color(0.9, 0.4, 0.3)
+			btn.add_theme_stylebox_override("hover", b_hover)
+			btn.add_theme_font_size_override("font_size", 22)
+			
+			btn.pressed.connect(func():
+				var out_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+				out_tween.tween_property(overlay, "modulate:a", 0.0, 0.2)
+				out_tween.tween_property(panel, "scale", Vector2(0.8, 0.8), 0.2)
+				out_tween.chain().tween_callback(func():
+					overlay.queue_free()
+					refresh_ui()
+				)
+			)
+			vbox.add_child(btn)
+			
+			overlay.modulate.a = 0.0
+			panel.scale = Vector2(0.8, 0.8)
+			var in_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+			in_tween.tween_property(overlay, "modulate:a", 1.0, 0.4)
+			in_tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.4)
+			
+			add_child(overlay)
 	else:
 		if selected_id == id:
 			selected_id = "" # Deselected
@@ -289,16 +385,25 @@ func get_totals() -> Dictionary:
 	var base_reach = GameState.promotion_total_actual_reach
 	if base_reach <= 0.0: base_reach = 5000.0 #Fallback
 	
+	var team_reliability = 3.0
+	if GameState.selected_team.size() > 0:
+		var total_rel = 0.0
+		for m in GameState.selected_team:
+			total_rel += m.get("reliability", 3.0)
+		team_reliability = total_rel / GameState.selected_team.size()
+		
+	var reliability_factor = team_reliability / 3.0
+	
 	if selected_id == "":
-		return {"selected": false, "attendance": base_reach, "price": 0, "revenue": 0, "quality": 0}
+		return {"selected": false, "attendance": base_reach * reliability_factor, "price": 0, "revenue": 0, "quality": 0}
 		
 	var p = pricing_options[selected_id]
-	var adj_attendance = base_reach * (1.0 + p["impact"])
+	var adj_attendance = base_reach * (1.0 + p["impact"]) * reliability_factor
 	var revenue = adj_attendance * p["price"]
 	
 	# Fuzzy totals for UI if not consulting
-	var fuzzy_att_low = base_reach * (1.0 + p["impact"] - 0.05)
-	var fuzzy_att_high = base_reach * (1.0 + p["impact"] + 0.05)
+	var fuzzy_att_low = base_reach * (1.0 + p["impact"] - 0.05) * reliability_factor
+	var fuzzy_att_high = base_reach * (1.0 + p["impact"] + 0.05) * reliability_factor
 	var fuzzy_rev_low = fuzzy_att_low * p["price"]
 	var fuzzy_rev_high = fuzzy_att_high * p["price"]
 	
