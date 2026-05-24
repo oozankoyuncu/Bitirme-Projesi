@@ -1,156 +1,172 @@
 {
-    "activities": [
-        {
-            "id": "team_assignment",
-            "name": "Team Assignment",
-            "type": "team_setup",
-            "duration": 0,
-            "cost": 0,
-            "dependencies": []
-        },
-        {
-            "id": "initial_festival_layout_mapping",
-            "name": "Initial Festival Layout Mapping",
-            "type": "layout_mapping",
-            "duration": 0,
-            "cost": 0,
-            "dependencies": [
-                "team_assignment"
-            ]
-        },
-        {
-            "id": "emergency_training",
-            "name": "Emergency Training",
-            "type": "emergency_train",
-            "duration": 0,
-            "cost": 0,
-            "dependencies": [
-                "initial_festival_layout_mapping"
-            ]
-        },
-        {
-            "id": "sponsor_management",
-            "name": "Sponsor Management",
-            "cost": 0,
-            "duration": 8,
-            "dependencies": [
-                "emergency_training"
-            ]
-        },
-        {
-            "id": "promotion_strategy",
-            "name": "Promotion Strategy",
-            "type": "promotion_selection",
-            "duration": 4,
-            "cost": 0,
-            "dependencies": [
-                "sponsor_management"
-            ]
-        },
-        {
-            "id": "entertainment_lineup",
-            "name": "Entertainment Line-Up",
-            "type": "artist_selection",
-            "duration": 8,
-            "cost": 0,
-            "dependencies": [
-                "sponsor_management"
-            ]
-        },
-        {
-            "id": "ticket_pricing",
-            "name": "Ticket Pricing",
-            "type": "ticket_pricing",
-            "duration": 4,
-            "cost": 0,
-            "dependencies": [
-                "entertainment_lineup"
-            ]
-        },
-        {
-            "id": "volunteer_club_recruitment",
-            "name": "Volunteer / Club Recruitment",
-            "type": "volunteer_club",
-            "duration": 4,
-            "cost": 0,
-            "dependencies": [
-                "entertainment_lineup"
-            ]
-        },
-        {
-            "id": "food_vendor_selection",
-            "name": "Food Vendor Selection",
-            "type": "food_vendor",
-            "duration": 4,
-            "cost": 0,
-            "dependencies": [
-                "ticket_pricing",
-                "volunteer_club_recruitment"
-            ]
-        },
-        {
-            "id": "stage_setup_choices",
-            "name": "Stage Setup Choices",
-            "type": "stage_setup",
-            "cost": 0,
-            "duration": 4,
-            "dependencies": []
-        },
-        {
-            "id": "sound_system_choices",
-            "name": "Sound System Choices",
-            "type": "sound_system",
-            "cost": 0,
-            "duration": 4,
-            "dependencies": []
-        },
-        {
-            "id": "transport_coordination",
-            "name": "Transport Coordination",
-            "type": "transport",
-            "cost": 0,
-            "duration": 4,
-            "dependencies": []
-        },
-        {
-            "id": "decoration_theme_decision",
-            "name": "Decoration Theme Decision",
-            "type": "decoration_theme",
-            "cost": 0,
-            "duration": 2,
-            "dependencies": []
-        },
-        {
-            "id": "festival_cleaning_security",
-            "name": "Festival Cleaning & Security",
-            "type": "cleaning_security",
-            "cost": 0,
-            "duration": 4,
-            "dependencies": [
-                "decoration_theme_decision"
-            ]
-        },
-        {
-            "id": "final_festival_layout_mapping",
-            "name": "Final Festival Layout Mapping",
-            "type": "final_layout_mapping",
-            "cost": 0,
-            "duration": 0,
-            "dependencies": [
-                "food_vendor_selection",
-                "volunteer_club_recruitment",
-                "stage_setup_choices"
-            ]
-        },
-        {
-            "id": "festival_day",
-            "name": "Festival Day",
-            "type": "festival_day",
-            "cost": 0,
-            "duration": 0,
-            "dependencies": [
-                "final_festival_layout_mapping"
-            ]
-        }
-    ]
+	"activities": [
+		{
+			"id": "team_assignment",
+			"name": "Team Assignment",
+			"type": "team_setup",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": []
+		},
+		{
+			"id": "initial_festival_layout_mapping",
+			"name": "Initial Festival Layout Mapping",
+			"type": "layout_mapping",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": []
+		},
+		{
+			"id": "emergency_training",
+			"name": "Emergency Plan Training",
+			"type": "emergency_train",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"team_assignment",
+				"initial_festival_layout_mapping"
+			]
+		},
+		{
+			"id": "sponsor_management",
+			"name": "Sponsor Management",
+			"cost": 0,
+			"duration": 8,
+			"dependencies": [
+				"team_assignment",
+				"initial_festival_layout_mapping"
+			]
+		},
+		{
+			"id": "promotion_strategy",
+			"name": "Promotion Strategy",
+			"type": "promotion_selection",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"sponsor_management"
+			]
+		},
+		{
+			"id": "entertainment_lineup",
+			"name": "Entertainment Line-Up",
+			"type": "artist_selection",
+			"duration": 8,
+			"cost": 0,
+			"dependencies": [
+				"emergency_training"
+			]
+		},
+		{
+			"id": "ticket_pricing",
+			"name": "Ticket Pricing Strategy",
+			"type": "ticket_pricing",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"entertainment_lineup",
+				"promotion_strategy"
+			]
+		},
+		{
+			"id": "volunteer_club_recruitment",
+			"name": "Volunteer/Club Recruitment",
+			"type": "volunteer_club",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"entertainment_lineup",
+				"promotion_strategy"
+			]
+		},
+		{
+			"id": "food_vendor_selection",
+			"name": "Food Vendor Selection",
+			"type": "food_vendor",
+			"duration": 4,
+			"cost": 0,
+			"dependencies": [
+				"ticket_pricing",
+				"volunteer_club_recruitment"
+			]
+		},
+		{
+			"id": "stage_setup_choices",
+			"name": "Stage Setup Choices",
+			"type": "stage_setup",
+			"cost": 0,
+			"duration": 4,
+			"dependencies": [
+				"food_vendor_selection"
+			]
+		},
+		{
+			"id": "sound_system_choices",
+			"name": "Sound System Choices",
+			"type": "sound_system",
+			"cost": 0,
+			"duration": 4,
+			"dependencies": [
+				"food_vendor_selection"
+			]
+		},
+		{
+			"id": "transport_coordination",
+			"name": "Transport Coordination",
+			"type": "transport",
+			"cost": 0,
+			"duration": 4,
+			"dependencies": [
+				"food_vendor_selection"
+			]
+		},
+		{
+			"id": "decoration_theme_decision",
+			"name": "Decoration Theme Decision",
+			"type": "decoration_theme",
+			"cost": 0,
+			"duration": 2,
+			"dependencies": [
+				"stage_setup_choices",
+				"sound_system_choices",
+				"transport_coordination"
+			]
+		},
+		{
+			"id": "festival_cleaning_security",
+			"name": "Festival Cleaning & Security",
+			"type": "cleaning_security",
+			"cost": 0,
+			"duration": 4,
+			"dependencies": [
+				"stage_setup_choices",
+				"sound_system_choices",
+				"transport_coordination"
+			]
+		},
+		{
+			"id": "final_festival_layout_mapping",
+			"name": "Facility Layout Mapping",
+			"type": "final_layout_mapping",
+			"cost": 0,
+			"duration": 4,
+			"dependencies": [
+				"stage_setup_choices",
+				"sound_system_choices",
+				"transport_coordination"
+			]
+		},
+		{
+			"id": "festival_day",
+			"name": "Festival Day",
+			"type": "festival_day",
+			"cost": 0,
+			"duration": 0,
+			"dependencies": [
+				"decoration_theme_decision",
+				"festival_cleaning_security",
+				"final_festival_layout_mapping"
+			]
+		}
+	]
 }

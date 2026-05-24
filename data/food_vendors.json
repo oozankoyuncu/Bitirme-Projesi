@@ -1,0 +1,136 @@
+{
+  "food_vendors": {
+    "urban_bites_co": {
+      "display_name": "Urban Bites Co.",
+      "cuisine_type": "Fast Food",
+      "price": 74000,
+      "service_capacity": 1800,
+      "speed": 4,
+      "hygiene_rating": 3,
+      "electricity_requirement": 2,
+      "space_requirement": 13,
+      "efficiency_score": 360
+    },
+    "street_grill_hub": {
+      "display_name": "Street Grill Hub",
+      "cuisine_type": "Fast Food",
+      "price": 66000,
+      "service_capacity": 2200,
+      "speed": 3,
+      "hygiene_rating": 4,
+      "electricity_requirement": 3,
+      "space_requirement": 17,
+      "efficiency_score": 264
+    },
+    "quickcrave_kitchen": {
+      "display_name": "QuickCrave Kitchen",
+      "cuisine_type": "Fast Food",
+      "price": 51000,
+      "service_capacity": 1400,
+      "speed": 2,
+      "hygiene_rating": 3,
+      "electricity_requirement": 4,
+      "space_requirement": 10,
+      "efficiency_score": 147.37
+    },
+    "sweet_haven_desserts": {
+      "display_name": "Sweet Haven Desserts",
+      "cuisine_type": "Desserts",
+      "price": 61000,
+      "service_capacity": 2600,
+      "speed": 2,
+      "hygiene_rating": 2,
+      "electricity_requirement": 2,
+      "space_requirement": 15,
+      "efficiency_score": 236.36
+    },
+    "velvet_sugar_bar": {
+      "display_name": "Velvet Sugar Bar",
+      "cuisine_type": "Desserts",
+      "price": 108000,
+      "service_capacity": 3000,
+      "speed": 5,
+      "hygiene_rating": 3,
+      "electricity_requirement": 4,
+      "space_requirement": 20,
+      "efficiency_score": 517.24
+    },
+    "frost_and_flame": {
+      "display_name": "Frost & Flame",
+      "cuisine_type": "Desserts",
+      "price": 46000,
+      "service_capacity": 1200,
+      "speed": 2,
+      "hygiene_rating": 1,
+      "electricity_requirement": 4,
+      "space_requirement": 9,
+      "efficiency_score": 133.33
+    },
+    "global_plate_express": {
+      "display_name": "Global Plate Express",
+      "cuisine_type": "International",
+      "price": 74000,
+      "service_capacity": 2400,
+      "speed": 4,
+      "hygiene_rating": 5,
+      "electricity_requirement": 4,
+      "space_requirement": 22,
+      "efficiency_score": 309.68
+    },
+    "world_spice_corner": {
+      "display_name": "World Spice Corner",
+      "cuisine_type": "International",
+      "price": 51000,
+      "service_capacity": 1300,
+      "speed": 2,
+      "hygiene_rating": 1,
+      "electricity_requirement": 4,
+      "space_requirement": 7,
+      "efficiency_score": 162.5
+    },
+    "fusion_feast_lab": {
+      "display_name": "Fusion Feast Lab",
+      "cuisine_type": "International",
+      "price": 66000,
+      "service_capacity": 1700,
+      "speed": 3,
+      "hygiene_rating": 4,
+      "electricity_requirement": 2,
+      "space_requirement": 14,
+      "efficiency_score": 242.86
+    },
+    "green_bowl_kitchen": {
+      "display_name": "Green Bowl Kitchen",
+      "cuisine_type": "Healthy",
+      "price": 65000,
+      "service_capacity": 2100,
+      "speed": 4,
+      "hygiene_rating": 2,
+      "electricity_requirement": 5,
+      "space_requirement": 19,
+      "efficiency_score": 289.66
+    },
+    "freshroots_market": {
+      "display_name": "FreshRoots Market",
+      "cuisine_type": "Healthy",
+      "price": 53000,
+      "service_capacity": 1600,
+      "speed": 3,
+      "hygiene_rating": 3,
+      "electricity_requirement": 2,
+      "space_requirement": 11,
+      "efficiency_score": 266.67
+    },
+    "purefuel_station": {
+      "display_name": "PureFuel Station",
+      "cuisine_type": "Healthy",
+      "price": 53000,
+      "service_capacity": 1500,
+      "speed": 3,
+      "hygiene_rating": 2,
+      "electricity_requirement": 4,
+      "space_requirement": 13,
+      "efficiency_score": 204.55
+    }
+  }
+}

@@ -122,6 +122,18 @@ func populate_unified_items() -> void:
 		placed_items[uid] = ""
 		
 	# Reconcile placed_items with areas
+	if GameState.final_layout_picky_facilities.is_empty() and not GameState.triggered_scenarios.has("final_layout_picky_vendors"):
+		GameState.triggered_scenarios.append("final_layout_picky_vendors")
+		var candidates = []
+		for u in unified_items.keys():
+			if unified_items[u]["type"] != "Stage":
+				candidates.append(u)
+		candidates.shuffle()
+		if candidates.size() > 0:
+			GameState.final_layout_picky_facilities[candidates[0]] = ""
+		if candidates.size() > 1:
+			GameState.final_layout_picky_facilities[candidates[1]] = ""
+			
 	for area_name in areas.keys():
 		var assigned = areas[area_name]["assigned"]
 		var valid_assigned = []
@@ -212,6 +224,9 @@ func _can_drop_data_on_area(at_position: Vector2, data: Variant, area_name: Stri
 	var uid = data["uid"]
 	if not unified_items.has(uid): return false
 	
+	if GameState.final_layout_picky_facilities.has(uid) and GameState.final_layout_picky_facilities[uid] == area_name:
+		return false
+	
 	var item = unified_items[uid]
 	var area = areas[area_name]
 	
@@ -228,6 +243,12 @@ func _can_drop_data_on_area(at_position: Vector2, data: Variant, area_name: Stri
 
 func _drop_data_on_area(at_position: Vector2, data: Variant, area_name: String) -> void:
 	var uid = data["uid"]
+	
+	if GameState.final_layout_picky_facilities.has(uid) and GameState.final_layout_picky_facilities[uid] == "":
+		GameState.final_layout_picky_facilities[uid] = area_name
+		_show_complaint_popup(unified_items[uid]["display_name"], area_name)
+		return
+		
 	areas[area_name]["assigned"].append(uid)
 	placed_items[uid] = area_name
 	
@@ -390,3 +411,94 @@ func _on_confirm_pressed() -> void:
 func _on_back_pressed() -> void:
 	hide()
 	get_parent().get_node("ActivityBoard").show()
+
+func _show_complaint_popup(vendor_name: String, area_name: String) -> void:
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.85)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 100
+	
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+	
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(700, 400)
+	var p_style = StyleBoxFlat.new()
+	p_style.bg_color = Color(0.1, 0.12, 0.18, 1.0)
+	p_style.set_corner_radius_all(15)
+	p_style.border_width_left = 6
+	p_style.border_width_right = 6
+	p_style.border_width_top = 6
+	p_style.border_width_bottom = 6
+	p_style.border_color = Color(0.9, 0.5, 0.2, 1.0)
+	p_style.shadow_size = 30
+	p_style.shadow_color = Color(0, 0, 0, 0.7)
+	panel.add_theme_stylebox_override("panel", p_style)
+	center.add_child(panel)
+	
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 40)
+	margin.add_theme_constant_override("margin_right", 40)
+	margin.add_theme_constant_override("margin_top", 40)
+	margin.add_theme_constant_override("margin_bottom", 40)
+	panel.add_child(margin)
+	
+	var vbox = VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 25)
+	margin.add_child(vbox)
+	
+	var title = Label.new()
+	title.text = "⚠️ FACILITY COMPLAINT ⚠️"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 38)
+	title.add_theme_color_override("font_color", Color(1.0, 0.6, 0.2))
+	vbox.add_child(title)
+	
+	var sep = HSeparator.new()
+	vbox.add_child(sep)
+	
+	var body = Label.new()
+	body.text = "The facility '%s' has stated that they absolutely do not want to be placed in %s!\n\nThey requested you to change their location to a different zone." % [vendor_name, area_name]
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_theme_font_size_override("font_size", 24)
+	vbox.add_child(body)
+	
+	var spacer = Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(spacer)
+	
+	var btn = Button.new()
+	btn.text = "ACKNOWLEDGE"
+	btn.custom_minimum_size = Vector2(300, 65)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	
+	var b_style = StyleBoxFlat.new()
+	b_style.bg_color = Color(0.8, 0.4, 0.2)
+	b_style.set_corner_radius_all(10)
+	btn.add_theme_stylebox_override("normal", b_style)
+	var b_hover = b_style.duplicate()
+	b_hover.bg_color = Color(0.9, 0.5, 0.2)
+	btn.add_theme_stylebox_override("hover", b_hover)
+	btn.add_theme_font_size_override("font_size", 22)
+	
+	btn.pressed.connect(func():
+		var out_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+		out_tween.tween_property(overlay, "modulate:a", 0.0, 0.2)
+		out_tween.tween_property(panel, "scale", Vector2(0.8, 0.8), 0.2)
+		out_tween.chain().tween_callback(func():
+			overlay.queue_free()
+		)
+	)
+	vbox.add_child(btn)
+	
+	overlay.modulate.a = 0.0
+	panel.scale = Vector2(0.8, 0.8)
+	var in_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	in_tween.tween_property(overlay, "modulate:a", 1.0, 0.4)
+	in_tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.4)
+	
+	add_child(overlay)

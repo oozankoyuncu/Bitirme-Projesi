@@ -119,10 +119,15 @@ func _create_card(theme: Dictionary) -> PanelContainer:
 	v_box.add_child(cost_lbl)
 
 	# Click logic
-	card.gui_input.connect(func(event): 
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			_select_theme(theme, card)
-	)
+	if GameState.vetoed_decoration_theme_id == theme["id"]:
+		card.modulate = Color(0.5, 0.5, 0.5, 0.6)
+		name_lbl.text += " (VETOED)"
+		name_lbl.add_theme_color_override("font_color", Color(0.9, 0.3, 0.3))
+	else:
+		card.gui_input.connect(func(event): 
+			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+				_select_theme(theme, card)
+		)
 
 	return card
 
@@ -193,6 +198,112 @@ func _on_back_pressed() -> void:
 func _on_visibility_changed() -> void:
 	if visible:
 		_refresh_ui()
+		if GameState.active_scenarios.has("headliner_decoration_veto") and not GameState.triggered_scenarios.has("headliner_decoration_veto"):
+			if GameState.selected_headliners.size() > 0:
+				GameState.triggered_scenarios.append("headliner_decoration_veto")
+				var hl = GameState.selected_headliners[0]
+				var idx = randi() % GameState.decoration_theme_defs.size()
+				var vetoed = GameState.decoration_theme_defs[idx]
+				GameState.vetoed_decoration_theme_id = vetoed["id"]
+				
+				var overlay = ColorRect.new()
+				overlay.color = Color(0, 0, 0, 0.85)
+				overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+				overlay.z_index = 100
+				
+				var center = CenterContainer.new()
+				center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+				overlay.add_child(center)
+				
+				var panel = PanelContainer.new()
+				panel.custom_minimum_size = Vector2(700, 400)
+				var p_style = StyleBoxFlat.new()
+				p_style.bg_color = Color(0.1, 0.12, 0.18, 1.0)
+				p_style.set_corner_radius_all(15)
+				p_style.border_width_left = 6
+				p_style.border_width_right = 6
+				p_style.border_width_top = 6
+				p_style.border_width_bottom = 6
+				p_style.border_color = Color(0.9, 0.3, 0.8, 1.0)
+				p_style.shadow_size = 30
+				p_style.shadow_color = Color(0, 0, 0, 0.7)
+				panel.add_theme_stylebox_override("panel", p_style)
+				center.add_child(panel)
+				
+				var margin = MarginContainer.new()
+				margin.add_theme_constant_override("margin_left", 40)
+				margin.add_theme_constant_override("margin_right", 40)
+				margin.add_theme_constant_override("margin_top", 40)
+				margin.add_theme_constant_override("margin_bottom", 40)
+				panel.add_child(margin)
+				
+				var vbox = VBoxContainer.new()
+				vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+				vbox.add_theme_constant_override("separation", 25)
+				margin.add_child(vbox)
+				
+				var title = Label.new()
+				title.text = "⭐ ARTIST SPECIAL REQUEST ⭐"
+				title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				title.add_theme_font_size_override("font_size", 38)
+				title.add_theme_color_override("font_color", Color(1.0, 0.4, 0.9))
+				vbox.add_child(title)
+				
+				var sep = HSeparator.new()
+				vbox.add_child(sep)
+				
+				var body = Label.new()
+				body.text = "%s absolutely refuses to perform if the festival uses the '%s' decoration theme.\n\nThis option is now unavailable." % [hl["name"], vetoed["name"]]
+				body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				body.add_theme_font_size_override("font_size", 24)
+				vbox.add_child(body)
+				
+				var spacer = Control.new()
+				spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+				vbox.add_child(spacer)
+				
+				var btn = Button.new()
+				btn.text = "ACKNOWLEDGE"
+				btn.custom_minimum_size = Vector2(300, 65)
+				btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+				btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+				
+				var b_style = StyleBoxFlat.new()
+				b_style.bg_color = Color(0.8, 0.2, 0.7)
+				b_style.set_corner_radius_all(10)
+				btn.add_theme_stylebox_override("normal", b_style)
+				var b_hover = b_style.duplicate()
+				b_hover.bg_color = Color(0.9, 0.3, 0.8)
+				btn.add_theme_stylebox_override("hover", b_hover)
+				btn.add_theme_font_size_override("font_size", 22)
+				
+				btn.pressed.connect(func():
+					var out_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+					out_tween.tween_property(overlay, "modulate:a", 0.0, 0.2)
+					out_tween.tween_property(panel, "scale", Vector2(0.8, 0.8), 0.2)
+					out_tween.chain().tween_callback(func():
+						overlay.queue_free()
+						_create_theme_cards()
+						if selected_theme_id == GameState.vetoed_decoration_theme_id:
+							selected_theme_id = ""
+							preview_title.text = "SELECT A THEME"
+							description_label.text = ""
+							synergy_label.text = ""
+							satisfaction_bar.value = 0
+							complexity_bar.value = 0
+							space_bar.value = 0
+					)
+				)
+				vbox.add_child(btn)
+				
+				overlay.modulate.a = 0.0
+				panel.scale = Vector2(0.8, 0.8)
+				var in_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+				in_tween.tween_property(overlay, "modulate:a", 1.0, 0.4)
+				in_tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.4)
+				
+				add_child(overlay)
 
 func _refresh_ui() -> void:
 	money_label.text = "Budget: " + str(GameState.money) + " TL"
