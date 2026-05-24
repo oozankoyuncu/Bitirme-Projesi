@@ -5,168 +5,280 @@
 			"name": "Team Assignment",
 			"type": "team_setup",
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 4,
+			"crash_cost": 0,
 			"cost": 0,
-			"dependencies": []
+			"dependencies": [],
+			"required_members": 1,
+			"required_phones": 0,
+			"required_computers": 1,
+			"can_crash": false
 		},
 		{
 			"id": "initial_festival_layout_mapping",
 			"name": "Initial Festival Layout Mapping",
 			"type": "layout_mapping",
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 4,
+			"crash_cost": 0,
 			"cost": 0,
-			"dependencies": []
+			"dependencies": [],
+			"required_members": 1,
+			"required_phones": 0,
+			"required_computers": 1,
+			"can_crash": false
 		},
 		{
 			"id": "emergency_training",
 			"name": "Emergency Plan Training",
 			"type": "emergency_train",
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 4,
+			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"team_assignment",
 				"initial_festival_layout_mapping"
-			]
+			],
+			"required_members": 2,
+			"required_phones": 1,
+			"required_computers": 0,
+			"can_crash": false
 		},
 		{
 			"id": "sponsor_management",
 			"name": "Sponsor Management",
-			"cost": 0,
 			"duration": 8,
+			"normal_duration": 8,
+			"crash_duration": 5,
+			"crash_cost": 20000,
+			"cost": 0,
 			"dependencies": [
 				"team_assignment",
 				"initial_festival_layout_mapping"
-			]
+			],
+			"required_members": 2,
+			"required_phones": 2,
+			"required_computers": 2,
+			"can_crash": true
 		},
 		{
 			"id": "promotion_strategy",
 			"name": "Promotion Strategy",
 			"type": "promotion_selection",
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 2,
+			"crash_cost": 12000,
 			"cost": 0,
 			"dependencies": [
 				"sponsor_management"
-			]
+			],
+			"required_members": 1,
+			"required_phones": 1,
+			"required_computers": 1,
+			"can_crash": true
 		},
 		{
 			"id": "entertainment_lineup",
 			"name": "Entertainment Line-Up",
 			"type": "artist_selection",
 			"duration": 8,
+			"normal_duration": 8,
+			"crash_duration": 5,
+			"crash_cost": 25000,
 			"cost": 0,
 			"dependencies": [
 				"emergency_training"
-			]
+			],
+			"required_members": 1,
+			"required_phones": 1,
+			"required_computers": 1,
+			"can_crash": true
 		},
 		{
 			"id": "ticket_pricing",
 			"name": "Ticket Pricing Strategy",
 			"type": "ticket_pricing",
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 4,
+			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"entertainment_lineup",
 				"promotion_strategy"
-			]
+			],
+			"required_members": 1,
+			"required_phones": 0,
+			"required_computers": 1,
+			"can_crash": false
 		},
 		{
 			"id": "volunteer_club_recruitment",
 			"name": "Volunteer/Club Recruitment",
 			"type": "volunteer_club",
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 4,
+			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"entertainment_lineup",
 				"promotion_strategy"
-			]
+			],
+			"required_members": 1,
+			"required_phones": 1,
+			"required_computers": 1,
+			"can_crash": false
 		},
 		{
 			"id": "food_vendor_selection",
 			"name": "Food Vendor Selection",
 			"type": "food_vendor",
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 4,
+			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"ticket_pricing",
 				"volunteer_club_recruitment"
-			]
+			],
+			"required_members": 1,
+			"required_phones": 1,
+			"required_computers": 1,
+			"can_crash": false
 		},
 		{
 			"id": "stage_setup_choices",
 			"name": "Stage Setup Choices",
 			"type": "stage_setup",
-			"cost": 0,
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 2,
+			"crash_cost": 12000,
+			"cost": 0,
 			"dependencies": [
 				"food_vendor_selection"
-			]
+			],
+			"required_members": 2,
+			"required_phones": 1,
+			"required_computers": 2,
+			"can_crash": true
 		},
 		{
 			"id": "sound_system_choices",
 			"name": "Sound System Choices",
 			"type": "sound_system",
-			"cost": 0,
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 2,
+			"crash_cost": 10000,
+			"cost": 0,
 			"dependencies": [
 				"food_vendor_selection"
-			]
+			],
+			"required_members": 2,
+			"required_phones": 0,
+			"required_computers": 2,
+			"can_crash": true
 		},
 		{
 			"id": "transport_coordination",
 			"name": "Transport Coordination",
 			"type": "transport",
-			"cost": 0,
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 2,
+			"crash_cost": 12000,
+			"cost": 0,
 			"dependencies": [
 				"food_vendor_selection"
-			]
+			],
+			"required_members": 2,
+			"required_phones": 2,
+			"required_computers": 1,
+			"can_crash": true
 		},
 		{
 			"id": "decoration_theme_decision",
 			"name": "Decoration Theme Decision",
 			"type": "decoration_theme",
-			"cost": 0,
 			"duration": 2,
+			"normal_duration": 2,
+			"crash_duration": 2,
+			"crash_cost": 0,
+			"cost": 0,
 			"dependencies": [
 				"stage_setup_choices",
 				"sound_system_choices",
 				"transport_coordination"
-			]
+			],
+			"required_members": 1,
+			"required_phones": 0,
+			"required_computers": 0,
+			"can_crash": false
 		},
 		{
 			"id": "festival_cleaning_security",
 			"name": "Festival Cleaning & Security",
 			"type": "cleaning_security",
-			"cost": 0,
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 2,
+			"crash_cost": 15000,
+			"cost": 0,
 			"dependencies": [
 				"stage_setup_choices",
 				"sound_system_choices",
 				"transport_coordination"
-			]
+			],
+			"required_members": 2,
+			"required_phones": 2,
+			"required_computers": 0,
+			"can_crash": true
 		},
 		{
 			"id": "final_festival_layout_mapping",
 			"name": "Facility Layout Mapping",
 			"type": "final_layout_mapping",
-			"cost": 0,
 			"duration": 4,
+			"normal_duration": 4,
+			"crash_duration": 4,
+			"crash_cost": 0,
+			"cost": 0,
 			"dependencies": [
 				"stage_setup_choices",
 				"sound_system_choices",
 				"transport_coordination"
-			]
+			],
+			"required_members": 1,
+			"required_phones": 1,
+			"required_computers": 2,
+			"can_crash": false
 		},
 		{
 			"id": "festival_day",
 			"name": "Festival Day",
 			"type": "festival_day",
-			"cost": 0,
 			"duration": 0,
+			"normal_duration": 0,
+			"crash_duration": 0,
+			"crash_cost": 0,
+			"cost": 0,
 			"dependencies": [
 				"decoration_theme_decision",
 				"festival_cleaning_security",
 				"final_festival_layout_mapping"
-			]
+			],
+			"required_members": 3,
+			"required_phones": 2,
+			"required_computers": 1,
+			"can_crash": false
 		}
 	]
 }
