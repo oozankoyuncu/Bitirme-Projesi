@@ -33,7 +33,7 @@ var training_defs = {
 @onready var time_label: Label = $MarginContainer/VBoxContainer/Footer/TimerBox/TimeRemainingLabel
 @onready var money_label: Label = $MarginContainer/VBoxContainer/Footer/MoneyBox/MoneyLabel
 @onready var member_list_container: GridContainer = $MarginContainer/VBoxContainer/MainContent/MembersColumn/ScrollContainer/MemberList
-@onready var active_trainings_container: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer/VBoxContainer
+@onready var active_trainings_container: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer/ScrollContainer/VBoxContainer
 @onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
 
 @onready var elec_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/ElectricalButton
@@ -63,6 +63,14 @@ func _ready() -> void:
 	if not GameState.emergency_training_phase_active:
 		GameState.start_emergency_training_phase()
 
+	# Dynamically add note below the footer
+	var note_label = Label.new()
+	note_label.text = "* Note: Pressing FINISH will immediately advance the time by the total max duration (240 seconds)."
+	note_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note_label.add_theme_font_size_override("font_size", 16)
+	note_label.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4))
+	$MarginContainer/VBoxContainer.add_child(note_label)
+
 func _process(_delta: float) -> void:
 	_refresh_ui()
 
@@ -79,6 +87,13 @@ func _setup_ui_styles() -> void:
 	status_style.border_color = Color(0.2, 0.3, 0.5)
 	$MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel.add_theme_stylebox_override("panel", status_style)
 
+	# Ensure the scroll container and list container pass mouse events to enable scroll wheel scrolling
+	member_list_container.mouse_filter = Control.MOUSE_FILTER_PASS
+	member_list_container.get_parent().mouse_filter = Control.MOUSE_FILTER_PASS
+	
+	active_trainings_container.mouse_filter = Control.MOUSE_FILTER_PASS
+	active_trainings_container.get_parent().mouse_filter = Control.MOUSE_FILTER_PASS
+
 	refresh_member_list()
 
 func refresh_member_list() -> void:
@@ -92,6 +107,7 @@ func refresh_member_list() -> void:
 func _create_member_card(member: Dictionary) -> PanelContainer:
 	var card = PanelContainer.new()
 	card.custom_minimum_size = Vector2(0, 95)
+	card.mouse_filter = Control.MOUSE_FILTER_PASS
 	
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.15, 0.18, 0.25, 0.7)
@@ -101,24 +117,29 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 
 	var hbox = HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 15)
+	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(hbox)
 
 	var margin = MarginContainer.new()
 	margin.add_theme_constant_override("margin_left", 10)
 	margin.add_theme_constant_override("margin_right", 10)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(margin)
 
 	var v_info = VBoxContainer.new()
 	v_info.size_flags_horizontal = SIZE_EXPAND_FILL
+	v_info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margin.add_child(v_info)
 
 	var name_lbl = Label.new()
 	name_lbl.text = member["name"]
 	name_lbl.add_theme_font_size_override("font_size", 22)
+	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v_info.add_child(name_lbl)
 
 	# Training Load Progress
 	var load_box = HBoxContainer.new()
+	load_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v_info.add_child(load_box)
 
 	var pbar = ProgressBar.new()
@@ -126,6 +147,7 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 	pbar.value = member.get("total_training_time", 0.0)
 	pbar.custom_minimum_size = Vector2(300, 20) # Larger bar
 	pbar.show_percentage = false
+	pbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	# Color coding for load
 	var p_style = StyleBoxFlat.new()
@@ -140,6 +162,7 @@ func _create_member_card(member: Dictionary) -> PanelContainer:
 	var time_lbl = Label.new()
 	time_lbl.text = str(int(pbar.value)) + "s / 240s"
 	time_lbl.add_theme_font_size_override("font_size", 18) # Larger font
+	time_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	load_box.add_child(time_lbl)
 
 	# Assign Button
@@ -206,16 +229,19 @@ func _refresh_ui() -> void:
 		empty_lbl.text = "No active training sessions."
 		empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		empty_lbl.add_theme_font_size_override("font_size", 20)
+		empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		active_trainings_container.add_child(empty_lbl)
 	else:
 		for training in GameState.active_trainings:
 			var t_box = VBoxContainer.new()
 			t_box.add_theme_constant_override("separation", 5)
+			t_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			active_trainings_container.add_child(t_box)
 			
 			var name_lbl = Label.new()
 			name_lbl.text = training["member_name"] + " - " + training_defs[training["training_type"]]["display_name"]
 			name_lbl.add_theme_font_size_override("font_size", 20)
+			name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			t_box.add_child(name_lbl)
 			
 			var left = max(0.0, training["end_time"] - GameState.game_seconds)
@@ -226,6 +252,7 @@ func _refresh_ui() -> void:
 			bar.value = left # This will decrease as 'left' decreases
 			bar.custom_minimum_size = Vector2(0, 30) # Big enough bar
 			bar.show_percentage = false
+			bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			
 			# Stylish fill
 			var style = StyleBoxFlat.new()
@@ -244,11 +271,13 @@ func _refresh_ui() -> void:
 			countdown_lbl.text = str(int(left)) + " seconds remaining"
 			countdown_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 			countdown_lbl.add_theme_font_size_override("font_size", 18)
+			countdown_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			t_box.add_child(countdown_lbl)
 			
 			# Spacing
 			var spacer = Control.new()
 			spacer.custom_minimum_size.y = 10
+			spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			active_trainings_container.add_child(spacer)
 	
 	# Periodically refresh the member list to update "is_in_training" status
@@ -264,7 +293,7 @@ func _refresh_ui() -> void:
 	# _refresh_member_list() is called via _process or better yet, signals from GameState
 
 func _on_back_pressed() -> void:
-	GameState.complete_activity("emergency_training")
+	GameState.finish_emergency_training()
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()

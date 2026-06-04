@@ -202,12 +202,12 @@ func _setup_guide_ui() -> void:
 func _setup_guide_text() -> void:
 	guide_label.text = "ACTIVITY GUIDE: VOLUNTEER & CLUB RECRUITMENT\n\n" + \
 		"What You Need to Pay Attention To:\n" + \
-		"• Capacity Constraints: Selected participants must fit within the available 200 sqm area limit. If you exceed this capacity, your festival will become overcrowded and you will face severe penalties to Event Quality.\n" + \
+		"• Space: There is no limit on space. You can select as many clubs as you want.\n" + \
 		"• Diversity: Try to pick clubs with different Activity Types (e.g., Artistic, Interactive, Competitive). Selecting only one type limits the festival's appeal.\n\n" + \
 		"How You Gather Points & Impact Success:\n" + \
 		"• Engagement Contribution: Each selected participant adds an 'Engagement Level' score. The more total Engagement you have, the higher your Event Quality and Participant Satisfaction will be.\n" + \
 		"• Diversity Bonus: Mixing different types of clubs provides a multiplier to your Event Quality score. A diverse festival is a successful festival.\n" + \
-		"• Strategic Rule: Maximize Engagement and Diversity WITHOUT exceeding the 200 sqm limit."
+		"• Strategic Rule: Maximize Engagement and Diversity."
 
 var scenario_timer_active = false
 func _on_visibility_changed() -> void:
@@ -448,25 +448,19 @@ func get_totals() -> Dictionary:
 	# Bonus impact from variety
 	quality_impact += (diversity_effect * 0.5)
 	
-	var space_penalty = 0.0
-	
-	if total_space > MAX_SPACE:
-		space_penalty = -2.0 # Fixed penalty if exceeding limits
-		quality_impact += space_penalty
-		
 	return {
 		"selected_ids": selected_ids,
 		"space": total_space,
 		"engagement": total_engagement,
 		"diversity_effect": diversity_effect,
 		"quality_impact": quality_impact,
-		"space_exceeded": total_space > MAX_SPACE
+		"space_exceeded": false
 	}
 
 func refresh_ui() -> void:
 	var data = get_totals()
 	
-	capacity_label.text = "Space Used: " + str(data["space"]) + " / " + str(MAX_SPACE) + " sqm"
+	capacity_label.text = "Space Used: " + str(data["space"]) + " sqm"
 	engagement_label.text = "Total Engagement: +" + str(data["engagement"])
 	types_label.text = "Diversity (Types): " + str(data["diversity_effect"])
 	
@@ -477,16 +471,9 @@ func refresh_ui() -> void:
 		warning_label.modulate = Color(0.4, 1.0, 0.4)
 	else:
 		confirm_button.text = "CONFIRM SELECTION"
-		
-		if data["space_exceeded"]:
-			warning_label.text = "WARNING: Over Capacity! Penalty will be applied."
-			warning_label.modulate = Color(1.0, 0.2, 0.2)
-			capacity_label.modulate = Color(1.0, 0.2, 0.2)
-		else:
-			warning_label.text = "Space is within limits."
-			warning_label.modulate = Color(0.6, 0.6, 0.6)
-			capacity_label.modulate = Color.WHITE
-		
+		warning_label.text = "No space limit constraint."
+		warning_label.modulate = Color(0.6, 0.8, 0.6)
+		capacity_label.modulate = Color.WHITE
 		confirm_button.disabled = false
 
 func _on_confirm_pressed() -> void:

@@ -304,10 +304,13 @@ func _can_drop_data_on_area(at_position: Vector2, data: Variant, area_name: Stri
 func _drop_data_on_area(at_position: Vector2, data: Variant, area_name: String) -> void:
 	var uid = data["uid"]
 	
-	if GameState.final_layout_picky_facilities.has(uid) and GameState.final_layout_picky_facilities[uid] == "":
-		GameState.final_layout_picky_facilities[uid] = area_name
-		_show_complaint_popup(unified_items[uid]["display_name"], area_name)
-		return
+	if GameState.final_layout_picky_facilities.has(uid):
+		if GameState.final_layout_picky_facilities[uid] == area_name:
+			return
+		elif GameState.final_layout_picky_facilities[uid] == "":
+			GameState.final_layout_picky_facilities[uid] = area_name
+			_show_complaint_popup(unified_items[uid]["display_name"], area_name)
+			return
 		
 	areas[area_name]["assigned"].append(uid)
 	placed_items[uid] = area_name

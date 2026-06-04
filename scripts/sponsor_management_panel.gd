@@ -21,6 +21,7 @@ var sponsor_defs = {}
 
 var secret_nodes: Array = []
 var _popup_timer_started: bool = false
+var all_conflicts: Dictionary = {}
 
 func _ready() -> void:
 	_load_sponsors()
@@ -54,6 +55,19 @@ func _load_sponsors() -> void:
 	
 	sponsor_defs = data["sponsors"]
 	print("Sponsors loaded: ", sponsor_defs.size())
+	
+	# Build bidirectional conflict map
+	all_conflicts.clear()
+	for id in sponsor_defs.keys():
+		all_conflicts[id] = []
+	for id in sponsor_defs.keys():
+		var conflicts = sponsor_defs[id].get("conflict_brands", [])
+		for cid in conflicts:
+			if sponsor_defs.has(cid):
+				if not cid in all_conflicts[id]:
+					all_conflicts[id].append(cid)
+				if not id in all_conflicts[cid]:
+					all_conflicts[cid].append(id)
 
 func _on_visibility_changed() -> void:
 	if is_visible_in_tree() and not GameState.sponsor_intelligence_bought and not _popup_timer_started:
@@ -116,6 +130,9 @@ func _setup_ui_styles() -> void:
 	side_style.border_color = Color(0.2, 0.4, 0.6)
 	$MarginContainer/VBoxContainer/MainContent/RightSummary/SummaryPanel.add_theme_stylebox_override("panel", side_style)
 
+	sponsor_list.mouse_filter = Control.MOUSE_FILTER_PASS
+	sponsor_list.get_parent().mouse_filter = Control.MOUSE_FILTER_PASS
+
 func create_sponsors() -> void:
 	for c in sponsor_list.get_children():
 		c.queue_free()
@@ -131,42 +148,61 @@ func create_sponsors() -> void:
 func _create_sponsor_card(id: String, s: Dictionary, is_accepted: bool) -> PanelContainer:
 	var card = PanelContainer.new()
 	card.custom_minimum_size = Vector2(0, 100)
+	card.mouse_filter = Control.MOUSE_FILTER_PASS
+	
+	# Check for conflicts with already accepted/signed sponsors
+	var has_conflict_with_accepted = false
+	for accepted_id in GameState.accepted_sponsors:
+		if accepted_id in all_conflicts.get(id, []):
+			has_conflict_with_accepted = true
+			break
 	
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.15, 0.18, 0.25, 0.7)
 	style.border_width_left = 4
-	style.border_color = Color(0.0, 0.8, 1.0) if not is_accepted else Color(0.0, 1.0, 0.0)
+	if is_accepted:
+		style.border_color = Color(0.0, 1.0, 0.0) # Signed/accepted green
+	elif has_conflict_with_accepted:
+		style.border_color = Color(0.8, 0.2, 0.2) # Conflict red
+		style.bg_color = Color(0.1, 0.1, 0.1, 0.5) # Darkened background
+	else:
+		style.border_color = Color(0.0, 0.8, 1.0) # Standard blue
 	card.add_theme_stylebox_override("panel", style)
 
 	var hbox = HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 15)
+	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(hbox)
 
 	var margin = MarginContainer.new()
 	margin.add_theme_constant_override("margin_left", 15)
 	margin.add_theme_constant_override("margin_right", 15)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(margin)
 
 	var cb = CheckBox.new()
 	cb.name = "CheckBox"
 	cb.button_pressed = is_accepted
-	cb.disabled = is_accepted
+	cb.disabled = is_accepted or has_conflict_with_accepted
 	cb.set_meta("id", id)
 	hbox.add_child(cb)
 
 	var v_info = VBoxContainer.new()
 	v_info.size_flags_horizontal = SIZE_EXPAND_FILL
+	v_info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(v_info)
 
 	var name_lbl = Label.new()
 	name_lbl.text = s["display_name"]
 	name_lbl.add_theme_font_size_override("font_size", 20)
+	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v_info.add_child(name_lbl)
 	
 	var grant_lbl = Label.new()
 	grant_lbl.text = "GRANT: " + str(s["price"]) + " TL"
 	grant_lbl.add_theme_font_size_override("font_size", 18)
 	grant_lbl.add_theme_color_override("font_color", Color(1, 0.8, 0.2))
+	grant_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v_info.add_child(grant_lbl)
 
 	# Branding demands info
@@ -174,13 +210,14 @@ func _create_sponsor_card(id: String, s: Dictionary, is_accepted: bool) -> Panel
 	branding_lbl.text = "Logo: " + str(s["branding_logo_placement"]) + " | Area: " + str(s["branding_area_demand"]) + " | Audience: " + str(s["target_audience_compatibility"])
 	branding_lbl.add_theme_font_size_override("font_size", 16)
 	branding_lbl.modulate = Color(0.7, 0.7, 0.7)
+	branding_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v_info.add_child(branding_lbl)
 
-	# Conflict info
-	var conflict_brands = s.get("conflict_brands", [])
-	if conflict_brands.size() > 0:
+	# Conflict info (using bidirectional conflicts)
+	var conflicts = all_conflicts.get(id, [])
+	if conflicts.size() > 0:
 		var conflict_names = []
-		for cid in conflict_brands:
+		for cid in conflicts:
 			if sponsor_defs.has(cid):
 				conflict_names.append(sponsor_defs[cid]["display_name"])
 			else:
@@ -189,22 +226,26 @@ func _create_sponsor_card(id: String, s: Dictionary, is_accepted: bool) -> Panel
 		conflict_lbl.text = "⚠ Conflict: " + ", ".join(conflict_names)
 		conflict_lbl.add_theme_font_size_override("font_size", 16)
 		conflict_lbl.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+		conflict_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		v_info.add_child(conflict_lbl)
 
 	var v_stats = VBoxContainer.new()
 	v_stats.alignment = BoxContainer.ALIGNMENT_CENTER
+	v_stats.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(v_stats)
 
 	var score = s.get("sponsor_score", 0.0)
 	var score_lbl = Label.new()
 	score_lbl.text = "SCORE: " + str(snapped(score, 0.01))
 	score_lbl.add_theme_font_size_override("font_size", 18)
+	score_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v_stats.add_child(score_lbl)
 
 	var success_lbl = Label.new()
 	success_lbl.text = str(int(s["acceptance"] * 100)) + "% CHANCE"
 	success_lbl.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
 	success_lbl.add_theme_font_size_override("font_size", 16)
+	success_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v_stats.add_child(success_lbl)
 	
 	if not GameState.sponsor_intelligence_bought:
@@ -232,28 +273,19 @@ func _on_check_pressed() -> void:
 		result_label.text = "NO PROPOSAL: Select a sponsor first."
 		return
 	
-	# Conflict Check
+	# Conflict Check within selected sponsors
 	for i in range(selected.size()):
 		for j in range(i + 1, selected.size()):
-			var conflicts_i = sponsor_defs[selected[i]].get("conflict_brands", [])
-			if selected[j] in conflicts_i:
+			if selected[j] in all_conflicts.get(selected[i], []):
 				result_label.text = "CONFLICT: " + sponsor_defs[selected[i]]["display_name"] + " and " + sponsor_defs[selected[j]]["display_name"] + " cannot be together."
 				return
-			var conflicts_j = sponsor_defs[selected[j]].get("conflict_brands", [])
-			if selected[i] in conflicts_j:
-				result_label.text = "CONFLICT: " + sponsor_defs[selected[j]]["display_name"] + " and " + sponsor_defs[selected[i]]["display_name"] + " cannot be together."
-				return
 
-	# Score Check (Aim to keep average > 2)
-	var avg_score = 0.0
+	# Conflict Check with already signed sponsors
 	for id in selected:
-		var s = sponsor_defs[id]
-		avg_score += s.get("sponsor_score", 0.0)
-	avg_score /= selected.size()
-
-	if avg_score < 2.0:
-		result_label.text = "PROPOSAL REJECTED: Average score is too low (" + str(snapped(avg_score, 0.01)) + "). Aim for > 2.0."
-		return
+		for accepted_id in GameState.accepted_sponsors:
+			if accepted_id in all_conflicts.get(id, []):
+				result_label.text = "CONFLICT: " + sponsor_defs[id]["display_name"] + " conflicts with already signed " + sponsor_defs[accepted_id]["display_name"] + "."
+				return
 
 	var results = GameState.process_sponsor_acceptance(selected, sponsor_defs)
 	var accepted = results["accepted"]
@@ -301,5 +333,4 @@ func _setup_guide_text() -> void:
 		"• Not all selected sponsors will accept your offer immediately.\n" + \
 		"• You can retry selection up to 2 times after rejections.\n" + \
 		"• Accepted sponsors are locked in your portfolio.\n" + \
-		"• Conflict Check: Some brands are competitors and cannot be selected together.\n" + \
-		"• Target Score: Aim to keep your average sponsor score above 2.0."
+		"• Conflict Check: Some brands are competitors and cannot be selected together."

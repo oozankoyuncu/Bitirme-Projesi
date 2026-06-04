@@ -476,10 +476,7 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	stats_row.add_theme_constant_override("separation", 20)
 	vbox.add_child(stats_row)
 	
-	var cost_label = Label.new()
-	cost_label.text = "💰 " + str(activity["cost"])
-	cost_label.modulate = Color(0.7, 0.7, 0.7)
-	stats_row.add_child(cost_label)
+
 	
 	var dur_label = Label.new()
 	var actual_dur = GameState.get_activity_duration(activity)

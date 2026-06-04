@@ -391,6 +391,9 @@ func transition_to_work_assignation() -> void:
 		
 	# Setup right panel for phase 2
 	_setup_work_assignment_right_panel()
+	
+	# Add Gantt Chart to the bottom of the activity list
+	_add_gantt_chart_to_work_assignation()
 
 
 func _create_activity_row(act: Dictionary) -> void:
@@ -527,12 +530,6 @@ func _setup_work_assignment_right_panel() -> void:
 	outsource_lbl.text = "Outsource (Select from dropdown) - $10,000"
 	outsource_lbl.add_theme_font_size_override("font_size", 14)
 	extra_box.add_child(outsource_lbl)
-	
-	var boost_lbl = Label.new()
-	boost_lbl.text = "Scope Warning: Extra Hires reduce Overall Score!"
-	boost_lbl.add_theme_color_override("font_color", Color(1, 0.4, 0.4))
-	boost_lbl.add_theme_font_size_override("font_size", 14)
-	extra_box.add_child(boost_lbl)
 	
 	confirm_button.text = "CONFIRM ASSIGNMENTS"
 	
@@ -761,3 +758,279 @@ func finalize_work_assignation() -> void:
 		var activity_board = parent_node.get_node("ActivityBoard")
 		activity_board.show()
 		activity_board.refresh_board()
+
+
+func _add_gantt_chart_to_work_assignation() -> void:
+	# Add a spacer/separator first
+	var sep = HSeparator.new()
+	sep.custom_minimum_size = Vector2(0, 30)
+	activity_list.add_child(sep)
+	
+	# Create a styled panel for the Gantt Chart
+	var chart_panel = PanelContainer.new()
+	var panel_style = StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.08, 0.1, 0.14, 0.75) # Dark glassmorphic background
+	panel_style.border_width_left = 2
+	panel_style.border_width_top = 2
+	panel_style.border_width_right = 2
+	panel_style.border_width_bottom = 2
+	panel_style.border_color = Color(0.2, 0.3, 0.45, 0.8) # Light blue border
+	panel_style.set_corner_radius_all(10)
+	panel_style.content_margin_left = 15
+	panel_style.content_margin_right = 15
+	panel_style.content_margin_top = 15
+	panel_style.content_margin_bottom = 15
+	chart_panel.add_theme_stylebox_override("panel", panel_style)
+	activity_list.add_child(chart_panel)
+	
+	# VBox inside chart panel
+	var chart_vbox = VBoxContainer.new()
+	chart_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	chart_vbox.add_theme_constant_override("separation", 15)
+	chart_panel.add_child(chart_vbox)
+	
+	# Header
+	var header = Label.new()
+	header.text = "PROJECT OPERATIONS GANTT CHART"
+	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	header.add_theme_font_size_override("font_size", 22)
+	header.add_theme_color_override("font_color", Color(0.15, 0.55, 0.9))
+	chart_vbox.add_child(header)
+	
+	# Legend (No names of colors, just colored squares and descriptive labels)
+	var legend_hbox = HBoxContainer.new()
+	legend_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	legend_hbox.add_theme_constant_override("separation", 30)
+	chart_vbox.add_child(legend_hbox)
+	
+	# Critical Path Item
+	var crit_item = HBoxContainer.new()
+	crit_item.add_theme_constant_override("separation", 8)
+	var crit_box = Panel.new()
+	crit_box.custom_minimum_size = Vector2(20, 20)
+	var crit_box_style = StyleBoxFlat.new()
+	crit_box_style.bg_color = Color(0.85, 0.15, 0.25, 0.9)
+	crit_box_style.border_color = Color(1.0, 0.45, 0.55)
+	crit_box_style.border_width_left = 1
+	crit_box_style.border_width_top = 1
+	crit_box_style.border_width_right = 1
+	crit_box_style.border_width_bottom = 1
+	crit_box_style.set_corner_radius_all(3)
+	crit_box.add_theme_stylebox_override("panel", crit_box_style)
+	crit_item.add_child(crit_box)
+	
+	var crit_lbl = Label.new()
+	crit_lbl.text = "Critical Operations"
+	crit_lbl.add_theme_font_size_override("font_size", 14)
+	crit_lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.9))
+	crit_item.add_child(crit_lbl)
+	legend_hbox.add_child(crit_item)
+	
+	# Flexible Item
+	var flex_item = HBoxContainer.new()
+	flex_item.add_theme_constant_override("separation", 8)
+	var flex_box = Panel.new()
+	flex_box.custom_minimum_size = Vector2(20, 20)
+	var flex_box_style = StyleBoxFlat.new()
+	flex_box_style.bg_color = Color(0.15, 0.45, 0.7, 0.9)
+	flex_box_style.border_color = Color(0.4, 0.7, 0.9)
+	flex_box_style.border_width_left = 1
+	flex_box_style.border_width_top = 1
+	flex_box_style.border_width_right = 1
+	flex_box_style.border_width_bottom = 1
+	flex_box_style.set_corner_radius_all(3)
+	flex_box.add_theme_stylebox_override("panel", flex_box_style)
+	flex_item.add_child(flex_box)
+	
+	var flex_lbl = Label.new()
+	flex_lbl.text = "Non-critical activity"
+	flex_lbl.add_theme_font_size_override("font_size", 14)
+	flex_lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.9))
+	flex_item.add_child(flex_lbl)
+	legend_hbox.add_child(flex_item)
+	
+	# Create a Gantt Chart layout container (HBox Container)
+	var gantt_hbox = HBoxContainer.new()
+	gantt_hbox.custom_minimum_size = Vector2(0, 520) # Smaller format!
+	gantt_hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	chart_vbox.add_child(gantt_hbox)
+	
+	# Left Column: Activity Labels
+	var labels_vbox = VBoxContainer.new()
+	labels_vbox.custom_minimum_size = Vector2(260, 0)
+	labels_vbox.add_theme_constant_override("separation", 5) # Smaller separation
+	gantt_hbox.add_child(labels_vbox)
+	
+	# Right Column: Timeline Area (Control containing overlapping grid and rows)
+	var timeline_area = Control.new()
+	timeline_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	timeline_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	gantt_hbox.add_child(timeline_area)
+	
+	# Grid Background first (drawn behind bars)
+	var grid_bg = Control.new()
+	grid_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	
+	# Rows VBoxContainer (drawn over GridBG)
+	var rows_vbox = VBoxContainer.new()
+	rows_vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	rows_vbox.add_theme_constant_override("separation", 5) # Smaller separation
+	timeline_area.add_child(rows_vbox)
+	
+	var activities = [
+		{"name": "Team Assignment", "code": "A", "duration": 4, "es": 0, "ef": 4, "is_critical": true},
+		{"name": "Initial Layout Mapping", "code": "B", "duration": 4, "es": 0, "ef": 4, "is_critical": true},
+		{"name": "Emergency Plan Training", "code": "C", "duration": 4, "es": 4, "ef": 8, "is_critical": true},
+		{"name": "Sponsor Management", "code": "D", "duration": 8, "es": 4, "ef": 12, "is_critical": false},
+		{"name": "Entertainment Line-Up", "code": "F", "duration": 8, "es": 8, "ef": 16, "is_critical": true},
+		{"name": "Promotion Strategy", "code": "E", "duration": 4, "es": 12, "ef": 16, "is_critical": false},
+		{"name": "Ticket Pricing Strategy", "code": "G", "duration": 4, "es": 16, "ef": 20, "is_critical": true},
+		{"name": "Volunteer/Club Recruitment", "code": "H", "duration": 4, "es": 16, "ef": 20, "is_critical": true},
+		{"name": "Food Vendor Selection", "code": "I", "duration": 4, "es": 20, "ef": 24, "is_critical": true},
+		{"name": "Stage Setup Choices", "code": "J", "duration": 4, "es": 24, "ef": 28, "is_critical": true},
+		{"name": "Sound System Choices", "code": "K", "duration": 4, "es": 24, "ef": 28, "is_critical": true},
+		{"name": "Transport Coordination", "code": "L", "duration": 4, "es": 24, "ef": 28, "is_critical": true},
+		{"name": "Decoration Theme Decision", "code": "M", "duration": 2, "es": 28, "ef": 30, "is_critical": false},
+		{"name": "Festival Cleaning & Security", "code": "N", "duration": 4, "es": 28, "ef": 32, "is_critical": true},
+		{"name": "Facility Layout Mapping", "code": "O", "duration": 4, "es": 28, "ef": 32, "is_critical": true}
+	]
+	
+	for act in activities:
+		# Add Label to left column
+		var lbl = Label.new()
+		lbl.text = act["name"]
+		lbl.custom_minimum_size = Vector2(0, 25) # Smaller height
+		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl.add_theme_font_size_override("font_size", 12) # Smaller font
+		lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.9))
+		labels_vbox.add_child(lbl)
+		
+		# Add Timeline Row to right column
+		var row = Control.new()
+		row.custom_minimum_size = Vector2(0, 25) # Smaller height
+		rows_vbox.add_child(row)
+		
+		# Draw the bar in the row
+		var bar = Panel.new()
+		bar.anchor_left = float(act["es"]) / 34.0
+		bar.anchor_right = float(act["ef"]) / 34.0
+		bar.anchor_top = 0.1
+		bar.anchor_bottom = 0.9
+		bar.offset_left = 0
+		bar.offset_top = 0
+		bar.offset_right = 0
+		bar.offset_bottom = 0
+		
+		# Styling the bar
+		var style = StyleBoxFlat.new()
+		if act["is_critical"]:
+			style.bg_color = Color(0.85, 0.15, 0.25, 0.9)
+			style.border_color = Color(1.0, 0.45, 0.55)
+		else:
+			style.bg_color = Color(0.15, 0.45, 0.7, 0.9)
+			style.border_color = Color(0.4, 0.7, 0.9)
+			
+		style.border_width_left = 1
+		style.border_width_top = 1
+		style.border_width_right = 1
+		style.border_width_bottom = 1
+		style.set_corner_radius_all(4)
+		bar.add_theme_stylebox_override("panel", style)
+		row.add_child(bar)
+		
+		# Code and duration inside the bar (e.g. A (4))
+		var bar_lbl = Label.new()
+		bar_lbl.text = act["code"] + " (" + str(act["duration"]) + ")"
+		bar_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		bar_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		bar_lbl.set_anchors_preset(Control.PRESET_FULL_RECT)
+		bar_lbl.add_theme_font_size_override("font_size", 10) # Smaller font
+		bar_lbl.add_theme_color_override("font_color", Color.WHITE)
+		bar.add_child(bar_lbl)
+		
+		# Add ES and EF labels
+		if act["es"] > 0:
+			var es_lbl = Label.new()
+			es_lbl.text = "ES=" + str(act["es"])
+			es_lbl.anchor_left = float(act["es"]) / 34.0
+			es_lbl.anchor_right = float(act["es"]) / 34.0
+			es_lbl.offset_left = -40
+			es_lbl.offset_right = -5
+			es_lbl.anchor_top = 0.2
+			es_lbl.anchor_bottom = 0.8
+			es_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			es_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			es_lbl.add_theme_font_size_override("font_size", 8) # Smaller font
+			es_lbl.modulate = Color(0.6, 0.6, 0.6)
+			row.add_child(es_lbl)
+			
+		var ef_lbl = Label.new()
+		ef_lbl.text = "EF=" + str(act["ef"])
+		ef_lbl.anchor_left = float(act["ef"]) / 34.0
+		ef_lbl.anchor_right = float(act["ef"]) / 34.0
+		ef_lbl.offset_left = 5
+		ef_lbl.offset_right = 40
+		ef_lbl.anchor_top = 0.2
+		ef_lbl.anchor_bottom = 0.8
+		ef_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		ef_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		ef_lbl.add_theme_font_size_override("font_size", 8) # Smaller font
+		ef_lbl.modulate = Color(0.6, 0.6, 0.6)
+		row.add_child(ef_lbl)
+
+	# Bottom axis row for labels_vbox
+	var axis_title_lbl = Label.new()
+	axis_title_lbl.text = "Timeline (Weeks):"
+	axis_title_lbl.custom_minimum_size = Vector2(0, 25) # Smaller height
+	axis_title_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	axis_title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	axis_title_lbl.add_theme_font_size_override("font_size", 12) # Smaller font
+	axis_title_lbl.add_theme_color_override("font_color", Color(0.6, 0.7, 0.8))
+	labels_vbox.add_child(axis_title_lbl)
+	
+	# Bottom axis row for rows_vbox
+	var axis_row = Control.new()
+	axis_row.custom_minimum_size = Vector2(0, 25) # Smaller height
+	rows_vbox.add_child(axis_row)
+	
+	# Add week labels (0, 2, 4, ..., 34)
+	for i in range(18):
+		var week = i * 2
+		var week_lbl = Label.new()
+		week_lbl.text = str(week)
+		week_lbl.anchor_left = float(week) / 34.0
+		week_lbl.anchor_right = float(week) / 34.0
+		week_lbl.offset_left = -15
+		week_lbl.offset_right = 15
+		week_lbl.anchor_top = 0.1
+		week_lbl.anchor_bottom = 0.9
+		week_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		week_lbl.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+		week_lbl.add_theme_font_size_override("font_size", 10) # Smaller font
+		week_lbl.add_theme_color_override("font_color", Color(0.7, 0.8, 0.9))
+		axis_row.add_child(week_lbl)
+		
+	# Grid draw callback definition
+	grid_bg.draw.connect(func():
+		var steps = 17 # 34 / 2
+		var col = Color(0.3, 0.35, 0.4, 0.15) # Very soft grid lines
+		
+		# Find the position of the axis row relative to grid_bg
+		var base_y = grid_bg.size.y - 25 # Smaller offset
+		if axis_row.is_inside_tree():
+			base_y = axis_row.position.y - 5
+			
+		for i in range(steps + 1):
+			var week = i * 2
+			var x = (float(week) / 34.0) * grid_bg.size.x
+			# Draw vertical grid line
+			grid_bg.draw_line(Vector2(x, 0), Vector2(x, base_y), col, 1.0)
+		
+		# Draw horizontal baseline for the axis
+		grid_bg.draw_line(Vector2(0, base_y), Vector2(grid_bg.size.x, base_y), Color(0.5, 0.5, 0.6, 0.4), 2.0)
+	)
+	timeline_area.add_child(grid_bg)
+	
+	# Move RowsVBox to draw over the grid background lines
+	timeline_area.move_child(rows_vbox, timeline_area.get_child_count() - 1)

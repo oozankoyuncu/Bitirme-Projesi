@@ -148,7 +148,7 @@ func _setup_guide_ui() -> void:
 	rich_text.add_theme_font_size_override("bold_font_size", 20)
 	
 	rich_text.text = """[b]YOUR OBJECTIVE[/b]
-Build a balanced food service system that meets participant demand, maintains high hygiene and speed standards, and stays within your budget.
+Build a balanced food service system that meets participant demand, maintains high hygiene and speed standards, and maximizes your vendor profits.
 
 [b]HOW TO SCORE & WIN[/b]
 
@@ -158,8 +158,8 @@ Build a balanced food service system that meets participant demand, maintains hi
 • [color=#66ff66]Cuisine Diversity:[/color] Select at least one vendor from different cuisine types to earn a valuable Diversity Bonus!
 
 [b]CONSTRAINTS TO MONITOR[/b]
-1. [b]Budget:[/b] Total costs must not exceed your available funds.
-2. [b]Physical Space:[/b] The vendors must fit within the total available square meters (sqm) on the festival map.
+1. [b]Budget:[/b] Vendor fees are added directly to your budget as profit.
+2. [b]Physical Space:[/b] There is no total space limit constraint, but the maximum space that can be allocated to each vendor is restricted.
 3. [b]Electricity:[/b] High-power vendors require more electricity infrastructure."""
 	
 	scroll.add_child(rich_text)
@@ -228,7 +228,7 @@ func create_options() -> void:
 		
 		# Top line: cuisine, price, capacity
 		var top_label = Label.new()
-		top_label.text = v_data["cuisine_type"] + " | Cost: " + str(int(v_data["price"])) + " TL | Cap: " + str(int(v_data["service_capacity"]))
+		top_label.text = v_data["cuisine_type"] + " | Profit: " + str(int(v_data["price"])) + " TL | Cap: " + str(int(v_data["service_capacity"]))
 		top_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		top_label.add_theme_font_size_override("font_size", 18)
 		top_label.modulate = Color(1.0, 0.8, 0.6)
@@ -251,7 +251,7 @@ func create_options() -> void:
 		var max_space = 100
 		
 		var slider_label = Label.new()
-		slider_label.text = "Allocated: " + str(min_space) + " sqm"
+		slider_label.text = "Allocated: " + str(min_space) + " / 100 sqm"
 		slider_label.add_theme_font_size_override("font_size", 18)
 		slider_label.modulate = Color(0.8, 0.9, 1.0)
 		
@@ -266,7 +266,10 @@ func create_options() -> void:
 		slider_label.visible = false
 		
 		slider.value_changed.connect(func(val):
-			slider_label.text = "Allocated: " + str(int(val)) + " sqm"
+			if val > current_max_space:
+				slider.value = current_max_space
+				val = current_max_space
+			slider_label.text = "Allocated: " + str(int(val)) + " / 100 sqm"
 			refresh_ui()
 		)
 		
@@ -364,12 +367,8 @@ func get_totals() -> Dictionary:
 	if avg_speed > 0 and avg_speed < 2.5:
 		satisfaction_impact -= 2.0 # Penalty for slow speed
 		
-	if total_space > current_max_space:
-		quality_impact -= 3.0 # System overload / crowding penalty
-		satisfaction_impact -= 2.0
-		
-	var space_exceeded = total_space > current_max_space
-	var budget_exceeded = total_price > GameState.money
+	var space_exceeded = false
+	var budget_exceeded = false
 		
 	return {
 		"selected_ids": selected_ids,
@@ -392,12 +391,12 @@ func get_totals() -> Dictionary:
 func refresh_ui() -> void:
 	var data = get_totals()
 	
-	budget_label.text = "Total Cost: " + str(data["price"]) + " TL"
+	budget_label.text = "Total Profit: " + str(data["price"]) + " TL"
 	var attendance_str = str(int(GameState.final_attendance)) if GameState.final_attendance > 0 else "N/A"
 	capacity_label.text = "Capacity: " + str(data["capacity"]) + " / " + attendance_str
 	hygiene_label.text = "Avg Hygiene: " + str(snapped(data["avg_hygiene"], 0.1)) + " / 5"
 	electricity_label.text = "Avg Speed: " + str(snapped(data["avg_speed"], 0.1)) + " / 5"
-	space_label.text = "Space Used: " + str(data["space"]) + " / " + str(current_max_space) + " sqm"
+	space_label.text = "Space Used: " + str(data["space"]) + " sqm"
 	diversity_label.text = "Diversity: " + str(data["diversity_count"]) + " types"
 	
 	if GameState.food_vendor_completed:
@@ -410,7 +409,6 @@ func refresh_ui() -> void:
 		
 		var warnings = []
 		if data["budget_exceeded"]: warnings.append("OVER BUDGET")
-		if data["space_exceeded"]: warnings.append("OVER SPACE LIMIT")
 		if data["low_capacity"]: warnings.append("LOW CAPACITY")
 		if data["low_hygiene"]: warnings.append("BAD HYGIENE")
 		if data["low_diversity"]: warnings.append("POOR VARIETY")
@@ -422,8 +420,8 @@ func refresh_ui() -> void:
 			warning_label.text = "All constraints met."
 			warning_label.modulate = Color(0.6, 0.6, 0.6)
 			
-		budget_label.modulate = Color(1.0, 0.2, 0.2) if data["budget_exceeded"] else Color.WHITE
-		space_label.modulate = Color(1.0, 0.2, 0.2) if data["space_exceeded"] else Color.WHITE
+		budget_label.modulate = Color(0.4, 0.9, 0.4) # Soft green for profit
+		space_label.modulate = Color.WHITE
 		capacity_label.modulate = Color(1.0, 0.6, 0.2) if data["low_capacity"] else Color.WHITE
 		hygiene_label.modulate = Color(1.0, 0.6, 0.2) if data["low_hygiene"] else Color.WHITE
 		diversity_label.modulate = Color(1.0, 0.6, 0.2) if data["low_diversity"] else Color.WHITE
@@ -469,6 +467,12 @@ func _start_scenario_timer() -> void:
 	
 	var reduction = randi() % 31 + 40 # 40 to 70
 	current_max_space -= reduction
+	
+	# Clamp existing sliders if their values exceed the new reduced space limit
+	for id in space_sliders.keys():
+		var slider = space_sliders[id]
+		if slider.value > current_max_space:
+			slider.value = current_max_space
 	
 	refresh_ui()
 

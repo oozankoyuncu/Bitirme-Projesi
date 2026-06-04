@@ -474,6 +474,13 @@ func _on_confirm_pressed() -> void:
 			var dropped_artist = GameState.selected_supporting_artists[idx]
 			GameState.selected_supporting_artists.remove_at(idx)
 			
+			# Remove from available artists so they cannot be selected again
+			for a in GameState.available_artists:
+				if a["id"] == dropped_artist["id"]:
+					GameState.available_artists.erase(a)
+					break
+			create_available_artist_list()
+			
 			var overlay = ColorRect.new()
 			overlay.color = Color(0, 0, 0, 0.85)
 			overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

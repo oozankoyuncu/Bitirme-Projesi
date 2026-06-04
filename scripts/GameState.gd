@@ -445,6 +445,13 @@ func start_emergency_training_phase() -> void:
 	emergency_training_phase_start_time = game_seconds
 	emergency_training_phase_end_time = game_seconds + emergency_training_phase_duration
 	
+func finish_emergency_training() -> void:
+	# Advance clock by the total max duration (240s)
+	game_seconds += emergency_training_phase_duration
+	_update_active_trainings()
+	emit_signal("time_changed")
+	complete_activity("emergency_training")
+	
 func get_emergency_training_remaining_time() -> float:
 	if not emergency_training_phase_active:
 		return 0.0
@@ -642,7 +649,7 @@ func finalize_food_vendor_selection(selected: Array, capacity: int, avg_hygiene:
 	total_food_capacity = capacity
 	average_hygiene = avg_hygiene
 	total_food_cost = total_cost
-	money -= total_cost
+	money += total_cost
 	
 	participant_satisfaction += satisfaction_impact
 	event_quality_score += quality_impact
