@@ -4,6 +4,7 @@ extends Control
 
 var resource_status_label: Label
 var resource_warning_label: Label
+var heuristic_confirmed: bool = false
 
 func _ready() -> void:
 	refresh_board()
@@ -136,6 +137,7 @@ func _setup_dashboard_notifications() -> void:
 			2: GameState.resource_leveling_heuristic = "minimum_slack_first"
 			3: GameState.resource_leveling_heuristic = "highest_resource_demand_first"
 			4: GameState.resource_leveling_heuristic = "critical_activity_first"
+		heuristic_confirmed = true
 		refresh_board()
 	)
 	resource_hbox.add_child(heuristic_option)
@@ -303,6 +305,7 @@ func _trigger_scoring() -> void:
 	
 	# Hide activity board
 	hide()
+
 
 func show_notepad_info_popup() -> void:
 	if has_node("NotepadInfoPopup"):
@@ -485,76 +488,34 @@ func create_activity_card(activity: Dictionary) -> PanelContainer:
 	stats_row.add_child(dur_label)
 
 	var activity_id = activity["id"]
-	if GameState.crashed_activities.has(activity_id):
-		var crashed_lbl = Label.new()
-		crashed_lbl.text = "CRASHED"
-		crashed_lbl.modulate = Color(1.0, 0.5, 0.0) # Orange
-		crashed_lbl.add_theme_font_size_override("font_size", 14)
-		stats_row.add_child(crashed_lbl)
+
 
 	# Resource Info Rows (display-only)
 	var req_members  = int(activity.get("required_members",  0))
 	var req_phones   = int(activity.get("required_phones",   0))
 	var req_comps    = int(activity.get("required_computers", 0))
 
-	var avail_lbl = Label.new()
-	avail_lbl.text = "Available:  Phones %d/%d  |  Computers %d/%d" % [
-		GameState.available_phones, GameState.total_phones,
-		GameState.available_computers, GameState.total_computers
-	]
-	avail_lbl.add_theme_font_size_override("font_size", 14)
-	avail_lbl.modulate = Color(0.55, 0.85, 1.0, 1.0)  # light cyan
-	vbox.add_child(avail_lbl)
+	if activity_id != "festival_day":
+		var avail_lbl = Label.new()
+		avail_lbl.text = "Available:  Phones %d/%d  |  Computers %d/%d" % [
+			GameState.available_phones, GameState.total_phones,
+			GameState.available_computers, GameState.total_computers
+		]
+		avail_lbl.add_theme_font_size_override("font_size", 14)
+		avail_lbl.modulate = Color(0.55, 0.85, 1.0, 1.0)  # light cyan
+		vbox.add_child(avail_lbl)
 
-	var req_lbl = Label.new()
-	req_lbl.text = "Requires:  Members %d  |  Phones %d  |  Computers %d" % [
-		req_members, req_phones, req_comps
-	]
-	req_lbl.add_theme_font_size_override("font_size", 14)
-	req_lbl.modulate = Color(0.9, 0.75, 0.3, 1.0)   # warm amber
-	vbox.add_child(req_lbl)
+		var req_lbl = Label.new()
+		req_lbl.text = "Requires:  Members %d  |  Phones %d  |  Computers %d" % [
+			req_members, req_phones, req_comps
+		]
+		req_lbl.add_theme_font_size_override("font_size", 14)
+		req_lbl.modulate = Color(0.9, 0.75, 0.3, 1.0)   # warm amber
+		vbox.add_child(req_lbl)
 
-	# Crash / Speed Up Button
-	if activity.get("can_crash", false):
-		var is_crashed = GameState.crashed_activities.has(activity_id)
-		var crash_btn = Button.new()
-		crash_btn.text = "Crash / Speed Up"
-		crash_btn.custom_minimum_size = Vector2(120, 30)
-		crash_btn.add_theme_font_size_override("font_size", 14)
-		crash_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		
-		var btn_style = StyleBoxFlat.new()
-		btn_style.bg_color = Color(0.8, 0.4, 0.1) # Orange/amber
-		btn_style.set_corner_radius_all(6)
-		crash_btn.add_theme_stylebox_override("normal", btn_style)
-		
-		var btn_hover = btn_style.duplicate()
-		btn_hover.bg_color = Color(0.9, 0.5, 0.15)
-		crash_btn.add_theme_stylebox_override("hover", btn_hover)
-		
-		if is_crashed:
-			crash_btn.disabled = true
-			crash_btn.text = "Crashed"
-			var btn_disabled = btn_style.duplicate()
-			btn_disabled.bg_color = Color(0.3, 0.3, 0.3)
-			crash_btn.add_theme_stylebox_override("disabled", btn_disabled)
-		elif status != "Available":
-			crash_btn.disabled = true
-			var btn_disabled = btn_style.duplicate()
-			btn_disabled.bg_color = Color(0.3, 0.3, 0.3)
-			crash_btn.add_theme_stylebox_override("disabled", btn_disabled)
-		else:
-			crash_btn.pressed.connect(func():
-				if GameState.crash_activity(activity_id):
-					refresh_board()
-				else:
-					if resource_warning_label:
-						resource_warning_label.text = "⚠️ Cannot crash activity: budget limit reached (-300,000 TL)."
-			)
-		vbox.add_child(crash_btn)
 
 	# Interaction
-	if status == "Available" or (status == "Completed" and activity["id"] in ["initial_festival_layout_mapping", "final_festival_layout_mapping"]):
+	if status == "Available" or status == "In Progress":
 		card.gui_input.connect(func(event): 
 			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 				start_activity(activity)
@@ -582,6 +543,9 @@ func _style_card(card: PanelContainer, status: String, activity_id: String = "")
 			style.border_color = Color(0.15, 0.55, 0.9) # Blue
 			if activity_id == "festival_day":
 				style.border_color = Color(0.2, 0.9, 0.3) # Bright green border when available
+		"In Progress":
+			style.border_color = Color(0.9, 0.6, 0.1) # Orange
+			style.bg_color = Color(0.2, 0.15, 0.1, 0.8)
 		"Completed":
 			style.border_color = Color(0.2, 0.8, 0.2) # Green
 			style.bg_color = Color(0.1, 0.15, 0.1, 0.8)
@@ -590,8 +554,7 @@ func _style_card(card: PanelContainer, status: String, activity_id: String = "")
 			if activity_id == "festival_day":
 				style.bg_color = Color(0.1, 0.2, 0.1, 0.6) # Darker green when locked
 			
-	if GameState.crashed_activities.has(activity_id):
-		style.border_color = Color(1.0, 0.5, 0.0) # Orange border for crashed activities
+
 
 	card.add_theme_stylebox_override("panel", style)
 
@@ -626,6 +589,7 @@ func get_activity_emoji(id: String) -> String:
 func get_status_color(status: String) -> Color:
 	match status:
 		"Available": return Color(0.15, 0.55, 0.9)
+		"In Progress": return Color(0.9, 0.6, 0.1)
 		"Completed": return Color(0.2, 0.8, 0.2)
 		"Locked": return Color(0.6, 0.6, 0.6)
 	return Color.WHITE
@@ -633,6 +597,7 @@ func get_status_color(status: String) -> Color:
 func get_activity_status(activity: Dictionary) -> String:
 	var activity_id = activity["id"]
 	if GameState.completed_activities.has(activity_id): return "Completed"
+	if GameState.started_activities.has(activity_id): return "In Progress"
 	
 	if not _dependencies_completed(activity): return "Locked"
 	return "Available"
@@ -643,34 +608,43 @@ func _dependencies_completed(activity: Dictionary) -> bool:
 	return true
 
 func start_activity(activity: Dictionary) -> void:
-	if not GameState.has_enough_resources(activity):
-		var req_phones = int(activity.get("required_phones", 0))
-		var req_computers = int(activity.get("required_computers", 0))
-		var missing_resource = ""
-		if GameState.available_phones < req_phones and GameState.available_computers < req_computers:
-			missing_resource = "phones and computers"
-		elif GameState.available_phones < req_phones:
-			missing_resource = "phones"
-		else:
-			missing_resource = "computers"
-		print("Not enough ", missing_resource, " available for ", activity["name"])
+	if not heuristic_confirmed:
 		if resource_warning_label:
-			var h_name = "Minimum Slack First"
-			match GameState.resource_leveling_heuristic:
-				"minimum_duration_first": h_name = "Minimum Duration First"
-				"maximum_duration_first": h_name = "Maximum Duration First"
-				"minimum_slack_first": h_name = "Minimum Slack First"
-				"highest_resource_demand_first": h_name = "Highest Resource Demand First"
-				"critical_activity_first": h_name = "Critical Activity First"
-			resource_warning_label.text = "⚠️ " + activity["name"] + " could not start. Blocked by resource constraints. Conflict evaluated using: " + h_name + "."
+			resource_warning_label.text = "⚠️ Please select a Resource Heuristic from the dropdown above before starting any activity."
 		return
+	
+	var activity_id = activity["id"]
+	if not GameState.started_activities.has(activity_id):
+		if not GameState.has_enough_resources(activity):
+			var req_phones = int(activity.get("required_phones", 0))
+			var req_computers = int(activity.get("required_computers", 0))
+			var missing_resource = ""
+			if GameState.available_phones < req_phones and GameState.available_computers < req_computers:
+				missing_resource = "phones and computers"
+			elif GameState.available_phones < req_phones:
+				missing_resource = "phones"
+			else:
+				missing_resource = "computers"
+			print("Not enough ", missing_resource, " available for ", activity["name"])
+			if resource_warning_label:
+				var h_name = "Minimum Slack First"
+				match GameState.resource_leveling_heuristic:
+					"minimum_duration_first": h_name = "Minimum Duration First"
+					"maximum_duration_first": h_name = "Maximum Duration First"
+					"minimum_slack_first": h_name = "Minimum Slack First"
+					"highest_resource_demand_first": h_name = "Highest Resource Demand First"
+					"critical_activity_first": h_name = "Critical Activity First"
+				resource_warning_label.text = "⚠️ " + activity["name"] + " could not start. Blocked by resource constraints. Conflict evaluated using: " + h_name + "."
+			return
 
-	GameState.allocate_resources(activity)
+		GameState.allocate_resources(activity)
+		GameState.started_activities.append(activity_id)
+
 	update_resource_display()
 	if resource_warning_label:
 		resource_warning_label.text = ""
 
-	var activity_id = activity["id"]
+	activity_id = activity["id"]
 	var panels = {
 		"team_assignment": "TeamAssignmentPanel",
 		"initial_festival_layout_mapping": "InitialFacilityLayoutPanel",

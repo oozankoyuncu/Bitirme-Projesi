@@ -11,6 +11,7 @@ var sponsor_defs = {}
 @onready var signed_list_label: Label = $MarginContainer/VBoxContainer/MainContent/RightSummary/SummaryPanel/MarginContainer/VBoxContainer/SignedListLabel
 @onready var check_button: Button = $MarginContainer/VBoxContainer/MainContent/LeftNegotiation/CheckButton
 @onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
+@onready var finish_button: Button = $MarginContainer/VBoxContainer/Footer/FinishButton
 
 @onready var info_btn: Button = $MarginContainer/VBoxContainer/Header/InfoButton
 @onready var guide_panel: PanelContainer = $GuidePanel
@@ -24,10 +25,62 @@ var _popup_timer_started: bool = false
 var all_conflicts: Dictionary = {}
 
 func _ready() -> void:
+
+	# -- DYNAMIC BUTTON INJECTION --
+	var __footer_found = false
+	var __footer_node = null
+	
+	# Try common paths
+	var __paths = [
+		"MarginContainer/VBoxContainer/Footer",
+		"MarginContainer/VBoxContainer/ButtonRow",
+		"MarginContainer/VBoxContainer/MainContent/RightPanel",
+		"MarginContainer/VBoxContainer/HBoxContainer"
+	]
+	
+	for p in __paths:
+		if has_node(p):
+			__footer_node = get_node(p)
+			__footer_found = true
+			break
+	
+	if __footer_node != null:
+		# Hide or remove any existing Confirm/Back buttons to replace with our standard ones
+		for c in __footer_node.get_children():
+			if c is Button and (c.name.find("Confirm") >= 0 or c.name.find("Back") >= 0 or c.name.find("Finish") >= 0):
+				c.hide()
+				# Keep them hidden, we'll use our own
+		
+		var __hbox = HBoxContainer.new()
+		__hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		__hbox.add_theme_constant_override("separation", 20)
+		__hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		var __back_btn = Button.new()
+		__back_btn.text = "BACK"
+		__back_btn.custom_minimum_size = Vector2(150, 45)
+		var __b_style = StyleBoxFlat.new()
+		__b_style.bg_color = Color(0.3, 0.3, 0.3)
+		__b_style.set_corner_radius_all(6)
+		__back_btn.add_theme_stylebox_override("normal", __b_style)
+		__back_btn.pressed.connect(self._on_back_pressed)
+		__hbox.add_child(__back_btn)
+		
+		var __finish_btn = Button.new()
+		__finish_btn.text = "FINISH"
+		__finish_btn.custom_minimum_size = Vector2(150, 45)
+		var __f_style = StyleBoxFlat.new()
+		__f_style.bg_color = Color(0.1, 0.6, 0.2)
+		__f_style.set_corner_radius_all(6)
+		__finish_btn.add_theme_stylebox_override("normal", __f_style)
+		if self.has_method("_on_finish_pressed"):
+			__finish_btn.pressed.connect(self._on_finish_pressed)
+		__hbox.add_child(__finish_btn)
+		
+		__footer_node.add_child(__hbox)
 	_load_sponsors()
 	
 	check_button.pressed.connect(_on_check_pressed)
-	back_button.pressed.connect(_on_back_pressed)
 	info_btn.pressed.connect(func(): guide_panel.show())
 	close_guide_btn.pressed.connect(func(): guide_panel.hide())
 
@@ -310,7 +363,6 @@ func refresh_ui() -> void:
 	signed_list_label.text = signed_text + "\n\nSecured: " + str(total_grant) + " TL"
 
 func _on_back_pressed() -> void:
-	GameState.complete_activity("sponsor_management")
 	hide()
 	if get_parent().has_node("ActivityBoard"):
 		get_parent().get_node("ActivityBoard").show()
@@ -334,3 +386,10 @@ func _setup_guide_text() -> void:
 		"• You can retry selection up to 2 times after rejections.\n" + \
 		"• Accepted sponsors are locked in your portfolio.\n" + \
 		"• Conflict Check: Some brands are competitors and cannot be selected together."
+
+func _on_finish_pressed() -> void:
+	GameState.complete_activity("sponsor_management")
+	hide()
+	if get_parent().has_node("ActivityBoard"):
+		get_parent().get_node("ActivityBoard").show()
+		get_parent().get_node("ActivityBoard").refresh_board()

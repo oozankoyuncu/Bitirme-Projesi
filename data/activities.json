@@ -6,14 +6,11 @@
 			"type": "team_setup",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 4,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [],
-			"required_members": 1,
+			"required_members": 0,
 			"required_phones": 0,
-			"required_computers": 1,
-			"can_crash": false
+			"required_computers": 1
 		},
 		{
 			"id": "initial_festival_layout_mapping",
@@ -21,14 +18,11 @@
 			"type": "layout_mapping",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 4,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [],
-			"required_members": 1,
+			"required_members": 0,
 			"required_phones": 0,
-			"required_computers": 1,
-			"can_crash": false
+			"required_computers": 1
 		},
 		{
 			"id": "emergency_training",
@@ -36,34 +30,28 @@
 			"type": "emergency_train",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 4,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"team_assignment",
-				"initial_festival_layout_mapping"
+                "initial_festival_layout_mapping"
 			],
-			"required_members": 2,
+			"required_members": 0,
 			"required_phones": 1,
-			"required_computers": 0,
-			"can_crash": false
+			"required_computers": 0
 		},
 		{
 			"id": "sponsor_management",
 			"name": "Sponsor Management",
 			"duration": 8,
 			"normal_duration": 8,
-			"crash_duration": 5,
-			"crash_cost": 20000,
 			"cost": 0,
 			"dependencies": [
 				"team_assignment",
-				"initial_festival_layout_mapping"
+                "initial_festival_layout_mapping"
 			],
-			"required_members": 2,
+			"required_members": 1,
 			"required_phones": 2,
-			"required_computers": 2,
-			"can_crash": true
+			"required_computers": 2
 		},
 		{
 			"id": "promotion_strategy",
@@ -71,16 +59,13 @@
 			"type": "promotion_selection",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 2,
-			"crash_cost": 12000,
 			"cost": 0,
 			"dependencies": [
-				"sponsor_management"
+                "sponsor_management"
 			],
 			"required_members": 1,
 			"required_phones": 1,
-			"required_computers": 1,
-			"can_crash": true
+			"required_computers": 1
 		},
 		{
 			"id": "entertainment_lineup",
@@ -88,16 +73,13 @@
 			"type": "artist_selection",
 			"duration": 8,
 			"normal_duration": 8,
-			"crash_duration": 5,
-			"crash_cost": 25000,
 			"cost": 0,
 			"dependencies": [
-				"emergency_training"
+                "emergency_training"
 			],
 			"required_members": 1,
 			"required_phones": 1,
-			"required_computers": 1,
-			"can_crash": true
+			"required_computers": 1
 		},
 		{
 			"id": "ticket_pricing",
@@ -105,17 +87,14 @@
 			"type": "ticket_pricing",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 4,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"entertainment_lineup",
-				"promotion_strategy"
+                "promotion_strategy"
 			],
 			"required_members": 1,
 			"required_phones": 0,
-			"required_computers": 1,
-			"can_crash": false
+			"required_computers": 1
 		},
 		{
 			"id": "volunteer_club_recruitment",
@@ -123,17 +102,14 @@
 			"type": "volunteer_club",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 4,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"entertainment_lineup",
-				"promotion_strategy"
+                "promotion_strategy"
 			],
 			"required_members": 1,
 			"required_phones": 1,
-			"required_computers": 1,
-			"can_crash": false
+			"required_computers": 1
 		},
 		{
 			"id": "food_vendor_selection",
@@ -141,17 +117,14 @@
 			"type": "food_vendor",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 4,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"ticket_pricing",
-				"volunteer_club_recruitment"
+                "volunteer_club_recruitment"
 			],
 			"required_members": 1,
 			"required_phones": 1,
-			"required_computers": 1,
-			"can_crash": false
+			"required_computers": 1
 		},
 		{
 			"id": "stage_setup_choices",
@@ -159,16 +132,13 @@
 			"type": "stage_setup",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 2,
-			"crash_cost": 12000,
 			"cost": 0,
 			"dependencies": [
-				"food_vendor_selection"
+                "food_vendor_selection"
 			],
-			"required_members": 2,
+			"required_members": 1,
 			"required_phones": 1,
-			"required_computers": 2,
-			"can_crash": true
+			"required_computers": 2
 		},
 		{
 			"id": "sound_system_choices",
@@ -176,16 +146,13 @@
 			"type": "sound_system",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 2,
-			"crash_cost": 10000,
 			"cost": 0,
 			"dependencies": [
-				"food_vendor_selection"
+                "food_vendor_selection"
 			],
-			"required_members": 2,
+			"required_members": 1,
 			"required_phones": 0,
-			"required_computers": 2,
-			"can_crash": true
+			"required_computers": 2
 		},
 		{
 			"id": "transport_coordination",
@@ -193,16 +160,13 @@
 			"type": "transport",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 2,
-			"crash_cost": 12000,
 			"cost": 0,
 			"dependencies": [
-				"food_vendor_selection"
+                "food_vendor_selection"
 			],
-			"required_members": 2,
+			"required_members": 1,
 			"required_phones": 2,
-			"required_computers": 1,
-			"can_crash": true
+			"required_computers": 1
 		},
 		{
 			"id": "decoration_theme_decision",
@@ -210,18 +174,15 @@
 			"type": "decoration_theme",
 			"duration": 2,
 			"normal_duration": 2,
-			"crash_duration": 2,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"stage_setup_choices",
 				"sound_system_choices",
-				"transport_coordination"
+                "transport_coordination"
 			],
 			"required_members": 1,
 			"required_phones": 0,
-			"required_computers": 0,
-			"can_crash": false
+			"required_computers": 0
 		},
 		{
 			"id": "festival_cleaning_security",
@@ -229,18 +190,15 @@
 			"type": "cleaning_security",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 2,
-			"crash_cost": 15000,
 			"cost": 0,
 			"dependencies": [
 				"stage_setup_choices",
 				"sound_system_choices",
-				"transport_coordination"
+                "transport_coordination"
 			],
-			"required_members": 2,
+			"required_members": 1,
 			"required_phones": 2,
-			"required_computers": 0,
-			"can_crash": true
+			"required_computers": 0
 		},
 		{
 			"id": "final_festival_layout_mapping",
@@ -248,18 +206,15 @@
 			"type": "final_layout_mapping",
 			"duration": 4,
 			"normal_duration": 4,
-			"crash_duration": 4,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"stage_setup_choices",
 				"sound_system_choices",
-				"transport_coordination"
+                "transport_coordination"
 			],
 			"required_members": 1,
 			"required_phones": 1,
-			"required_computers": 2,
-			"can_crash": false
+			"required_computers": 2
 		},
 		{
 			"id": "festival_day",
@@ -267,18 +222,15 @@
 			"type": "festival_day",
 			"duration": 0,
 			"normal_duration": 0,
-			"crash_duration": 0,
-			"crash_cost": 0,
 			"cost": 0,
 			"dependencies": [
 				"decoration_theme_decision",
 				"festival_cleaning_security",
-				"final_festival_layout_mapping"
+                "final_festival_layout_mapping"
 			],
-			"required_members": 3,
-			"required_phones": 2,
-			"required_computers": 1,
-			"can_crash": false
+			"required_members": 0,
+			"required_phones": 0,
+			"required_computers": 0
 		}
 	]
 }

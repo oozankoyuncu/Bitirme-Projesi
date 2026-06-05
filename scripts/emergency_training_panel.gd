@@ -35,6 +35,7 @@ var training_defs = {
 @onready var member_list_container: GridContainer = $MarginContainer/VBoxContainer/MainContent/MembersColumn/ScrollContainer/MemberList
 @onready var active_trainings_container: VBoxContainer = $MarginContainer/VBoxContainer/MainContent/StatusColumn/StatusPanel/MarginContainer/ScrollContainer/VBoxContainer
 @onready var back_button: Button = $MarginContainer/VBoxContainer/Footer/BackButton
+@onready var finish_button: Button = $MarginContainer/VBoxContainer/Footer/FinishButton
 
 @onready var elec_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/ElectricalButton
 @onready var crowd_btn: Button = $MarginContainer/VBoxContainer/MainContent/ProgramsColumn/TrainingButtons/CrowdButton
@@ -47,13 +48,65 @@ var training_defs = {
 @onready var close_guide_btn: Button = $GuidePanel/MarginContainer/VBoxContainer/Header/CloseGuideButton
 
 func _ready() -> void:
+
+	# -- DYNAMIC BUTTON INJECTION --
+	var __footer_found = false
+	var __footer_node = null
+	
+	# Try common paths
+	var __paths = [
+		"MarginContainer/VBoxContainer/Footer",
+		"MarginContainer/VBoxContainer/ButtonRow",
+		"MarginContainer/VBoxContainer/MainContent/RightPanel",
+		"MarginContainer/VBoxContainer/HBoxContainer"
+	]
+	
+	for p in __paths:
+		if has_node(p):
+			__footer_node = get_node(p)
+			__footer_found = true
+			break
+	
+	if __footer_node != null:
+		# Hide or remove any existing Confirm/Back buttons to replace with our standard ones
+		for c in __footer_node.get_children():
+			if c is Button and (c.name.find("Confirm") >= 0 or c.name.find("Back") >= 0 or c.name.find("Finish") >= 0):
+				c.hide()
+				# Keep them hidden, we'll use our own
+		
+		var __hbox = HBoxContainer.new()
+		__hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		__hbox.add_theme_constant_override("separation", 20)
+		__hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		var __back_btn = Button.new()
+		__back_btn.text = "BACK"
+		__back_btn.custom_minimum_size = Vector2(150, 45)
+		var __b_style = StyleBoxFlat.new()
+		__b_style.bg_color = Color(0.3, 0.3, 0.3)
+		__b_style.set_corner_radius_all(6)
+		__back_btn.add_theme_stylebox_override("normal", __b_style)
+		__back_btn.pressed.connect(self._on_back_pressed)
+		__hbox.add_child(__back_btn)
+		
+		var __finish_btn = Button.new()
+		__finish_btn.text = "FINISH"
+		__finish_btn.custom_minimum_size = Vector2(150, 45)
+		var __f_style = StyleBoxFlat.new()
+		__f_style.bg_color = Color(0.1, 0.6, 0.2)
+		__f_style.set_corner_radius_all(6)
+		__finish_btn.add_theme_stylebox_override("normal", __f_style)
+		if self.has_method("_on_finish_pressed"):
+			__finish_btn.pressed.connect(self._on_finish_pressed)
+		__hbox.add_child(__finish_btn)
+		
+		__footer_node.add_child(__hbox)
 	# Program Connections
 	elec_btn.pressed.connect(func(): _on_program_selected("electrical_failure_response", elec_btn))
 	crowd_btn.pressed.connect(func(): _on_program_selected("crowd_control", crowd_btn))
 	med_btn.pressed.connect(func(): _on_program_selected("medical_first_response", med_btn))
 	crisis_btn.pressed.connect(func(): _on_program_selected("crisis_management", crisis_btn))
 
-	back_button.pressed.connect(_on_back_pressed)
 	info_btn.pressed.connect(func(): guide_panel.show())
 	close_guide_btn.pressed.connect(func(): guide_panel.hide())
 
@@ -293,7 +346,7 @@ func _refresh_ui() -> void:
 	# _refresh_member_list() is called via _process or better yet, signals from GameState
 
 func _on_back_pressed() -> void:
-	GameState.finish_emergency_training()
+	
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()
@@ -313,3 +366,9 @@ func _setup_guide_text() -> void:
 		"• TOTAL TIME LIMIT: Each member can train for a maximum of 4 minutes (240s).\n" + \
 		"• IMPACT: Trained members complete related scenarios 50% FASTER during the festival.\n" + \
 		"• Member status: Trainees are unavailable for other tasks while in session."
+
+func _on_finish_pressed() -> void:
+	GameState.finish_emergency_training()
+	hide()
+	get_parent().get_node("ActivityBoard").show()
+	get_parent().get_node("ActivityBoard").refresh_board()
