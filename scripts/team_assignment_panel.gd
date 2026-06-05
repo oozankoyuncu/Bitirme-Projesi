@@ -2,6 +2,8 @@ extends Panel
 
 @onready var member_list: GridContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/MemberList
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
+@onready var back_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/BackButton
+@onready var finish_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/FinishButton
 @onready var main_panel: Panel = self
 @onready var stats_sidebar: PanelContainer = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel
 @onready var title_label: Label = $MarginContainer/VBoxContainer/Header/TitleLabel
@@ -25,6 +27,59 @@ var member_boosts: Dictionary = {}
 var current_assignments: Dictionary = {}
 
 func _ready() -> void:
+
+	# -- DYNAMIC BUTTON INJECTION --
+	var __footer_found = false
+	var __footer_node = null
+	
+	# Try common paths
+	var __paths = [
+		"MarginContainer/VBoxContainer/Footer",
+		"MarginContainer/VBoxContainer/ButtonRow",
+		"MarginContainer/VBoxContainer/MainContent/RightPanel",
+		"MarginContainer/VBoxContainer/HBoxContainer"
+	]
+	
+	for p in __paths:
+		if has_node(p):
+			__footer_node = get_node(p)
+			__footer_found = true
+			break
+	
+	if __footer_node != null:
+		# Hide or remove any existing Confirm/Back buttons to replace with our standard ones
+		for c in __footer_node.get_children():
+			if c is Button and (c.name.find("Confirm") >= 0 or c.name.find("Back") >= 0 or c.name.find("Finish") >= 0):
+				c.hide()
+				# Keep them hidden, we'll use our own
+		
+		var __hbox = HBoxContainer.new()
+		__hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		__hbox.add_theme_constant_override("separation", 20)
+		__hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		var __back_btn = Button.new()
+		__back_btn.text = "BACK"
+		__back_btn.custom_minimum_size = Vector2(150, 45)
+		var __b_style = StyleBoxFlat.new()
+		__b_style.bg_color = Color(0.3, 0.3, 0.3)
+		__b_style.set_corner_radius_all(6)
+		__back_btn.add_theme_stylebox_override("normal", __b_style)
+		__back_btn.pressed.connect(self._on_back_pressed)
+		__hbox.add_child(__back_btn)
+		
+		var __finish_btn = Button.new()
+		__finish_btn.text = "FINISH"
+		__finish_btn.custom_minimum_size = Vector2(150, 45)
+		var __f_style = StyleBoxFlat.new()
+		__f_style.bg_color = Color(0.1, 0.6, 0.2)
+		__f_style.set_corner_radius_all(6)
+		__finish_btn.add_theme_stylebox_override("normal", __f_style)
+		if self.has_method("_on_finish_pressed"):
+			__finish_btn.pressed.connect(self._on_finish_pressed)
+		__hbox.add_child(__finish_btn)
+		
+		__footer_node.add_child(__hbox)
 	if has_node("MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel"):
 		get_node("MarginContainer/VBoxContainer/MainContent/RightPanel/CostPanel").hide()
 	
@@ -355,8 +410,12 @@ func _on_confirm_pressed() -> void:
 	if current_phase == 1:
 		var selected := get_selected_members()
 		if selected.size() != 8:
-			print("You must select exactly 8 members!")
+			subtitle_label.text = "You must select exactly 8 members! (Currently selected: " + str(selected.size()) + ")"
+			subtitle_label.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3))
 			return
+		
+		# Reset subtitle color if successful
+		subtitle_label.remove_theme_color_override("font_color")
 		
 		GameState.selected_team = selected
 		GameState.complete_activity("team_assignment")
@@ -459,9 +518,9 @@ func _create_activity_row(act: Dictionary) -> void:
 	activity_list.add_child(row)
 
 func _setup_work_assignment_right_panel() -> void:
-	# Clear existing right panel contents except the confirm button
+	# Clear existing right panel contents except the confirm button and dynamic buttons
 	for child in right_panel.get_children():
-		if child != confirm_button:
+		if child != confirm_button and not (child is HBoxContainer and child.get_child_count() > 0 and child.get_child(0) is Button and child.get_child(0).text == "BACK"):
 			child.queue_free()
 			
 	var stats_panel = PanelContainer.new()
@@ -531,7 +590,9 @@ func _setup_work_assignment_right_panel() -> void:
 	outsource_lbl.add_theme_font_size_override("font_size", 14)
 	extra_box.add_child(outsource_lbl)
 	
-	confirm_button.text = "CONFIRM ASSIGNMENTS"
+	for child in right_panel.get_children():
+		if child is HBoxContainer and child.get_child_count() > 1 and child.get_child(1) is Button:
+			child.get_child(1).text = "CONFIRM ASSIGNMENTS"
 	
 	_update_capacity_display()
 
@@ -1034,3 +1095,15 @@ func _add_gantt_chart_to_work_assignation() -> void:
 	
 	# Move RowsVBox to draw over the grid background lines
 	timeline_area.move_child(rows_vbox, timeline_area.get_child_count() - 1)
+
+func _on_back_pressed() -> void:
+	
+	hide()
+	var parent_node = get_parent()
+	if parent_node.has_node("ActivityBoard"):
+		var activity_board = parent_node.get_node("ActivityBoard")
+		activity_board.show()
+		activity_board.refresh_board()
+
+func _on_finish_pressed() -> void:
+	_on_confirm_pressed()

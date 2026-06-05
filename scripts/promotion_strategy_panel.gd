@@ -43,6 +43,8 @@ var promotion_options = {
 @onready var budget_label: Label = $MarginContainer/VBoxContainer/HeaderPanel/Margin/VBoxContainer/BudgetLabel
 @onready var summary_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer/SummaryLabel
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonRow/ConfirmButton
+@onready var back_button: Button = $MarginContainer/VBoxContainer/ButtonRow/BackButton
+@onready var finish_button: Button = $MarginContainer/VBoxContainer/ButtonRow/FinishButton
 
 @onready var info_popup: PanelContainer = $InfoPopup
 @onready var info_button: Button = $MarginContainer/VBoxContainer/HeaderPanel/InfoButton
@@ -58,6 +60,59 @@ var hover_style: StyleBoxFlat
 var selected_style: StyleBoxFlat
 
 func _ready() -> void:
+
+	# -- DYNAMIC BUTTON INJECTION --
+	var __footer_found = false
+	var __footer_node = null
+	
+	# Try common paths
+	var __paths = [
+		"MarginContainer/VBoxContainer/Footer",
+		"MarginContainer/VBoxContainer/ButtonRow",
+		"MarginContainer/VBoxContainer/MainContent/RightPanel",
+		"MarginContainer/VBoxContainer/HBoxContainer"
+	]
+	
+	for p in __paths:
+		if has_node(p):
+			__footer_node = get_node(p)
+			__footer_found = true
+			break
+	
+	if __footer_node != null:
+		# Hide or remove any existing Confirm/Back buttons to replace with our standard ones
+		for c in __footer_node.get_children():
+			if c is Button and (c.name.find("Confirm") >= 0 or c.name.find("Back") >= 0 or c.name.find("Finish") >= 0):
+				c.hide()
+				# Keep them hidden, we'll use our own
+		
+		var __hbox = HBoxContainer.new()
+		__hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		__hbox.add_theme_constant_override("separation", 20)
+		__hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		var __back_btn = Button.new()
+		__back_btn.text = "BACK"
+		__back_btn.custom_minimum_size = Vector2(150, 45)
+		var __b_style = StyleBoxFlat.new()
+		__b_style.bg_color = Color(0.3, 0.3, 0.3)
+		__b_style.set_corner_radius_all(6)
+		__back_btn.add_theme_stylebox_override("normal", __b_style)
+		__back_btn.pressed.connect(self._on_back_pressed)
+		__hbox.add_child(__back_btn)
+		
+		var __finish_btn = Button.new()
+		__finish_btn.text = "FINISH"
+		__finish_btn.custom_minimum_size = Vector2(150, 45)
+		var __f_style = StyleBoxFlat.new()
+		__f_style.bg_color = Color(0.1, 0.6, 0.2)
+		__f_style.set_corner_radius_all(6)
+		__finish_btn.add_theme_stylebox_override("normal", __f_style)
+		if self.has_method("_on_finish_pressed"):
+			__finish_btn.pressed.connect(self._on_finish_pressed)
+		__hbox.add_child(__finish_btn)
+		
+		__footer_node.add_child(__hbox)
 	confirm_button.pressed.connect(_on_confirm_pressed)
 	info_button.pressed.connect(func(): info_popup.show())
 	info_close.pressed.connect(func(): info_popup.hide())
@@ -374,3 +429,9 @@ func go_back() -> void:
 	hide()
 	get_parent().get_node("ActivityBoard").show()
 	get_parent().get_node("ActivityBoard").refresh_board()
+
+func _on_back_pressed() -> void:
+	go_back()
+
+func _on_finish_pressed() -> void:
+	_on_confirm_pressed()

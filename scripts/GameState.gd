@@ -15,12 +15,14 @@ var game_seconds: float = START_TIME_SECONDS
 
 var activities = []
 var completed_activities: Array[String] = []
+var started_activities: Array = []
 var selected_team: Array = []
 var all_team_members: Array = []
 var team_motivation: float = 80.0
 var skip_onboarding: bool = false
 var player_notes: String = ""
 var notepad_popup_shown: bool = false
+
 
 # ---- Resource Constraint System Phase 1 ----
 var total_phones: int = 3
@@ -29,7 +31,7 @@ var total_computers: int = 4
 var available_computers: int = 4
 var resource_leveling_heuristic: String = "minimum_slack_first"
 var active_allocations: Dictionary = {}
-var crashed_activities: Dictionary = {}
+
 
 # ---- Scenarios ----
 var active_scenarios: Array = []
@@ -185,7 +187,6 @@ func reset() -> void:
 	available_phones = total_phones
 	available_computers = total_computers
 	active_allocations.clear()
-	crashed_activities.clear()
 
 	last_week_tick = -1
 	
@@ -261,7 +262,7 @@ func load_activities():
 	activities = data["activities"]
 	
 	# Validation check
-	var required_keys = ["required_members", "required_phones", "required_computers", "can_crash"]
+	var required_keys = ["required_members", "required_phones", "required_computers"]
 	for act in activities:
 		for key in required_keys:
 			if not act.has(key):
@@ -318,37 +319,9 @@ func get_activity_data(activity_id: String) -> Dictionary:
 			return act
 	return {}
 
-func crash_activity(activity_id: String) -> bool:
-	var act = get_activity_data(activity_id)
-	if act.is_empty():
-		print("Activity does not exist: ", activity_id)
-		return false
-	
-	if not act.get("can_crash", false):
-		print("Activity cannot be crashed: ", activity_id)
-		return false
-	
-	if crashed_activities.has(activity_id):
-		print("Activity already crashed: ", activity_id)
-		return false
-		
-	var crash_cost = int(act.get("crash_cost", 0))
-	if money - crash_cost <= -300000:
-		print("Crashing blocked: budget safety threshold reached.")
-		return false
-		
-	money -= crash_cost
-	crashed_activities[activity_id] = true
-	print("Activity ", activity_id, " crashed successfully.")
-	emit_signal("time_changed")
-	return true
 
 func get_activity_duration(activity_data: Dictionary) -> float:
-	var activity_id = activity_data.get("id", "")
-	if crashed_activities.has(activity_id):
-		return float(activity_data.get("crash_duration", activity_data.get("duration", 0.0)))
-	else:
-		return float(activity_data.get("normal_duration", activity_data.get("duration", 0.0)))
+	return float(activity_data.get("normal_duration", activity_data.get("duration", 0.0)))
 
 func print_resource_status() -> void:
 	print("Phones: ", available_phones, "/", total_phones)
