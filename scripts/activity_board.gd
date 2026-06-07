@@ -242,7 +242,7 @@ func refresh_board() -> void:
 	rc.set_anchors_preset(PRESET_TOP_RIGHT)
 	rc.grow_horizontal = GROW_DIRECTION_BEGIN
 	rc.add_theme_constant_override("margin_right", 120)
-	rc.add_theme_constant_override("margin_top", 210) # Align with the first row of activities
+	rc.add_theme_constant_override("margin_top", 380) # Align lower on the board
 	add_child(rc)
 
 	# Populate with new cards
@@ -271,7 +271,7 @@ func refresh_board() -> void:
 		show_notepad_info_popup()
 
 func _check_game_completion() -> void:
-	if GameState.completed_activities.size() >= GameState.activities.size():
+	if GameState.completed_activities.has("festival_day"):
 		var notepad = get_parent().get_node_or_null("NotepadPanel")
 		if notepad:
 			notepad.clear_ui_notes()
@@ -596,7 +596,7 @@ func get_status_color(status: String) -> Color:
 
 func get_activity_status(activity: Dictionary) -> String:
 	var activity_id = activity["id"]
-	if GameState.completed_activities.has(activity_id): return "Completed"
+	if GameState.completed_activities.has(activity_id) and activity_id != "initial_festival_layout_mapping": return "Completed"
 	if GameState.started_activities.has(activity_id): return "In Progress"
 	
 	if not _dependencies_completed(activity): return "Locked"

@@ -1,31 +1,94 @@
 {
   "stage_setups": [
 	{
-	  "id": "basic_stage",
-	  "name": "Basic Stage",
-	  "cost": 1500,
-	  "stage_size": 2,
+	  "id": "stage_setup_a",
+	  "name": "Stage Setup A",
+	  "cost": 160000,
+	  "stage_size": 4,
 	  "lighting_complexity": 2,
+	  "operation_features": 2,
+	  "setup_duration": 3
+	},
+	{
+	  "id": "stage_setup_b",
+	  "name": "Stage Setup B",
+	  "cost": 138000,
+	  "stage_size": 1,
+	  "lighting_complexity": 2,
+	  "operation_features": 1,
+	  "setup_duration": 1
+	},
+	{
+	  "id": "stage_setup_c",
+	  "name": "Stage Setup C",
+	  "cost": 235000,
+	  "stage_size": 4,
+	  "lighting_complexity": 5,
+	  "operation_features": 3,
+	  "setup_duration": 4
+	},
+	{
+	  "id": "stage_setup_d",
+	  "name": "Stage Setup D",
+	  "cost": 134000,
+	  "stage_size": 2,
+	  "lighting_complexity": 4,
+	  "operation_features": 1,
+	  "setup_duration": 2
+	},
+	{
+	  "id": "stage_setup_e",
+	  "name": "Stage Setup E",
+	  "cost": 102000,
+	  "stage_size": 2,
+	  "lighting_complexity": 1,
+	  "operation_features": 1,
+	  "setup_duration": 2
+	},
+	{
+	  "id": "stage_setup_f",
+	  "name": "Stage Setup F",
+	  "cost": 149000,
+	  "stage_size": 2,
+	  "lighting_complexity": 5,
 	  "operation_features": 2,
 	  "setup_duration": 2
 	},
 	{
-	  "id": "standard_stage",
-	  "name": "Standard Stage",
-	  "cost": 3000,
-	  "stage_size": 4,
+	  "id": "stage_setup_g",
+	  "name": "Stage Setup G",
+	  "cost": 139000,
+	  "stage_size": 1,
+	  "lighting_complexity": 5,
+	  "operation_features": 2,
+	  "setup_duration": 1
+	},
+	{
+	  "id": "stage_setup_h",
+	  "name": "Stage Setup H",
+	  "cost": 269000,
+	  "stage_size": 5,
 	  "lighting_complexity": 3,
-	  "operation_features": 3,
+	  "operation_features": 4,
+	  "setup_duration": 5
+	},
+	{
+	  "id": "stage_setup_i",
+	  "name": "Stage Setup I",
+	  "cost": 124000,
+	  "stage_size": 3,
+	  "lighting_complexity": 2,
+	  "operation_features": 2,
 	  "setup_duration": 3
 	},
 	{
-	  "id": "premium_stage",
-	  "name": "Premium Stage",
-	  "cost": 5000,
-	  "stage_size": 5,
-	  "lighting_complexity": 5,
-	  "operation_features": 4,
-	  "setup_duration": 4
+	  "id": "stage_setup_j",
+	  "name": "Stage Setup J",
+	  "cost": 171000,
+	  "stage_size": 3,
+	  "lighting_complexity": 3,
+	  "operation_features": 3,
+	  "setup_duration": 3
 	}
   ]
 }

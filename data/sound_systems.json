@@ -1,31 +1,58 @@
 {
   "sound_systems": [
     {
-      "id": "basic_system",
-      "name": "Basic Audio System",
-      "cost": 1000,
-      "sound_quality": 4,
+      "id": "sound_system_1",
+      "name": "Sound System Version 1",
+      "cost": 150000,
+      "sound_quality": 5,
       "technical_skill_level": 2,
-      "electricity_consumption": 2,
-      "setup_duration": 2
-    },
-    {
-      "id": "standard_system",
-      "name": "Standard Line Array",
-      "cost": 2500,
-      "sound_quality": 7,
-      "technical_skill_level": 4,
       "electricity_consumption": 4,
       "setup_duration": 3
     },
     {
-      "id": "premium_system",
-      "name": "Premium Surround Array",
-      "cost": 4500,
-      "sound_quality": 10,
-      "technical_skill_level": 6,
-      "electricity_consumption": 7,
+      "id": "sound_system_2",
+      "name": "Sound System Version 2",
+      "cost": 131000,
+      "sound_quality": 5,
+      "technical_skill_level": 4,
+      "electricity_consumption": 3,
       "setup_duration": 4
+    },
+    {
+      "id": "sound_system_3",
+      "name": "Sound System Version 3",
+      "cost": 113000,
+      "sound_quality": 4,
+      "technical_skill_level": 5,
+      "electricity_consumption": 2,
+      "setup_duration": 3
+    },
+    {
+      "id": "sound_system_4",
+      "name": "Sound System Version 4",
+      "cost": 151000,
+      "sound_quality": 4,
+      "technical_skill_level": 1,
+      "electricity_consumption": 4,
+      "setup_duration": 4
+    },
+    {
+      "id": "sound_system_5",
+      "name": "Sound System Version 5",
+      "cost": 77000,
+      "sound_quality": 2,
+      "technical_skill_level": 3,
+      "electricity_consumption": 2,
+      "setup_duration": 2
+    },
+    {
+      "id": "sound_system_6",
+      "name": "Sound System Version 6",
+      "cost": 138000,
+      "sound_quality": 4,
+      "technical_skill_level": 2,
+      "electricity_consumption": 3,
+      "setup_duration": 3
     }
   ]
 }

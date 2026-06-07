@@ -474,7 +474,10 @@ static func _bc_feedback(budget: int) -> String:
 static func _calculate_tm() -> Dictionary:
 	print("\n--- KPI 5: Time Management (TM) ---")
 
-	var completed: int = GameState.completed_activities.size()
+	var completed := 0
+	for act in GameState.activities:
+		if GameState.completed_activities.has(act["id"]):
+			completed += 1
 	var total_activities: int = GameState.activities.size()
 
 	var score: float = 0.0

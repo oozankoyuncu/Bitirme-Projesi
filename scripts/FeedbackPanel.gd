@@ -1,7 +1,6 @@
 extends Control
 
 # ── Dynamic UI references ──────────────────────────────────────────────
-var _ofs_score_label: Label
 var _ofs_status_container: HBoxContainer
 var _ofs_feedback_label: Label
 var _outcome_table_container: VBoxContainer
@@ -149,12 +148,6 @@ func _build_header() -> VBoxContainer:
 	score_row.add_theme_constant_override("separation", 16)
 	vbox.add_child(score_row)
 
-	_ofs_score_label = Label.new()
-	_ofs_score_label.text = "-- / 100"
-	_ofs_score_label.add_theme_font_size_override("font_size", 64)
-	_ofs_score_label.add_theme_color_override("font_color", COLOR_TEXT_PRIMARY)
-	score_row.add_child(_ofs_score_label)
-
 	_ofs_status_container = HBoxContainer.new()
 	score_row.add_child(_ofs_status_container)
 
@@ -226,12 +219,8 @@ func _build_footer() -> CenterContainer:
 
 func _populate_header(results: Dictionary) -> void:
 	var ofs: Dictionary = results.get("ofs", {})
-	var score: float = ofs.get("score", 0.0)
 	var status: String = ofs.get("status", "")
 	var feedback: String = ofs.get("feedback", "")
-
-	_ofs_score_label.text = "%d / 100" % int(score)
-	_ofs_score_label.add_theme_color_override("font_color", _get_score_color(score))
 
 	# Clear old badge
 	for c in _ofs_status_container.get_children():
@@ -759,4 +748,7 @@ func _get_badge_color(status: String) -> Color:
 func _on_return_pressed() -> void:
 	var tw := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	tw.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.25)
-	tw.tween_callback(func(): visible = false)
+	tw.tween_callback(func():
+		visible = false
+		get_tree().change_scene_to_file("res://main_menu.tscn")
+	)

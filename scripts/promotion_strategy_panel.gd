@@ -1,41 +1,48 @@
 extends Control
 
-# Data structure expanded to 5 options according to objectives
+# Data structure expanded to 6 options according to objectives
 var promotion_options = {
-	"posters": {
-		"display_name": "Campus Posters & Flyers",
-		"desc": "Low cost, traditional method. Highly visible on campus but easy to ignore.",
-		"cost": 800,
-		"expected_reach": 1500,
-		"reliability": 0.6
+	"no_promotion": {
+		"display_name": "No Promotion",
+		"desc": "Do not spend any budget on promotion. Zero expected reach.",
+		"cost": 0,
+		"expected_reach": 0,
+		"reliability": 0.0
 	},
 	"social_media": {
-		"display_name": "Targeted Social Media Ads",
-		"desc": "Uses algorithms to target student demographics on popular platforms.",
-		"cost": 2500,
-		"expected_reach": 3500,
-		"reliability": 0.82
+		"display_name": "Social Media Ads",
+		"desc": "Targeted ads on student social networks.",
+		"cost": 42000,
+		"expected_reach": 1500,
+		"reliability": 0.75
 	},
-	"radio_podcast": {
-		"display_name": "Local Radio & Podcasts",
-		"desc": "Sponsorship spots on local youth stations and campus podcasts.",
-		"cost": 3000,
-		"expected_reach": 4200,
-		"reliability": 0.7
-	},
-	"pr_press": {
-		"display_name": "Traditional Media (PR & Press)",
-		"desc": "Press releases and articles in local newspapers and news portals.",
-		"cost": 4500,
-		"expected_reach": 5500,
-		"reliability": 0.85
+	"posters": {
+		"display_name": "Campus Posters and Flyers",
+		"desc": "Print and distribute physical flyers around campus.",
+		"cost": 25000,
+		"expected_reach": 600,
+		"reliability": 0.90
 	},
 	"influencers": {
-		"display_name": "Influencer Partnerships",
-		"desc": "Collaboration with local social media personalities. Massive potential audience.",
-		"cost": 6500,
-		"expected_reach": 9000,
-		"reliability": 0.65
+		"display_name": "Influencer Collaborations",
+		"desc": "Work with local student influencers to promote the event.",
+		"cost": 27000,
+		"expected_reach": 1200,
+		"reliability": 0.55
+	},
+	"online_campaigns": {
+		"display_name": "Online Campaigns",
+		"desc": "Banner ads and newsletters on university-affiliated blogs.",
+		"cost": 21000,
+		"expected_reach": 400,
+		"reliability": 0.80
+	},
+	"student_platforms": {
+		"display_name": "Student Community Platforms",
+		"desc": "Announcement posts and pins on official student forums and chats.",
+		"cost": 25000,
+		"expected_reach": 200,
+		"reliability": 0.85
 	}
 }
 
@@ -118,6 +125,8 @@ func _ready() -> void:
 	info_close.pressed.connect(func(): info_popup.hide())
 	info_popup.hide()
 	
+	_wrap_promotion_list_in_scroll()
+	
 	_setup_styles()
 	create_options()
 	refresh_ui()
@@ -171,6 +180,25 @@ func _reveal_intelligence() -> void:
 			node.visible = true
 	refresh_ui()
 
+func _wrap_promotion_list_in_scroll() -> void:
+	var parent = promotion_list.get_parent()
+	if not parent:
+		return
+	
+	var scroll = ScrollContainer.new()
+	scroll.name = "PromotionScrollContainer"
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	
+	var idx = promotion_list.get_index()
+	parent.remove_child(promotion_list)
+	parent.add_child(scroll)
+	parent.move_child(scroll, idx)
+	
+	scroll.add_child(promotion_list)
+	promotion_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
 func _setup_styles() -> void:
 	# General Panel Style
 	var bg_style = StyleBoxFlat.new()
@@ -210,7 +238,7 @@ func create_options() -> void:
 		var expected = p["expected_reach"]
 		var rel = p["reliability"]
 		var actual = int(expected * rel)
-		var efficiency = float(actual) / float(p["cost"]) * 10.0 # Multiplier for visual scale
+		var efficiency = float(actual) / float(p["cost"]) * 10.0 if p["cost"] > 0 else 0.0 # Multiplier for visual scale
 
 		# Main Card Container
 		var card = PanelContainer.new()

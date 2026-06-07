@@ -2,43 +2,83 @@ extends Control
 
 # Strategic Pricing Options
 var pricing_options = {
-	"super_saver": {
-		"display_name": "Super Saver / Early Bird",
-		"desc": "Aggressive low pricing to fill the venue quickly. High energy, low margin.",
-		"price": 250,
-		"impact": 0.35,
-		"quality": 0,
+	"ticket_0": {
+		"display_name": "Ticket – 0",
+		"desc": "Free entry to maximize attendance. No revenue from tickets.",
+		"price": 0,
+		"impact": 0.30,
+		"quality": 1,
+		"color": Color(0.4, 0.9, 0.4)
+	},
+	"ticket_50": {
+		"display_name": "Ticket – 50",
+		"desc": "Minimal pricing to attract the widest audience possible.",
+		"price": 50,
+		"impact": 0.30,
+		"quality": 1,
 		"color": Color(0.4, 0.8, 0.4)
 	},
-	"student": {
-		"display_name": "Student Promotion",
-		"desc": "Targeted pricing for the core campus demographic. Balanced and fair.",
-		"price": 380,
-		"impact": 0.15,
-		"quality": 1,
+	"ticket_100": {
+		"display_name": "Ticket – 100",
+		"desc": "Low-cost entry that still boosts attendance significantly.",
+		"price": 100,
+		"impact": 0.30,
+		"quality": 2,
+		"color": Color(0.3, 0.8, 0.6)
+	},
+	"ticket_150": {
+		"display_name": "Ticket – 150",
+		"desc": "Affordable pricing with moderate attendance growth.",
+		"price": 150,
+		"impact": 0.10,
+		"quality": 2,
 		"color": Color(0.2, 0.7, 0.9)
 	},
-	"standard": {
-		"display_name": "Standard Access",
-		"desc": "The market expected price. No surprises, steady attendance.",
-		"price": 550,
-		"impact": 0.0,
-		"quality": 2,
+	"ticket_200": {
+		"display_name": "Ticket – 200",
+		"desc": "Balanced pricing that maintains steady attendance.",
+		"price": 200,
+		"impact": 0.10,
+		"quality": 3,
+		"color": Color(0.3, 0.6, 1.0)
+	},
+	"ticket_250": {
+		"display_name": "Ticket – 250",
+		"desc": "Mid-range pricing with moderate attendance and quality.",
+		"price": 250,
+		"impact": 0.10,
+		"quality": 3,
 		"color": Color(1.0, 1.0, 1.0)
 	},
-	"premium": {
-		"display_name": "Premium Experience",
-		"desc": "Higher price for a perceived quality boost and exclusive atmosphere.",
-		"price": 950,
-		"impact": -0.18,
+	"ticket_300": {
+		"display_name": "Ticket – 300",
+		"desc": "Higher pricing that reduces attendance but increases perceived value.",
+		"price": 300,
+		"impact": -0.25,
+		"quality": 4,
+		"color": Color(0.9, 0.8, 0.2)
+	},
+	"ticket_350": {
+		"display_name": "Ticket – 350",
+		"desc": "Premium pricing targeting a quality-focused audience.",
+		"price": 350,
+		"impact": -0.25,
 		"quality": 4,
 		"color": Color(0.9, 0.7, 0.2)
 	},
-	"elite": {
-		"display_name": "Elite / VIP Tier",
-		"desc": "Maximum margin. Targets a niche audience. Massive quality boost, limited crowd.",
-		"price": 1600,
-		"impact": -0.45,
+	"ticket_400": {
+		"display_name": "Ticket – 400",
+		"desc": "High-end pricing for an exclusive festival experience.",
+		"price": 400,
+		"impact": -0.25,
+		"quality": 5,
+		"color": Color(0.9, 0.5, 0.2)
+	},
+	"ticket_450": {
+		"display_name": "Ticket – 450",
+		"desc": "Maximum pricing for the most exclusive experience. Limited crowd.",
+		"price": 450,
+		"impact": -0.25,
 		"quality": 5,
 		"color": Color(0.8, 0.3, 0.9)
 	}
@@ -127,6 +167,9 @@ func _ready() -> void:
 	if consulting_panel:
 		consulting_panel.hide()
 	
+	# Wrap PricingList in a ScrollContainer so all options are scrollable
+	_wrap_pricing_list_in_scroll()
+	
 	_setup_styles()
 	create_options()
 	refresh_ui()
@@ -173,6 +216,25 @@ func _show_intelligence_popup() -> void:
 	
 	add_child(dialog)
 	dialog.popup_centered()
+
+func _wrap_pricing_list_in_scroll() -> void:
+	var parent = pricing_list.get_parent()
+	if not parent:
+		return
+	
+	var scroll = ScrollContainer.new()
+	scroll.name = "PricingScrollContainer"
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	
+	var idx = pricing_list.get_index()
+	parent.remove_child(pricing_list)
+	parent.add_child(scroll)
+	parent.move_child(scroll, idx)
+	
+	scroll.add_child(pricing_list)
+	pricing_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 func _setup_styles() -> void:
 	normal_style = StyleBoxFlat.new()

@@ -186,10 +186,14 @@ func _create_card(theme: Dictionary) -> PanelContainer:
 
 func _get_theme_color(id: String) -> Color:
 	match id:
-		"electro_neon": return Color(0.8, 0.0, 1.0) # Neon Purple
-		"colorful_carnival": return Color(1.0, 0.4, 0.0) # Carnival Orange
-		"old_school_retro": return Color(0.0, 0.8, 0.8) # Retro Cyan
-		"freedom_time": return Color(1.0, 1.0, 1.0) # Pure White/Beyond
+		"urban_minimal": return Color(0.6, 0.6, 0.6) # Industrial Grey
+		"color_pulse": return Color(1.0, 0.3, 0.5) # Bright Pink/Magenta
+		"night_lights": return Color(0.9, 0.8, 0.3) # Warm Yellow/Lantern
+		"retro_street": return Color(0.2, 0.8, 0.4) # Arcade Green
+		"open_nature": return Color(0.3, 0.8, 0.3) # Leaf Green
+		"neon_grid": return Color(0.0, 0.6, 1.0) # Electric Blue
+		"classic_setup": return Color(0.9, 0.9, 0.9) # Clean White
+		"dynamic_flow": return Color(0.8, 0.3, 0.9) # Dynamic Violet
 		_: return Color(0.5, 0.5, 0.5)
 
 func _select_theme(theme: Dictionary, card: PanelContainer) -> void:
@@ -206,10 +210,14 @@ func _select_theme(theme: Dictionary, card: PanelContainer) -> void:
 	
 	# Descriptions mapping (dynamic)
 	match theme["id"]:
-		"electro_neon": description_label.text = "Immerse the festival in futuristic neon lights and electronic vibes. High satisfaction but requires significant power and space."
-		"colorful_carnival": description_label.text = "A burst of traditional colors and street-party aesthetics. Reliable, simple to set up, and universally loved."
-		"old_school_retro": description_label.text = "Nostalgic 90s vibes with pixel art and retro props. Low cost and low complexity, perfect for tighter budgets."
-		"freedom_time": description_label.text = "Abstract, minimalist, and open-ended. A sophisticated choice that balances space and satisfaction beautifully."
+		"urban_minimal": description_label.text = "Sleek, modern design focusing on industrial elements, clean lines, and neutral color tones."
+		"color_pulse": description_label.text = "Energetic and pulsing colors that react to the atmosphere and music. High-impact color waves."
+		"night_lights": description_label.text = "A warm and inviting environment illuminated by strings of fairy lights, lanterns, and cozy fixtures."
+		"retro_street": description_label.text = "Street-style decoration themed around the colorful era of retro arcade cabinets and classic pop art."
+		"open_nature": description_label.text = "Brings the outdoors in, using plants, wooden structures, and organic arrangements to create a fresh vibe."
+		"neon_grid": description_label.text = "A cyber-aesthetic layout characterized by grid patterns, glowing accents, and electric neon frames."
+		"classic_setup": description_label.text = "A traditional, elegant festival decoration layout emphasizing timeless aesthetics and comfortable spacing."
+		"dynamic_flow": description_label.text = "Flowing elements, light projections, and wind-responsive installations that create a constantly evolving environment."
 	
 	var impact = GameState.calculate_decoration_theme_impact(theme)
 	synergy_label.text = "Synergy Score: " + str(snapped(impact, 0.1))

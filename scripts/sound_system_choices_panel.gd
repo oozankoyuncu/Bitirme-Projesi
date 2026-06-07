@@ -187,11 +187,6 @@ func _on_confirm_pressed() -> void:
 			system_data = s
 			break
 
-	if GameState.money < system_data["cost"]:
-		result_label.text = "INSUFFICIENT FUNDS: Budget threshold exceeded."
-		result_label.add_theme_color_override("font_color", Color.RED)
-		return
-
 	GameState.choose_sound_system(system_data)
 	GameState.complete_activity("sound_system_choices")
 	_on_back_pressed()

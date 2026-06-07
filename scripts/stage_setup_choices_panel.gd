@@ -212,10 +212,6 @@ func _on_confirm_pressed() -> void:
 			stage_data = s
 			break
 
-	if GameState.money < stage_data["cost"]:
-		result_label.text = "ERROR: Insufficient capital for this infrastructure."
-		result_label.add_theme_color_override("font_color", Color.RED)
-		return
 
 	GameState.choose_stage_setup(stage_data)
 	GameState.complete_activity("stage_setup_choices")

@@ -1,40 +1,76 @@
 {
   "decoration_themes": [
 	{
-	  "id": "electro_neon",
-	  "name": "Neon Nights",
-	  "cost": 4500,
-	  "setup_duration": 4,
-	  "satisfaction_impact": 9,
-	  "complexity": 6,
-	  "space_impact": 6
-	},
-	{
-	  "id": "colorful_carnival",
-	  "name": "Vibrant Color Summer",
-	  "cost": 2800,
+	  "id": "urban_minimal",
+	  "name": "Urban Minimal",
 	  "setup_duration": 2,
-	  "satisfaction_impact": 8,
-	  "complexity": 3,
+	  "cost": 87000,
+	  "satisfaction_impact": 1,
+	  "complexity": 5,
 	  "space_impact": 5
 	},
 	{
-	  "id": "old_school_retro",
-	  "name": "Old School 90s Retro",
-	  "cost": 1500,
+	  "id": "color_pulse",
+	  "name": "Color Pulse",
 	  "setup_duration": 1,
-	  "satisfaction_impact": 6,
+	  "cost": 108000,
+	  "satisfaction_impact": 2,
+	  "complexity": 5,
+	  "space_impact": 4
+	},
+	{
+	  "id": "night_lights",
+	  "name": "Night Lights",
+	  "setup_duration": 3,
+	  "cost": 75000,
+	  "satisfaction_impact": 1,
+	  "complexity": 4,
+	  "space_impact": 3
+	},
+	{
+	  "id": "retro_street",
+	  "name": "Retro Street",
+	  "setup_duration": 1,
+	  "cost": 141000,
+	  "satisfaction_impact": 3,
+	  "complexity": 3,
+	  "space_impact": 2
+	},
+	{
+	  "id": "open_nature",
+	  "name": "Open Nature",
+	  "setup_duration": 2,
+	  "cost": 151000,
+	  "satisfaction_impact": 4,
+	  "complexity": 3,
+	  "space_impact": 3
+	},
+	{
+	  "id": "neon_grid",
+	  "name": "Neon Grid",
+	  "setup_duration": 2,
+	  "cost": 150000,
+	  "satisfaction_impact": 3,
 	  "complexity": 2,
 	  "space_impact": 3
 	},
 	{
-	  "id": "freedom_time",
-	  "name": "Beyond Freedom",
-	  "cost": 3750,
+	  "id": "classic_setup",
+	  "name": "Classic Setup",
+	  "setup_duration": 3,
+	  "cost": 104000,
+	  "satisfaction_impact": 2,
+	  "complexity": 4,
+	  "space_impact": 2
+	},
+	{
+	  "id": "dynamic_flow",
+	  "name": "Dynamic Flow",
 	  "setup_duration": 1,
-	  "satisfaction_impact": 8,
-	  "complexity": 2,
-	  "space_impact": 4
+	  "cost": 126000,
+	  "satisfaction_impact": 3,
+	  "complexity": 5,
+	  "space_impact": 1
 	}
   ]
 }
