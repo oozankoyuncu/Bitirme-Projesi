@@ -447,7 +447,7 @@ func _setup_gantt_chart_tab() -> void:
 	desc.add_theme_font_size_override("bold_font_size", 20)
 	
 	desc.text = "To guarantee a flawless Spring Festival execution, you must master the preparation operations and respect the operational dependencies between tasks.\n\n" + \
-		"Review the Gantt Chart below to optimize your timeline and manage resource allocation:\n" + \
+		"📅 Festival Day is scheduled to begin at the end of Week 10. Complete all critical preparations on time to ensure a successful launch.\n" + \
 		"• [color=#ff334b][b]Critical Operations:[/b][/color] Activities with zero float (A, B, C, F, G, H, I, J, K, L, N, O). Delaying any of these will directly push back the final festival date!\n" + \
 		"• [color=#3399ff][b]Non-critical activity:[/b][/color] Operations with float/flexibility (D, E, M) that can be rescheduled without affecting the critical path."
 	vbox.add_child(desc)

@@ -520,7 +520,10 @@ func _create_activity_row(act: Dictionary) -> void:
 func _setup_work_assignment_right_panel() -> void:
 	# Clear existing right panel contents except the confirm button and dynamic buttons
 	for child in right_panel.get_children():
-		if child != confirm_button and not (child is HBoxContainer and child.get_child_count() > 0 and child.get_child(0) is Button and child.get_child(0).text == "BACK"):
+		if child is HBoxContainer and child.get_child_count() > 0 and child.get_child(0) is Button and child.get_child(0).text == "BACK":
+			child.get_child(0).hide()
+			continue
+		if child != confirm_button:
 			child.queue_free()
 			
 	var stats_panel = PanelContainer.new()
