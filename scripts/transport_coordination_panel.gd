@@ -273,9 +273,25 @@ func _time_to_val(t: String) -> int:
 		"evening": return 3
 	return 4
 
+func _has_order_warning() -> bool:
+	for del_id in selections:
+		var d = _get_delivery(del_id)
+		if d.is_empty(): continue
+		var dep_id = d.get("dependency", "none")
+		if dep_id != "none" and selections.has(dep_id):
+			var my_week = 8 if selections[del_id] == "week_8" else 9
+			var dep_week = 8 if selections[dep_id] == "week_8" else 9
+			if my_week < dep_week:
+				return true
+	return false
+
 func _on_confirm_pressed() -> void:
 	if selections.size() < GameState.transport_delivery_defs.size():
 		risk_label.text = "SYSTEM: Sync incomplete. All trucks must be assigned."
+		return
+
+	if _has_order_warning():
+		risk_label.text = "SYSTEM: Cannot confirm. Fix delivery order sequence conflicts (❌ ORDER)."
 		return
 
 	GameState.save_transport_schedule(selections)
@@ -304,7 +320,15 @@ func _on_finish_pressed() -> void:
 	if selections.size() < GameState.transport_delivery_defs.size():
 		var dialog = AcceptDialog.new()
 		dialog.title = "Transport Coordination Incomplete"
-		dialog.dialog_text = "You cannot complete this activity yet."
+		dialog.dialog_text = "You cannot complete this activity yet. All trucks must be assigned."
+		add_child(dialog)
+		dialog.popup_centered()
+		return
+	
+	if _has_order_warning():
+		var dialog = AcceptDialog.new()
+		dialog.title = "Order Sequence Conflict"
+		dialog.dialog_text = "You cannot complete this activity. Please fix delivery order warnings (❌ ORDER)."
 		add_child(dialog)
 		dialog.popup_centered()
 		return
