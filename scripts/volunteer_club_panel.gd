@@ -1,40 +1,110 @@
 extends Control
 
 var club_options = {
-	"art_club": {
-		"display_name": "University Art Club",
+	"unity_foundation": {
+		"display_name": "Unity Foundation",
+		"activity_type": "Competitive",
+		"engagement_level": 7,
+		"space_requirement": 22,
+		"operational_needs": "Electricity (2)"
+	},
+	"future_bridge_foundation": {
+		"display_name": "Future Bridge Foundation",
+		"activity_type": "Competitive",
+		"engagement_level": 4,
+		"space_requirement": 26,
+		"operational_needs": "Truck Accesible"
+	},
+	"horizon_aid_foundation": {
+		"display_name": "Horizon Aid Foundation",
 		"activity_type": "Artistic",
-		"engagement_level": 10,
-		"space_requirement": 50,
-		"operational_needs": "Covered Tent"
+		"engagement_level": 2,
+		"space_requirement": 14,
+		"operational_needs": "Electricity (1)"
 	},
-	"esports_club": {
-		"display_name": "E-Sports Society",
+	"social_impact_foundation": {
+		"display_name": "Social Impact Foundation",
+		"activity_type": "Informational",
+		"engagement_level": 4,
+		"space_requirement": 18,
+		"operational_needs": "Truck Accesible"
+	},
+	"bright_path_foundation": {
+		"display_name": "Bright Path Foundation",
 		"activity_type": "Interactive",
-		"engagement_level": 20,
-		"space_requirement": 60,
-		"operational_needs": "Electricity, Internet"
+		"engagement_level": 5,
+		"space_requirement": 16,
+		"operational_needs": "Electricity (4)"
 	},
-	"dance_troupe": {
-		"display_name": "Modern Dance Troupe",
-		"activity_type": "Performance",
-		"engagement_level": 15,
-		"space_requirement": 80,
-		"operational_needs": "Open Floor, Audio"
+	"community_trust_foundation": {
+		"display_name": "Community Trust Foundation",
+		"activity_type": "Interactive",
+		"engagement_level": 6,
+		"space_requirement": 20,
+		"operational_needs": "Electricity (2)"
 	},
-	"tech_club": {
-		"display_name": "Tech Innovators",
+	"chess_club": {
+		"display_name": "Chess Club",
+		"activity_type": "Competitive",
+		"engagement_level": 3,
+		"space_requirement": 10,
+		"operational_needs": "Truck Accesible"
+	},
+	"music_club": {
+		"display_name": "Music Club",
+		"activity_type": "Artistic",
+		"engagement_level": 8,
+		"space_requirement": 28,
+		"operational_needs": "Electricity (3)"
+	},
+	"photography_club": {
+		"display_name": "Photography Club",
+		"activity_type": "Artistic",
+		"engagement_level": 5,
+		"space_requirement": 19,
+		"operational_needs": "Truck Accesible"
+	},
+	"entrepreneurship_club": {
+		"display_name": "Entrepreneurship Club",
 		"activity_type": "Informational",
 		"engagement_level": 5,
-		"space_requirement": 40,
-		"operational_needs": "Electricity"
+		"space_requirement": 21,
+		"operational_needs": "Electricity (1)"
 	},
-	"sports_team": {
-		"display_name": "Athletics Mini-Games",
+	"economics_club": {
+		"display_name": "Economics Club",
+		"activity_type": "Informational",
+		"engagement_level": 8,
+		"space_requirement": 24,
+		"operational_needs": "Electricity (5)"
+	},
+	"esports_club": {
+		"display_name": "Esports Club",
 		"activity_type": "Competitive",
-		"engagement_level": 15,
-		"space_requirement": 100,
-		"operational_needs": "Open Space"
+		"engagement_level": 6,
+		"space_requirement": 23,
+		"operational_needs": "Electricity (2)"
+	},
+	"theater_club": {
+		"display_name": "Theater Club",
+		"activity_type": "Artistic",
+		"engagement_level": 7,
+		"space_requirement": 27,
+		"operational_needs": "Electricity (3)"
+	},
+	"ieee_club": {
+		"display_name": "IEEE Club",
+		"activity_type": "Informational",
+		"engagement_level": 4,
+		"space_requirement": 15,
+		"operational_needs": "Truck Accesible"
+	},
+	"dance_club": {
+		"display_name": "Dance Club",
+		"activity_type": "Interactive",
+		"engagement_level": 6,
+		"space_requirement": 25,
+		"operational_needs": "Electricity (4)"
 	}
 }
 
@@ -402,6 +472,16 @@ func create_options() -> void:
 		c.queue_free()
 	option_checkboxes.clear()
 
+	# Initialize default selection if empty
+	if GameState.selected_volunteer_clubs.is_empty() and not GameState.volunteer_club_completed:
+		GameState.selected_volunteer_clubs = [
+			"unity_foundation",
+			"bright_path_foundation",
+			"music_club",
+			"economics_club",
+			"esports_club"
+		]
+
 	for id in club_options.keys():
 		var c_data = club_options[id]
 		
@@ -434,11 +514,12 @@ func create_options() -> void:
 		cb.set_meta("id", id)
 		cb.toggled.connect(func(toggled_on): _on_option_toggled(toggled_on, card, card_style))
 		
+		if GameState.selected_volunteer_clubs.has(id):
+			cb.button_pressed = true
+			_style_selected_card(card_style, true)
+		
 		if GameState.volunteer_club_completed:
 			cb.disabled = true
-			if GameState.selected_volunteer_clubs.has(id):
-				cb.button_pressed = true
-				_style_selected_card(card_style, true)
 		
 		option_checkboxes.append(cb)
 		hbox.add_child(cb)

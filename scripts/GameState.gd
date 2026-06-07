@@ -122,7 +122,7 @@ const TICKET_CONSULTING_COST: int = 10000
 
 # Volunteer / Club Recruitment
 var volunteer_club_completed: bool = false
-var selected_volunteer_clubs: Array = []
+var selected_volunteer_clubs: Array = ["unity_foundation", "bright_path_foundation", "music_club", "economics_club", "esports_club"]
 var volunteer_club_space_used: int = 0
 var volunteer_club_engagement: int = 0
 var volunteer_club_diversity_effect: int = 0
@@ -190,7 +190,78 @@ func reset() -> void:
 
 	last_week_tick = -1
 	
+	# Reset other variables
+	completed_activities.clear()
+	started_activities.clear()
+	selected_team.clear()
+	work_assignment_completed = false
+	work_assignments.clear()
+	hired_extra_members.clear()
+	outsourced_activities.clear()
+	capacity_boosts.clear()
+	work_assignment_scope_penalty = 0.0
 	
+	emergency_training_phase_active = false
+	emergency_training_phase_start_time = 0.0
+	emergency_training_phase_end_time = 0.0
+	active_trainings.clear()
+	
+	sponsor_phase_active = false
+	sponsor_phase_start_time = 0.0
+	sponsor_phase_end_time = 0.0
+	accepted_sponsors.clear()
+	rejected_sponsors.clear()
+	sponsor_attempts_left = 3
+	sponsor_intelligence_bought = false
+	
+	selected_headliners.clear()
+	selected_supporting_artists.clear()
+	entertainment_lineup_phase_active = false
+	entertainment_lineup_completed = false
+	entertainment_total_cost = 0
+	
+	promotion_phase_completed = false
+	promotion_intelligence_bought = false
+	promotion_total_actual_reach = 0.0
+	promotion_total_cost = 0
+	
+	ticket_pricing_completed = false
+	final_attendance = 0.0
+	chosen_ticket_price = 0.0
+	total_revenue = 0.0
+	event_quality_score = 0.0
+	ticket_consulting_purchased = false
+	
+	volunteer_club_completed = false
+	selected_volunteer_clubs = ["unity_foundation", "bright_path_foundation", "music_club", "economics_club", "esports_club"]
+	volunteer_club_space_used = 0
+	volunteer_club_engagement = 0
+	volunteer_club_diversity_effect = 0
+	volunteer_club_quality_impact = 0.0
+	
+	food_vendor_completed = false
+	selected_food_vendors.clear()
+	total_food_capacity = 0
+	average_hygiene = 0.0
+	total_food_cost = 0
+	participant_satisfaction = 0.0
+	
+	selected_stage_setup.clear()
+	stage_setup_score = 0.0
+	
+	selected_sound_system.clear()
+	sound_system_score = 0.0
+	
+	transport_schedule.clear()
+	
+	selected_decoration_theme.clear()
+	decoration_theme_score = 0.0
+	
+	cleaning_security_completed = false
+	selected_cleaning_teams.clear()
+	selected_security_teams.clear()
+	used_site_space = 0
+	cleaning_security_total_cost = 0
 
 	emit_signal("time_changed")
 

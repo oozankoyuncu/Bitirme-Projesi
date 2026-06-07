@@ -7,26 +7,66 @@ extends RefCounted
 
 # Hardcoded volunteer-club data (mirrors volunteer_club_panel.gd)
 const CLUB_DATA := {
-	"art_club": {
-		"engagement_level": 10,
+	"unity_foundation": {
+		"engagement_level": 7,
+		"activity_type": "Competitive",
+	},
+	"future_bridge_foundation": {
+		"engagement_level": 4,
+		"activity_type": "Competitive",
+	},
+	"horizon_aid_foundation": {
+		"engagement_level": 2,
 		"activity_type": "Artistic",
 	},
-	"esports_club": {
-		"engagement_level": 20,
+	"social_impact_foundation": {
+		"engagement_level": 4,
+		"activity_type": "Informational",
+	},
+	"bright_path_foundation": {
+		"engagement_level": 5,
 		"activity_type": "Interactive",
 	},
-	"dance_troupe": {
-		"engagement_level": 15,
-		"activity_type": "Performance",
+	"community_trust_foundation": {
+		"engagement_level": 6,
+		"activity_type": "Interactive",
 	},
-	"tech_club": {
+	"chess_club": {
+		"engagement_level": 3,
+		"activity_type": "Competitive",
+	},
+	"music_club": {
+		"engagement_level": 8,
+		"activity_type": "Artistic",
+	},
+	"photography_club": {
+		"engagement_level": 5,
+		"activity_type": "Artistic",
+	},
+	"entrepreneurship_club": {
 		"engagement_level": 5,
 		"activity_type": "Informational",
 	},
-	"sports_team": {
-		"engagement_level": 15,
+	"economics_club": {
+		"engagement_level": 8,
+		"activity_type": "Informational",
+	},
+	"esports_club": {
+		"engagement_level": 6,
 		"activity_type": "Competitive",
 	},
+	"theater_club": {
+		"engagement_level": 7,
+		"activity_type": "Artistic",
+	},
+	"ieee_club": {
+		"engagement_level": 4,
+		"activity_type": "Informational",
+	},
+	"dance_club": {
+		"engagement_level": 6,
+		"activity_type": "Interactive",
+	}
 }
 
 # Required activity types for Scope Adherence check
