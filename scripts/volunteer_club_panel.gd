@@ -118,8 +118,6 @@ const MAX_SPACE: int = 200
 @onready var types_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/TypesLabel
 @onready var warning_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/WarningLabel
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
-@onready var back_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/BackButton
-@onready var finish_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/FinishButton
 
 var option_checkboxes: Array = []
 var guide_panel: PanelContainer

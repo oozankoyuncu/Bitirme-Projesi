@@ -2,8 +2,6 @@ extends Panel
 
 @onready var member_list: GridContainer = $MarginContainer/VBoxContainer/MainContent/LeftScroll/MemberList
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
-@onready var back_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/BackButton
-@onready var finish_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/FinishButton
 @onready var main_panel: Panel = self
 @onready var stats_sidebar: PanelContainer = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel
 @onready var title_label: Label = $MarginContainer/VBoxContainer/Header/TitleLabel

@@ -87,8 +87,6 @@ var pricing_options = {
 @onready var pricing_list: VBoxContainer = $MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/PricingList
 @onready var summary_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer/SummaryLabel
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonRow/ConfirmButton
-@onready var back_button: Button = $MarginContainer/VBoxContainer/ButtonRow/BackButton
-@onready var finish_button: Button = $MarginContainer/VBoxContainer/ButtonRow/FinishButton
 
 @onready var consulting_panel: PanelContainer = $MarginContainer/VBoxContainer/ContentPanel/MarginContainer/DynamicContent/ConsultingPanel
 # @onready var purchase_consulting_btn: Button = ... (removed)

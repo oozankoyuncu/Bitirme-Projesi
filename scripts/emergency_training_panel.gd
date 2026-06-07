@@ -113,9 +113,6 @@ func _ready() -> void:
 	_setup_guide_text()
 	_setup_ui_styles()
 	
-	if not GameState.emergency_training_phase_active:
-		GameState.start_emergency_training_phase()
-
 	# Dynamically add note below the footer
 	var note_label = Label.new()
 	note_label.text = "* Note: Pressing FINISH will immediately advance the time by the total max duration (240 seconds)."

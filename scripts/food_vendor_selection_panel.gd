@@ -14,8 +14,6 @@ var current_max_space: int = 100
 @onready var diversity_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/DiversityLabel
 @onready var warning_label: Label = $MarginContainer/VBoxContainer/MainContent/RightPanel/StatsPanel/MarginContainer/VBoxContainer/WarningLabel
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/ConfirmButton
-@onready var back_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/BackButton
-@onready var finish_button: Button = $MarginContainer/VBoxContainer/MainContent/RightPanel/FinishButton
 
 var option_checkboxes: Array = []
 var space_sliders: Dictionary = {}

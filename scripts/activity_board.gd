@@ -706,6 +706,8 @@ func _check_scenarios_and_start(activity: Dictionary, panel_name: String) -> voi
 				messages.append("Team Notification: %s and %s have no exams, they can take on 1 additional task each. Workload capacity increased!" % [members[0]["name"], members[1]["name"]])
 				
 	elif activity_id == "emergency_training":
+		if not GameState.emergency_training_phase_active:
+			GameState.start_emergency_training_phase()
 		if GameState.active_scenarios.has("mandatory_emergency_training") and not GameState.triggered_scenarios.has("mandatory_emergency_training"):
 			GameState.triggered_scenarios.append("mandatory_emergency_training")
 			var m_team = GameState.selected_team.duplicate()

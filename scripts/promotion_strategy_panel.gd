@@ -50,8 +50,6 @@ var promotion_options = {
 @onready var budget_label: Label = $MarginContainer/VBoxContainer/HeaderPanel/Margin/VBoxContainer/BudgetLabel
 @onready var summary_label: Label = $MarginContainer/VBoxContainer/SummaryPanel/Margin/VBoxContainer/SummaryLabel
 @onready var confirm_button: Button = $MarginContainer/VBoxContainer/ButtonRow/ConfirmButton
-@onready var back_button: Button = $MarginContainer/VBoxContainer/ButtonRow/BackButton
-@onready var finish_button: Button = $MarginContainer/VBoxContainer/ButtonRow/FinishButton
 
 @onready var info_popup: PanelContainer = $InfoPopup
 @onready var info_button: Button = $MarginContainer/VBoxContainer/HeaderPanel/InfoButton
