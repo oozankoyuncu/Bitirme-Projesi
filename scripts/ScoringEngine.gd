@@ -569,11 +569,13 @@ static func _calculate_sp() -> Dictionary:
 
 	for member in GameState.selected_team:
 		var has_training := false
-		if member.get("fire_safety", 0) == 1:
-			has_training = true
-		if member.get("first_aid", 0) == 1:
+		if member.get("electrical_failure_response", 0) == 1:
 			has_training = true
 		if member.get("crowd_control", 0) == 1:
+			has_training = true
+		if member.get("medical_first_response", 0) == 1:
+			has_training = true
+		if member.get("crisis_management", 0) == 1:
 			has_training = true
 		if has_training:
 			trained_count += 1

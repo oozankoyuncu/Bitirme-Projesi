@@ -107,6 +107,18 @@ func _ready() -> void:
 	med_btn.pressed.connect(func(): _on_program_selected("medical_first_response", med_btn))
 	crisis_btn.pressed.connect(func(): _on_program_selected("crisis_management", crisis_btn))
 
+	# Update button labels with cost & duration info
+	var _btn_map = {
+		"electrical_failure_response": elec_btn,
+		"crowd_control": crowd_btn,
+		"medical_first_response": med_btn,
+		"crisis_management": crisis_btn,
+	}
+	for type_key in _btn_map:
+		var btn = _btn_map[type_key]
+		var td = training_defs[type_key]
+		btn.text = td["display_name"] + "\nCost: " + str(td["cost_per_member"]) + " TL/member  |  Duration: " + str(int(td["duration"])) + "s"
+
 	info_btn.pressed.connect(func(): guide_panel.show())
 	close_guide_btn.pressed.connect(func(): guide_panel.hide())
 

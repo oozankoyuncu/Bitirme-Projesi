@@ -1,60 +1,60 @@
 {
   "artists": [
-    {
-      "id": "athena",
-      "name": "Athena",
-      "role": "headliner",
-      "cost": 180000,
-      "popularity": 9,
-      "crowd_appeal": "Very High"
-    },
-    {
-      "id": "tarkan",
-      "name": "Tarkan",
-      "role": "headliner",
-      "cost": 220000,
-      "popularity": 10,
-      "crowd_appeal": "Very High"
-    },
-    {
-      "id": "ajda_pekkan",
-      "name": "Ajda Pekkan",
-      "role": "headliner",
-      "cost": 190000,
-      "popularity": 9,
-      "crowd_appeal": "Very High"
-    },
-    {
-      "id": "manga",
-      "name": "Manga",
-      "role": "supporting",
-      "cost": 90000,
-      "popularity": 7,
-      "crowd_appeal": "High"
-    },
-    {
-      "id": "dktt",
-      "name": "Dolu Kadehi Ters Tut",
-      "role": "supporting",
-      "cost": 70000,
-      "popularity": 7,
-      "crowd_appeal": "High"
-    },
-    {
-      "id": "gokhan_turkmen",
-      "name": "Gökhan Türkmen",
-      "role": "supporting",
-      "cost": 80000,
-      "popularity": 8,
-      "crowd_appeal": "High"
-    },
-    {
-      "id": "kalben",
-      "name": "Kalben",
-      "role": "supporting",
-      "cost": 50000,
-      "popularity": 6,
-      "crowd_appeal": "Medium-High"
-    }
+	{
+	  "id": "athena",
+	  "name": "Athena",
+	  "role": "headliner",
+	  "cost": 260000,
+	  "popularity": 9,
+	  "crowd_appeal": "Very High"
+	},
+	{
+	  "id": "tarkan",
+	  "name": "Tarkan",
+	  "role": "headliner",
+	  "cost": 440000,
+	  "popularity": 10,
+	  "crowd_appeal": "Very High"
+	},
+	{
+	  "id": "ajda_pekkan",
+	  "name": "Ajda Pekkan",
+	  "role": "headliner",
+	  "cost": 450000,
+	  "popularity": 9,
+	  "crowd_appeal": "Very High"
+	},
+	{
+	  "id": "manga",
+	  "name": "Manga",
+	  "role": "supporting",
+	  "cost": 180000,
+	  "popularity": 7,
+	  "crowd_appeal": "High"
+	},
+	{
+	  "id": "dktt",
+	  "name": "Dolu Kadehi Ters Tut",
+	  "role": "supporting",
+	  "cost": 140000,
+	  "popularity": 7,
+	  "crowd_appeal": "High"
+	},
+	{
+	  "id": "gokhan_turkmen",
+	  "name": "Gökhan Türkmen",
+	  "role": "supporting",
+	  "cost": 160000,
+	  "popularity": 8,
+	  "crowd_appeal": "High"
+	},
+	{
+	  "id": "kalben",
+	  "name": "Kalben",
+	  "role": "supporting",
+	  "cost": 100000,
+	  "popularity": 6,
+	  "crowd_appeal": "Medium-High"
+	}
   ]
 }

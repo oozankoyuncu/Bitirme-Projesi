@@ -154,39 +154,8 @@ func _setup_dashboard_notifications() -> void:
 	# Insert below Header (index 1)
 	vbox.add_child(panel)
 	vbox.move_child(panel, 1)
-	
-	# ── "Finish Game" debug / test button ──
-	var finish_container = CenterContainer.new()
-	finish_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vbox.add_child(finish_container)
-	vbox.move_child(finish_container, 2)
-	
-	var finish_btn = Button.new()
-	finish_btn.name = "FinishGameButton"
-	finish_btn.text = "🏁 FINISH GAME"
-	finish_btn.custom_minimum_size = Vector2(280, 55)
-	finish_btn.add_theme_font_size_override("font_size", 22)
-	
-	var finish_style = StyleBoxFlat.new()
-	finish_style.bg_color = Color(0.6, 0.15, 0.15, 0.9)
-	finish_style.set_corner_radius_all(10)
-	finish_style.border_width_left = 2
-	finish_style.border_width_top = 2
-	finish_style.border_width_right = 2
-	finish_style.border_width_bottom = 2
-	finish_style.border_color = Color(0.9, 0.3, 0.3, 0.8)
-	finish_btn.add_theme_stylebox_override("normal", finish_style)
-	
-	var finish_hover = finish_style.duplicate()
-	finish_hover.bg_color = Color(0.75, 0.2, 0.2, 1.0)
-	finish_btn.add_theme_stylebox_override("hover", finish_hover)
-	
-	var finish_pressed = finish_style.duplicate()
-	finish_pressed.bg_color = Color(0.5, 0.1, 0.1, 1.0)
-	finish_btn.add_theme_stylebox_override("pressed", finish_pressed)
-	
-	finish_btn.pressed.connect(_on_finish_game_pressed)
-	finish_container.add_child(finish_btn)
+
+
 
 func get_heuristic_value(act: Dictionary) -> float:
 	var h = GameState.resource_leveling_heuristic
@@ -280,9 +249,6 @@ func _check_game_completion() -> void:
 		
 		# Show scoring feedback panel
 		_trigger_scoring()
-
-func _on_finish_game_pressed() -> void:
-	_trigger_scoring()
 
 func _trigger_scoring() -> void:
 	# Calculate all scores using the ScoringEngine
