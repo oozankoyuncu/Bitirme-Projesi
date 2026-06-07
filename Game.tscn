@@ -305,7 +305,7 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 10
 
 [node name="Header" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
 layout_mode = 2
@@ -314,7 +314,7 @@ alignment = 1
 [node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Header"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 42
 text = "PROJECT CHARTER"
 
 [node name="AdminRow" type="HBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
@@ -380,12 +380,12 @@ theme_override_constants/separation = 5
 [node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ObjectiveSection"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.3, 0.3, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 text = "🎯 Project Objective"
 
 [node name="Text" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ObjectiveSection"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 22
 text = "Successfully plan and deliver a one-day Spring Student Festival by managing time, budget, scope, and risks under realistic constraints, while maximizing overall project performance."
 autowrap_mode = 3
 
@@ -396,32 +396,98 @@ theme_override_constants/separation = 8
 [node name="Title" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.55, 0.9, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 text = "📋 Project Scope Requirements"
 
-[node name="List" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection"]
+[node name="List" type="GridContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/h_separation = 30
+theme_override_constants/v_separation = 5
+columns = 2
 
 [node name="Item1" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "✅ Secure at least 2 sponsors contributing to the budget of at least $$"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ Overall average team performance should be higher than 2.5"
+autowrap_mode = 3
 
 [node name="Item2" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "✅ Select one main headliner and at least 2 sub-performers"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ At least 2 sponsors should be selected"
+autowrap_mode = 3
 
 [node name="Item3" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "✅ Include different types of activity (volunteer/club) and at least two volunteers"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ The average sponsor score should be higher than 2.5"
+autowrap_mode = 3
 
 [node name="Item4" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "✅ Have at least two different types of cuisine and have at least a 2.6 hygiene rating"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ Sponsor budget contribution should satisfy the required level"
+autowrap_mode = 3
+
+[node name="Item5" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ Attendance should be at least 3000 participants"
+autowrap_mode = 3
+
+[node name="Item6" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ The average popularity level should be higher than 3.0"
+autowrap_mode = 3
+
+[node name="Item7" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ At least 1 main headliner and 2 supporting artists should be selected"
+autowrap_mode = 3
+
+[node name="Item8" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ Required activity types should be covered: Competitive, Artistic, Informational, and Interactive"
+autowrap_mode = 3
+
+[node name="Item9" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ At least 2 volunteers and 3 clubs should be selected"
+autowrap_mode = 3
+
+[node name="Item10" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ Required cuisine types should be covered"
+autowrap_mode = 3
+
+[node name="Item11" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ The average hygiene rating should be higher than 2.5"
+autowrap_mode = 3
+
+[node name="Item12" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ScopeSection/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "✅ At least 1 cleaning crew and 1 security team should be selected"
+autowrap_mode = 3
 
 [node name="ConstraintHeader" type="PanelContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
 layout_mode = 2
@@ -429,12 +495,13 @@ layout_mode = 2
 [node name="ConstraintTitle" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/ConstraintHeader"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.75, 0, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 text = "⚠️ Project Constraints"
 
 [node name="Grid" type="GridContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox"]
 layout_mode = 2
-theme_override_constants/h_separation = 50
+theme_override_constants/h_separation = 100
+theme_override_constants/v_separation = 40
 columns = 2
 
 [node name="TimeBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid"]
@@ -442,13 +509,13 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/TimeBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 text = "⌛ Time Constraint:"
 
 [node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/TimeBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 20
 text = "• Total preparation duration: 8 weeks
 • Total gameplay duration: 32 minutes"
 
@@ -457,15 +524,45 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/BudgetBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 text = "💰 Budget Constraint:"
 
 [node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/BudgetBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 20
 text = "• Initial budget: 400,000 TL
 • No additional internal funding after start"
+
+[node name="ResourceBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/ResourceBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "⚙️ Resource Constraints:"
+
+[node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/ResourceBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 20
+text = "• Limited team member capacity
+• Limited computer and phone resources"
+
+[node name="ScopeBox" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/ScopeBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "🎯 Scope Constraints:"
+
+[node name="Details" type="Label" parent="CharterPanel/MarginContainer/TabContainer/Overview/Margin/VBox/Grid/ScopeBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 20
+text = "• All mandatory requirements should be satisfied
+• Required event activities should be covered"
 
 [node name="Success" type="VBoxContainer" parent="CharterPanel/MarginContainer/TabContainer"]
 visible = false
@@ -503,7 +600,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 26
-text = "Project success is evaluated using the following Key Performance Indicators (KPIs). Each indicator reflects a core project management competency and contributes to the final score."
+text = "Project success is evaluated using the following Key Performance Indicators (KPIs). Each indicator reflects a core project management competency."
 horizontal_alignment = 1
 autowrap_mode = 3
 

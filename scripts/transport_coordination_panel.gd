@@ -301,4 +301,12 @@ func _setup_guide_text() -> void:
 		"Your coordination efficiency score directly affects the setup speed in Week 8 and 9. Poor timing will lose points."
 
 func _on_finish_pressed() -> void:
+	if selections.size() < GameState.transport_delivery_defs.size():
+		var dialog = AcceptDialog.new()
+		dialog.title = "Transport Coordination Incomplete"
+		dialog.dialog_text = "You cannot complete this activity yet."
+		add_child(dialog)
+		dialog.popup_centered()
+		return
+	
 	_on_confirm_pressed()
