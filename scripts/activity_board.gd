@@ -565,7 +565,7 @@ func get_activity_status(activity: Dictionary) -> String:
 	if GameState.completed_activities.has(activity_id) and activity_id != "initial_festival_layout_mapping": return "Completed"
 	if GameState.started_activities.has(activity_id): return "In Progress"
 	
-	if not _dependencies_completed(activity): return "Locked"
+	#if not _dependencies_completed(activity): return "Locked"
 	return "Available"
 
 func _dependencies_completed(activity: Dictionary) -> bool:
